@@ -3,13 +3,13 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-BUILD_HOME=/shared/juno
+BUILD_HOME=/home/shared/juno
 
 # Java should be configured per machine,
 # so this variable point to valid installs
 # we "share" with orbits versions
-JAVA_5_HOME=/shared/orbit/apps/ibm-java2-i386-50
-JAVA_6_HOME=/shared/orbit/apps/ibm-java-i386-60
+JAVA_5_HOME=/home/shared/orbit/apps/ibm-java2-i386-50
+JAVA_6_HOME=/home/shared/orbit/apps/ibm-java-i386-60
 
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
