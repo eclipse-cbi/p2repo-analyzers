@@ -1,0 +1,14 @@
+<project name="junoAntRunner" basedir="." default="invokeAnt">
+	    <property
+	        environment="env" />
+	        	
+	<target name="invokeAnt">
+
+		<echo message="invoke ant runner, from ant" />
+		<exec executable="${env.ECLIPSE_HOME}/eclipse" 
+			failonerror="false" 
+			append="true">
+			<arg line="-consolelog -data ./runEclipseWorkspace -debug -nosplash --launcher.suppressErrors -vm ${env.JAVA_EXEC_DIR} -application org.eclipse.ant.core.antRunner -f runTests.xml" />
+		</exec>
+	</target>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><jardesc>
+    <jar path="org.eclipse.simrel.tests/simreltests.jar"/>
+    <options buildIfNeeded="true" compress="false" descriptionLocation="/org.eclipse.simrel.tests/simreltests.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="/org.eclipse.simrel.tests/simreltests.mf" manifestVersion="1.0" reuseManifest="false" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/org.eclipse.simrel.tests/runTests.xml"/>
+        <file path="/org.eclipse.simrel.tests/build.properties"/>
+        <file path="/org.eclipse.simrel.tests/cleanupBuildResults.sh"/>
+        <file path="/org.eclipse.simrel.tests/.project"/>
+        <file path="/org.eclipse.simrel.tests/verifydir.sh"/>
+        <file path="/org.eclipse.simrel.tests/.classpath"/>
+        <file path="/org.eclipse.simrel.tests/plugin.xml"/>
+        <file path="/org.eclipse.simrel.tests/breedata.txt"/>
+        <file path="/org.eclipse.simrel.tests/ant.sh"/>
+        <file path="/org.eclipse.simrel.tests/about.html"/>
+        <file path="/org.eclipse.simrel.tests/runEclipseAntRunner.sh"/>
+        <javaElement handleIdentifier="=org.eclipse.simrel.tests/src"/>
+        <file path="/org.eclipse.simrel.tests/aggr.properties"/>
+        <file path="/org.eclipse.simrel.tests/invokeAntRunner.xml"/>
+        <file path="/org.eclipse.simrel.tests/aggr_properties.shsource"/>
+        <file path="/org.eclipse.simrel.tests/getRelengTests.sh"/>
+        <javaElement handleIdentifier="=org.eclipse.simrel.tests/templateFiles"/>
+        <folder path="/org.eclipse.simrel.tests/META-INF"/>
+        <file path="/org.eclipse.simrel.tests/verify.sh"/>
+        <folder path="/org.eclipse.simrel.tests/data"/>
+        <folder path="/org.eclipse.simrel.tests/OSGI-INF"/>
+    </selectedElements>
+</jardesc>
