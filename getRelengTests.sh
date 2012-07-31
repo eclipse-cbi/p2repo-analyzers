@@ -61,16 +61,18 @@ mkdir -p "${RELENG_TESTS}"
 
 #controltag=david_williams_tempBranch3
 controltag=HEAD
-echo "    checking out $controltag of ${RELENG_TESTS} from cvs ..."
+#echo "    checking out $controltag of ${RELENG_TESTS} from cvs ..."
 
-export CVS_RSH=ssh
-if [ -z ${CVS_INFO} ] ; then
-    CVS_INFO=:pserver:anonymous@dev.eclipse.org:
-fi
+#export CVS_RSH=ssh
+#if [ -z ${CVS_INFO} ] ; then
+    #    CVS_INFO=:pserver:anonymous@dev.eclipse.org:
+#fi
+#
+#echo "CVS_INFO: " $CVS_INFO
 
-echo "CVS_INFO: " $CVS_INFO
+#cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TESTS} -r $controltag ${RELENG_TESTS}
+wget http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sbtests && rsync -r sbtests/master/ ${RELENG_TESTS}
 
-cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TESTS} -r $controltag ${RELENG_TESTS}
 returncode=$?
 if [ $returncode -ne 0 ] 
 then
