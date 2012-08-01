@@ -71,7 +71,7 @@ controltag=HEAD
 #echo "CVS_INFO: " $CVS_INFO
 
 #cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TESTS} -r $controltag ${RELENG_TESTS}
-wget http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sbtests && rsync -r sbtests/master/ ${RELENG_TESTS}
+wget http://davidw.com/gitorg.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sbtests && rsync -r sbtests/master/ ${RELENG_TESTS}
 
 returncode=$?
 if [ $returncode -ne 0 ] 

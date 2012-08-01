@@ -102,4 +102,4 @@ BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
 BRANCH_TESTS=master
 TMPDIR_TESTS=sbtests
-CGITURL=http://davidw.com/git/
+CGITURL=http://davidw.com/git
