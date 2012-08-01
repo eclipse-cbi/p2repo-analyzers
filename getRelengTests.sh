@@ -87,7 +87,7 @@ then
     exit $RC
 fi
 
-rsync -r ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
+rsync -vr ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
