@@ -28,7 +28,7 @@ echo "            number of directories before cleaning: ${before}";
 # empty directories often result from "bad builds". We remove those no matter how old
 find ${artifactsDir} -mindepth 1 -maxdepth 2 -type d -empty -exec rm -fr '{}' \;
 # now remove old ones
-find ${artifactsDir} -mindepth 1 -maxdepth 1 -type d -ctime +$ndays -execdir ${BUILD_HOME}${RELENG_TOOLS}/removeIf.sh '{}' \;
+find ${artifactsDir} -mindepth 1 -maxdepth 1 -type d -ctime +$ndays -execdir ${BUILD_HOME}${BUILD_TOOLS}/removeIf.sh '{}' \;
 
 after=`find ${artifactsDir} -mindepth 1 -maxdepth 1 | wc -l`;
 echo "            number of directories after cleaning: ${after}";
