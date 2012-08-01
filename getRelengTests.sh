@@ -59,26 +59,44 @@ rm -fr "${RELENG_TESTS}"/.settings
 rm -fr "${RELENG_TESTS}"/.classpath
 mkdir -p "${RELENG_TESTS}"
 
-#controltag=david_williams_tempBranch3
-controltag=HEAD
-#echo "    checking out $controltag of ${RELENG_TESTS} from cvs ..."
+BRANCH_TESTS=${BRANCH_TESTS:-master}
+TMPDIR_TESTS=${TMPDIR_TESTS:-sbtests}
+CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
 
-#export CVS_RSH=ssh
-#if [ -z ${CVS_INFO} ] ; then
-    #    CVS_INFO=:pserver:anonymous@dev.eclipse.org:
-#fi
-#
-#echo "CVS_INFO: " $CVS_INFO
 
-#cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TESTS} -r $controltag ${RELENG_TESTS}
-wget http://davidw.com/gitorg.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sbtests && rsync -r sbtests/master/ ${RELENG_TESTS}
+echo "PWD: ${PWD}"
+rm ${BRANCH_TESTS}.zip*
 
-returncode=$?
-if [ $returncode -ne 0 ] 
+echo "PWD: ${PWD}"
+wget  ${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip 2>&1
+RC=$?
+if [[ $RC != 0 ]] 
 then
-    echo "non zero from cvs checkout: "$returncode
-    exit $returncode
-fi 
+    echo "   ERROR: Failed to get ${BRANCH_TESTS}.zip from  ${CGITURL}/${BUILD_TESTS}/snapshot/${BRANCH_TESTS}.zip"
+    echo "   RC: $RC"
+    exit $RC
+fi
+
+echo "PWD: ${PWD}"
+unzip -o ${BRANCH_TESTS}.zip -d ${TMPDIR_TESTS} 
+RC=$?
+if [[ $RC != 0 ]] 
+then
+    printf "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS}.zip to ${TMPDIR_TESTS}"
+        echo "   RC: $RC"
+    exit $RC
+fi
+
+rsync -r ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
+RC=$?
+if [[ $RC != 0 ]] 
+then
+    printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${RELENG_TESTS} from ${TMPDIR_TESTS}/${BRANCH_TESTS}/"
+        echo "   RC: $RC"
+        exit $RC
+fi
+
+
 echo "    making sure releng control files are executable and have proper EOL ..."
 dos2unix ${RELENG_TESTS}/*.sh* ${RELENG_TESTS}/*.properties ${RELENG_TESTS}/*.xml >/dev/null 2>>/dev/null
 chmod +x ${RELENG_TESTS}/*.sh > /dev/null
