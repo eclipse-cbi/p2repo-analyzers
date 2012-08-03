@@ -15,14 +15,59 @@
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource
 
-if [ -z ${RELENG_TESTS} ] ; then
+RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
+BRANCH_TESTS=${BRANCH_TESTS:-master}
+TMPDIR_TESTS=${TMPDIR_TESTS:-sbtests}
+CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
 
-    RELENG_TESTS=org.eclipse.simrel.tests
-    echo "RELENG_TESTS set from script: " $RELENG_TESTS
-else
-    echo "RELENG_TESTS set from aggr_properties.shsource: " $RELENG_TESTS
+function usage() 
+{
+    printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
+    printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
+    printf "\n\t\t%s\t%s\n" "-v" "Print verbose debug info." >&2
+}
 
+
+verboseFlag=false
+freshFlag=false
+while getopts 'hvf' OPTION
+do
+    case $OPTION in
+        h)    usage
+        exit 1
+        ;;
+        v)    verboseFlag=true
+        ;;
+        f)    freshFlag=true
+        ;;
+        ?)    usage
+        exit 2
+        ;;
+    esac
+done
+
+# This shift is not required in our particular, current case, 
+# But is a common pattern to leave command line args at correct 
+# point, so we leave it in. 
+shift $(($OPTIND - 1))
+
+# 'env' is handy to print all env variables to log, 
+# if needed for debugging
+if $verboseFlag
+then
+	env
+	echo "fresh install: $freshFlag"
+	echo "verbose output: $verboseFlag"
+	echo "BUILD_TESTS: ${RELENG_TESTS}"
+ echo "TMPDIR_TESTS=${TMPDIR_TESTS}"
+		
 fi
+
+echo "CGITURL: ${CGITURL}"
+echo "BRANCH_TOOLS: ${BRANCH_TESTS}"
+
+# echo current directory
+echo "Current Directory: ${PWD}"
 
 # This script file is to help get builds started "fresh", when
 # the ${RELENG_TESTS} directory already exists on local file system.
@@ -33,15 +78,12 @@ fi
 # export is used, instead of checkout, just to avoid the CVS directories and since this code
 # for a local build, there should never be a need to check it back in to CVS.
 
-# If there is no subdirectory, try going up one directory and looking again (in case we are in it).
-if [ ! -e ${RELENG_TESTS} ]
+# if freshFlag is set, then "not freshFlag" is false and will skip 
+# the sanity check.   
+if ! $freshFlag && [[ ! -e ${RELENG_TESTS} ]]
 then
-    cd ..
-    if [ ! -e ${RELENG_TESTS} ]
-    then        
-        echo "${RELENG_TESTS} does not exist as sub directory";
-        exit 1;
-    fi
+    echo "${RELENG_TESTS} does not exist as sub directory";
+    exit 1;
 fi
 
 
@@ -52,23 +94,19 @@ then
     echo "The variable RELENG_TESTS must be defined to run this script"
     exit 1;
 fi
+
+
 echo "    removing all of ${RELENG_TESTS} ..."
-rm -fr "${RELENG_TESTS}"/*
-rm -fr "${RELENG_TESTS}"/.project
-rm -fr "${RELENG_TESTS}"/.settings
-rm -fr "${RELENG_TESTS}"/.classpath
+rm -fr "${RELENG_TESTS}"
 mkdir -p "${RELENG_TESTS}"
 
-BRANCH_TESTS=${BRANCH_TESTS:-master}
-TMPDIR_TESTS=${TMPDIR_TESTS:-sbtests}
-CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
 
 
-echo "PWD: ${PWD}"
-rm ${BRANCH_TESTS}.zip*
+# remove if already exists
+rm ${BRANCH_TESTS}.zip* 2>/dev/null
+rm -fr ${TMPDIR_TESTS} 2>/dev/null 
 
-echo "PWD: ${PWD}"
-wget  ${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip 2>&1
+wget --no-verbose -O ${BRANCH_TESTS}.zip ${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -77,21 +115,32 @@ then
     exit $RC
 fi
 
-echo "PWD: ${PWD}"
-unzip -o ${BRANCH_TESTS}.zip -d ${TMPDIR_TESTS} 
+quietZipFlag=-q
+if $verboseFlag
+then
+	quietZipFlag=
+fi
+
+unzip ${quietZipFlag} -o ${BRANCH_TESTS}.zip -d ${TMPDIR_TESTS} 
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    printf "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS}.zip to ${TMPDIR_TESTS}"
+    echo "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS}.zip to ${TMPDIR_TESTS}"
         echo "   RC: $RC"
     exit $RC
 fi
 
-rsync -vr ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
+rsynchvFlag=
+if $verboseFlag
+then
+	rsynchvFlag=-v
+fi
+
+rsync $rsynchvFlag -r ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${RELENG_TESTS} from ${TMPDIR_TESTS}/${BRANCH_TESTS}/"
+    echo "ERROR: Failed to copy ${RELENG_TESTS} from ${TMPDIR_TESTS}/${BRANCH_TESTS}/"
         echo "   RC: $RC"
         exit $RC
 fi
@@ -100,9 +149,16 @@ fi
 echo "    making sure releng control files are executable and have proper EOL ..."
 dos2unix ${RELENG_TESTS}/*.sh* ${RELENG_TESTS}/*.properties ${RELENG_TESTS}/*.xml >/dev/null 2>>/dev/null
 chmod +x ${RELENG_TESTS}/*.sh > /dev/null
-echo
+echo "    Done. "
 
-# TODO ... a bit quirky ... need to install releng tests as above, but then 
+if ! $verboseFlag
+then
+	# cleanup unless verbose/debugging
+ rm ${BRANCH_TESTS}.zip* 2>/dev/null
+rm -fr ${TMPDIR_TESTS} 2>/dev/null
+fi
+
+# TODO ... a bit quirky ... need to install releng tests using this file, but then 
 # also run "installTests" target from releng tools build.xml file. 
 
-
+exit 0
