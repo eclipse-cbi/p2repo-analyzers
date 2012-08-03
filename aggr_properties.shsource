@@ -3,9 +3,9 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-BUILD_HOME=/home/shared/juno
+BUILD_HOME=/shared/juno
 
-# Java should be configured per machine,
+# Java should be configured per machine, 
 # so this variable point to valid installs
 # we "share" with orbits versions
 JAVA_5_HOME=/home/shared/orbit/apps/ibm-java2-i386-50
@@ -19,7 +19,8 @@ FULL_FILENAME_362=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops/
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=https://hudson.eclipse.org
-LOG_URL="${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BUILD_NUMBER}/console"
+
+LOG_URL=${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BUILD_NUMBER}/console
 
 
 
@@ -57,6 +58,7 @@ ECLIPSE_HOME=${ECLIPSE_HOME_37}
 
 #ECLIPSE_HOME_TEST=${ECLIPSE_HOME_36_TEST}
 ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
+ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
 
 stagingDirectory=${REPO_ROOT}/releases/staging
 releaseDirectory=${REPO_ROOT}/releases/juno
@@ -71,7 +73,8 @@ TEST_RESULTS=${BUILD_HOME}/simrel
 
 # remember, for ant, properties must be "read in" at beginning of ant build file to get variables expanded
 # also, remember, shell scripts need quotes, but ant can not have them
-AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
+#AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
+AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
 
 # clean build
 #we will clean the aggregation directory ourselves, as work around for bug 354321
@@ -84,10 +87,10 @@ AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 
 # only one or the other
 # --mavenResult
-# --trustedContributions Eclipse,Equinox
+# --trustedContributions Eclipse,Equinox 
 
 # add this to production aggregtor app args only
-# --production
+# --production 
 
 # NOTE: quotes needed in bash scripts ... NOT in ant properties! 
 # -Declipse.p2.mirrors=false
@@ -102,4 +105,9 @@ BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
 BRANCH_TESTS=master
 TMPDIR_TESTS=sbtests
-CGITURL=http://davidw.com/git
+CGITURL=http://git.eclipse.org/c/simrel
+
+# should be '/aggregate' if using "trusted repos" ... else, empty
+#AGGR=/aggregate
+AGGR=
+
