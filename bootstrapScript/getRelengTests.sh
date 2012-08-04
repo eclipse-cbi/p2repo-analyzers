@@ -24,13 +24,15 @@ function usage()
 {
     printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
     printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
+    printf "\n\t\t%s\t%s" "-c" "Force clean of testInstance directory" >&2
     printf "\n\t\t%s\t%s\n" "-v" "Print verbose debug info." >&2
 }
 
 
 verboseFlag=false
 freshFlag=false
-while getopts 'hvf' OPTION
+cleanFlag=false
+while getopts 'hvfc' OPTION
 do
     case $OPTION in
         h)    usage
@@ -39,6 +41,8 @@ do
         v)    verboseFlag=true
         ;;
         f)    freshFlag=true
+        ;;
+		c)    cleanFlag=true
         ;;
         ?)    usage
         exit 2
@@ -58,8 +62,9 @@ then
 	env
 	echo "fresh install: $freshFlag"
 	echo "verbose output: $verboseFlag"
+	echo "force clean prereqs: $cleanFlag"
 	echo "BUILD_TESTS: ${RELENG_TESTS}"
- echo "TMPDIR_TESTS=${TMPDIR_TESTS}"
+ 	echo "TMPDIR_TESTS=${TMPDIR_TESTS}"
 		
 fi
 
@@ -150,6 +155,16 @@ echo "    making sure releng control files are executable and have proper EOL ..
 dos2unix ${RELENG_TESTS}/*.sh* ${RELENG_TESTS}/*.properties ${RELENG_TESTS}/*.xml >/dev/null 2>>/dev/null
 chmod +x ${RELENG_TESTS}/*.sh > /dev/null
 echo "    Done. "
+
+if $cleanFlag
+then
+	# should very rarely need to do this, Like, once release. 
+	# But Eclipse (OSGi?) creates some files with 
+	# only group read access, so to complete remove them, must use 
+	# hudsonbuild ID to get completely clean. 
+	echo "    removing all of testInstance directory"
+	rm -fr testInstance
+fi
 
 if ! $verboseFlag
 then
