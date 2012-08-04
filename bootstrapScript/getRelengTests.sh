@@ -106,7 +106,7 @@ mkdir -p "${RELENG_TESTS}"
 rm ${BRANCH_TESTS}.zip* 2>/dev/null
 rm -fr ${TMPDIR_TESTS} 2>/dev/null 
 
-wget --no-verbose -O ${BRANCH_TESTS}.zip ${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip 2>&1
+wget --no-verbose -O ${BRANCH_TESTS}.zip ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
