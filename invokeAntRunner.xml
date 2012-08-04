@@ -1,4 +1,4 @@
-<project name="junoAntRunner" basedir="." default="invokeAnt">
+<project name="simrelAntRunner" basedir="." default="invokeAnt">
 	    <property
 	        environment="env" />
 	        	

@@ -3,7 +3,7 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-BUILD_HOME=/shared/juno
+BUILD_HOME=/shared/${release}
 
 # Java should be configured per machine, 
 # so this variable point to valid installs
@@ -61,7 +61,7 @@ ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
 ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
 
 stagingDirectory=${REPO_ROOT}/releases/staging
-releaseDirectory=${REPO_ROOT}/releases/juno
+releaseDirectory=${REPO_ROOT}/releases/${release}
 testRepoDirectory=${stagingDirectory}
 
 ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
@@ -73,8 +73,8 @@ TEST_RESULTS=${BUILD_HOME}/simrel
 
 # remember, for ant, properties must be "read in" at beginning of ant build file to get variables expanded
 # also, remember, shell scripts need quotes, but ant can not have them
-#AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
-AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
+#AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation"
+AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation"
 
 # clean build
 #we will clean the aggregation directory ourselves, as work around for bug 354321

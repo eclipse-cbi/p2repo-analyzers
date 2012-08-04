@@ -15,7 +15,7 @@
 <stringAttribute key="location" value="${workspace_loc}/../runtime-repoReports"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/home/shared/juno/simrel -DreportRepoDir=/home/www/html/downloads/releases/staging -DreferenceRepo=/home/www/html/downloads/releases/juno/201202030900/"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/home/shared/${release}/simrel -DreportRepoDir=/home/www/html/downloads/releases/staging -DreferenceRepo=/home/www/html/downloads/releases/${release}/201202030900/"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.sdk.ide"/>
 <booleanAttribute key="show_selected_only" value="false"/>
