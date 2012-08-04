@@ -9,7 +9,7 @@ source aggr_properties.shsource
 # These first few variables commonly need to overridden on test machines, they 
 # are very specific per machine. 
 # the top directory of build-related directories
-export BUILD_HOME=${BUILD_HOME:-/shared/${release}}
+export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
 export JAVA_HOME=${JAVA_HOME:-/shared/orbit/apps/ibm-java-i386-60}
 
 # These remaining variable should not need to be overriddent, as they 

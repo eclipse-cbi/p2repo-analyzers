@@ -34,7 +34,7 @@
 
 		<!-- NOTE: we strongly assume 'reportOutputDir' is dedicated completely 
 			for our use. Do not set to user.home!! normally, on production machine 
-			reportOutputDir = /shared/${release}/simrel.
+			reportOutputDir = /shared/simrel/${release}/simrel.
 			If not specfified, the application assumes 
 			reportOutputDir = ${user.dir}/temp/simrel -->
 		<delete>

@@ -5,10 +5,10 @@
 # Note: for deployment on production machine, no "custom" properties need to be set in aggr_properties.shsource, 
 # assuming the "hudson build script" has been set up appropriately. 
 # 1. need to set "use custom workspace" so some of the relative directory assumptions are true ... such as for Juno, set 
-#    /shared/${release}/org.eclipse.simrel.tests
-# 2. copy "by hand" (or scp) this getRelengTests.sh file to /shared/${release} and run from hudson from there, the parent of 
-#    o.e.i.tests, namely "run shell script" /shared/${release}/getRelengTests.sh
-# 3. We currently assume "testInstance" already exists, as a child of /shared/${release}, and contains an instance of eclipse SDK (3.7). 
+#    /shared/simrel/${release}/org.eclipse.simrel.tests
+# 2. copy "by hand" (or scp) this getRelengTests.sh file to /shared/simrel/${release} and run from hudson from there, the parent of 
+#    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
+# 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and contains an instance of eclipse SDK (3.7). 
 
 
 # finds file on users path, before current directory
