@@ -69,7 +69,7 @@ ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
 # Holds the results of the build
 BUILD_RESULTS=${BUILD_HOME}/buildresults
 AGGREGATOR_RESULTS=${BUILD_HOME}/aggregation
-TEST_RESULTS=${BUILD_HOME}/simrel
+TEST_RESULTS=${BUILD_HOME}
 
 # remember, for ant, properties must be "read in" at beginning of ant build file to get variables expanded
 # also, remember, shell scripts need quotes, but ant can not have them
