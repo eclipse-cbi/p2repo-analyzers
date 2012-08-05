@@ -18,7 +18,7 @@ source aggr_properties.shsource
 RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
 BRANCH_TESTS=${BRANCH_TESTS:-master}
 TMPDIR_TESTS=${TMPDIR_TESTS:-sbtests}
-CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
+CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel}
 
 function usage() 
 {
