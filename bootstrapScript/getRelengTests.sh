@@ -10,6 +10,18 @@
 #    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
 # 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and contains an instance of eclipse SDK (3.7). 
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines

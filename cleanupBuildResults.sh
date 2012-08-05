@@ -2,6 +2,19 @@
 
 # small utility to remove old (temporary) builds from work area
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource

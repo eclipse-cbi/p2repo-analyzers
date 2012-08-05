@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
-# On production machine, it is normal to "not find" this file when running. 
-# All variables that might be defined in it have correct values set for the production 
-# machine. Its purpose is if/when running on a test machine, the variables can be over ridden
-# easily in that one file, and leave original scripts alone. 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+ 
 source aggr_properties.shsource
 
 # These first few variables commonly need to overridden on test machines, they 
