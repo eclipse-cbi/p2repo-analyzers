@@ -36,19 +36,18 @@ where you want the output to go, and another to specify where the repo is on the
 
 <h3>The Details</h3>
 
-<p>The "tests project" is named 'org.eclipse.simrel.tests' and is currently in CVS in repository nanmed '/cvsroot/callisto'.</p>
+<p>The source project is named 'org.eclipse.simrel.tests' and is currently in Git in repository named 'simrel/org.eclipse.simrel.tests.git'. See {{Git|simrel|org.eclipse.simrel.tests.git}}.</p>
 
 <p>Once you load that project into your workspace, it will include one "launch configuration" that can be used as a starting example, 
 edited and used to launch 
 the application from your workspace.<p>
 
 <p>On a large repository, it take 5 or 10 minutes to complete, and then you just to look at the
-results (usually) with a web browser starting with the 'index.html' at the location you specified in 'reportOutputDir'property.<p>
-
+results (usually) with a web browser starting with the 'index.html' at the location you specified in 'reportOutputDir' property.<p>
 
 <h3>Signing verification</h3>
 
-There are two scripts in the 'org.eclipse.simrel.tests' that work together to check signatures: verify.sh and verifydir.sh. Written for Linux, but could be re-written for Windows, I'd guess. I normally put these on my path, such as in my ~/bin directory. The run time, I navigate to the "top" of the repository, and execute ./verifydir.sh which uses the current directory (if none specified) and iterates through all the files looking for "*.jar" and '*pack.gz' files and eventually calls 'verify.sh' on a specific file. You will need to edit verify.sh and define the Java directory on your local system where "jarsigner" can be found. Once ran, the scripts create report files in ~/verifyoutputdir (in your home folder, erasing what ever was there before) and you can check those report files for "errors" or "unsigned" items. 
+There are two scripts in the 'org.eclipse.juno.tests' that work together to check signatures: verify.sh and verifydir.sh. Written for Linux, but could be re-written for Windows, I'd guess. I normally put these on my path, such as in my ~/bin directory. The run time, I navigate to the "top" of the repository, and execute ./verifydir.sh which uses the current directory (if none specified) and iterates through all the files looking for "*.jar" and '*pack.gz' files and eventually calls 'verify.sh' on a specific file. You will need to edit verify.sh and define the Java directory on your local system where "jarsigner" can be found. Once ran, the scripts create report files in ~/verifyoutputdir (in your home folder, erasing what ever was there before) and you can check those report files for "errors" or "unsigned" items. 
 
 <h2>Getting help or making contributions</h2>
 
