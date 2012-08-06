@@ -30,6 +30,7 @@
 
 		<echoproperties />
 
+		<echo message="reportOutputDir: ${reportOutputDir}" />
 		<mkdir dir="${reportOutputDir}/reporeports" />
 
 		<!-- NOTE: we strongly assume 'reportOutputDir' is dedicated completely 
