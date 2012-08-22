@@ -30,6 +30,7 @@
 
 		<echoproperties />
 
+		<fail unless="stagingsegment" />
 		<echo message="reportOutputDir: ${reportOutputDir}" />
 		<mkdir dir="${reportOutputDir}/reporeports" />
 
