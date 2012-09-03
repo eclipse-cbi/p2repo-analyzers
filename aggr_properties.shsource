@@ -3,7 +3,7 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-BUILD_HOME=/shared/simrel/${release}
+export BUILD_HOME=/shared/simrel/${release}
 
 echo "BUILD_HOME: $BUILD_HOME"
 
@@ -55,13 +55,13 @@ ECLIPSE_HOME_42=${ECLIPSE_INSTALL}/eclipse42
 ECLIPSE_HOME=${ECLIPSE_HOME_42}
 
 ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
-ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
+export ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
 
 stagingDirectory=${REPO_ROOT}/releases/${stagingsegment}
 releaseDirectory=${REPO_ROOT}/releases/${release}
 testRepoDirectory=${stagingDirectory}
 
-ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
+export ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
 
 # Holds the results of the build
 BUILD_RESULTS=${BUILD_HOME}/buildresults
