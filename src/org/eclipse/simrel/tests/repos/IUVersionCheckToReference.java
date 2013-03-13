@@ -14,6 +14,7 @@ import java.util.TreeSet;
 
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
+import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
@@ -23,9 +24,13 @@ public class IUVersionCheckToReference extends TestRepo {
         FileWriter outfileWriter = null;
         File outfile = null;
         List<IInstallableUnit> referenceOnly = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> newIUs = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> matchingVersions = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsService = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();
         Set<String> refinboth = new TreeSet<String>();
         Set<String> curinboth = new TreeSet<String>();
 
@@ -35,7 +40,14 @@ public class IUVersionCheckToReference extends TestRepo {
             outfileWriter = new FileWriter(outfile);
             System.out.println("output: " + outfile.getAbsolutePath());
 
-            System.out.println("all IUs");
+            outfileWriter.write("<h1>All IUs</h1>" + EOL + "<p>(except groups, and categories)</p>");
+          // The "System.out" lines are for sanity check/debugging purposes.
+            outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
+            if (getRepoURLForReference().length() > 0) {
+                outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
+                        + EOL);
+            }
+
             System.out.println("Number in reference from raw count:" + rawcount(getAllReferenceIUs()));
             if (getAllReferenceIUs() != null) {
                 System.out.println("Number in reference from set:" + getAllReferenceIUs().toSet().size());
@@ -47,33 +59,42 @@ public class IUVersionCheckToReference extends TestRepo {
 
             System.out.println("Number in reference missing from current: " + referenceOnly.size());
             System.out.println("Number in common in reference and current: " + refinboth.size());
-            dump(refinboth, "inBothRef.txt");
+            //dump(refinboth, "inBothRef.txt");
 
             processForNewBundles(newIUs, curinboth);
 
             System.out.println("Number in current missing from reference: " + newIUs.size());
             System.out.println("Number in common in reference and current: " + curinboth.size());
-            dump(curinboth, "inBothCurrent.txt");
+            //dump(curinboth, "inBothCurrent.txt");
 
-            outfileWriter.write("<h1>IU versions chagned</h1>" + EOL);
-            outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
-            if (getRepoURLForReference().length() > 0) {
-                outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
-                        + EOL);
-            }
 
-            outfileWriter.write("<h2>Major: IUs in reference, but not in current repo</h2>" + EOL);
+            outfileWriter.write("<h2>IUs in reference, but not in current repo</h2>" + EOL);
             printLinesIUs(outfileWriter, referenceOnly);
-            // outfileWriter.write("<h2>Probably correct bundle name</h2>" +
-            // EOL);
-            // printLinesBundleName(outfileWriter, probablyCorrectBundleName);
 
-            // if (incorrectBundleName.size() > 0) {
-            // fail("Errors in naming or localization. For list, see " +
-            // outfile.getName());
-            // }
+            outfileWriter.write("<h2>IUs in current, but not in reference</h2>" + EOL);
+            printLinesIUs(outfileWriter, newIUs);
 
-            // return incorrectBundleName.size() > 0;
+            processForDifferences(curinboth, getAllIUs(), getAllReferenceIUs(), decreasingVersions, matchingVersions,
+                    increaseVersionsMajor, increaseVersionsMinor, increaseVersionsService, increaseVersionsQualifierOnly);
+
+            outfileWriter.write("<h2>IUs in current repo that decrease versions</h2>" + EOL);
+            printTableIUs(outfileWriter, decreasingVersions, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase major versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsMajor, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase minor versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsMinor, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase versions but with qualifier only</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsQualifierOnly, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase service versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsService, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that have matching versions in reference repo</h2>" + EOL);
+            printTableIUs(outfileWriter, matchingVersions, getAllReferenceIUs());
+
             return true;
         } finally {
             if (outfileWriter != null) {
@@ -86,6 +107,75 @@ public class IUVersionCheckToReference extends TestRepo {
             }
         }
 
+    }
+
+    private void processForDifferences(Set<String> curinboth, IQueryResult<IInstallableUnit> allIUs,
+            IQueryResult<IInstallableUnit> allReferenceIUs, List<IInstallableUnit> decreasingVersions,
+            List<IInstallableUnit> matchingVersions, List<IInstallableUnit> increaseVersionsMajor,
+            List<IInstallableUnit> increaseVersionsMinor, List<IInstallableUnit> increaseVersionsService,
+            List<IInstallableUnit> increaseVersionsQualifierOnly) {
+
+        Set allCurrent = allIUs.toUnmodifiableSet();
+        Set allRef = allReferenceIUs.toUnmodifiableSet();
+
+        for (Iterator iterator = curinboth.iterator(); iterator.hasNext();) {
+            String iuname = (String) iterator.next();
+            IInstallableUnit current = getIU(iuname, allCurrent);
+            IInstallableUnit reference = getIU(iuname, allRef);
+            Version curVersion = current.getVersion();
+            Version refVersion = reference.getVersion();
+            if (curVersion.equals(refVersion)) {
+                matchingVersions.add(current);
+            } else {
+                Comparable curMajor = curVersion.getSegment(0);
+                Comparable refMajor = refVersion.getSegment(0);
+                if (curMajor.compareTo(refMajor) < 0) {
+                    decreasingVersions.add(current);
+                } else if (curMajor.compareTo(refMajor) > 0) {
+                    increaseVersionsMajor.add(current);
+                } else if (curMajor.compareTo(refMajor) == 0) {
+                    Comparable curMinor = curVersion.getSegment(1);
+                    Comparable refMinor = refVersion.getSegment(1);
+                    if (curMinor.compareTo(refMinor) < 0) {
+                        decreasingVersions.add(current);
+                    } else if (curMinor.compareTo(refMinor) > 0) {
+                        increaseVersionsMinor.add(current);
+                    } else if (curMinor.compareTo(refMinor) == 0) {
+                        Comparable curService = curVersion.getSegment(2);
+                        Comparable refService = refVersion.getSegment(2);
+                        if (curService.compareTo(refService) < 0) {
+                            decreasingVersions.add(current);
+                        } else if (curService.compareTo(refService) > 0) {
+                            increaseVersionsService.add(current);
+                        } else if (curService.compareTo(refService) == 0) {
+                            Comparable curQualifier = curVersion.getSegment(3);
+                            Comparable refQualifier = refVersion.getSegment(3);
+                            if (curQualifier.compareTo(refQualifier) < 0) {
+                                decreasingVersions.add(current);
+                            } else if (curQualifier.compareTo(refQualifier) > 0) {
+                                increaseVersionsQualifierOnly.add(current);
+                            } else if (curQualifier.compareTo(refQualifier) == 0) {
+                                System.out.print("Surprising we'd get here, since already checked for equality");
+                                matchingVersions.add(current);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private IInstallableUnit getIU(String iuname, Set allIUs) {
+        IInstallableUnit result = null;
+        for (Iterator iterator = allIUs.iterator(); iterator.hasNext();) {
+            IInstallableUnit iu = (IInstallableUnit) iterator.next();
+            if (iuname.equals(iu.getId())) {
+                result = iu;
+                break;
+            }
+        }
+        return result;
     }
 
     private int rawcount(IQueryResult<IInstallableUnit> refs) {
@@ -233,23 +323,46 @@ public class IUVersionCheckToReference extends TestRepo {
         }
         out.write("</ol>" + EOL);
     }
-    private void printLinesCommonIUs(FileWriter out, Set<String> iuIds, IQueryResult<IInstallableUnit> iuList, IQueryResult<IInstallableUnit> iuListRefs) throws IOException {
-        // Comparator<? super IInstallableUnit> comparatorBundleName = new
-        // IUNameAndIdComparator();
-        //Comparator<? super IInstallableUnit> comparatorBundleName = new IUIdComparator();
-        List<String> iuIdList = new ArrayList<String>(iuIds);
-        Collections.sort(iuIdList);
-        out.write("<p>Count: " + iuIdList.size() + EOL);
-        printStartTable(out, "");
-        printRowln(out, "<th>" + "new less than reference" + "</th><th>" + "group IU id" +  "</th><th>" + "Reference (old) version" +  "</th><th>" + "Current (new) version" + "</th>");
 
-        for (String iuId : iuIdList) {
-            IInstallableUnit iu = getIUNamed(iuList, iuId);
-            IInstallableUnit iuRef = getIUNamed(iuListRefs, iuId);
-            printLineRowItem(out, iu, iuRef);
+    private void printTableIUs(FileWriter out, List<IInstallableUnit> iuListCur, IQueryResult<IInstallableUnit> iuListRefs)
+            throws IOException {
+
+        out.write("<p>Count: " + iuListCur.size() + EOL);
+        if (iuListCur.size() > 0) {
+            Collections.sort(iuListCur);
+            printStartTable(out, "");
+            printRowln(out, "<th>" + "IU id" + "</th><th>" + "Reference (old) version" + "</th><th>" + "Current (new) version"
+                    + "</th>");
+            for (Iterator iterator = iuListCur.iterator(); iterator.hasNext();) {
+                IInstallableUnit curInstallableUnit = (IInstallableUnit) iterator.next();
+                IInstallableUnit refIInstallableUnit = getIUNamed(iuListRefs, curInstallableUnit.getId());
+                printLineRowItem(out, curInstallableUnit, refIInstallableUnit);
+            }
+            printEndTable(out);
         }
-        printEndTable(out);
     }
+
+//    private void printTableIUs(FileWriter out, Set<String> iuIds, IQueryResult<IInstallableUnit> iuList,
+//            IQueryResult<IInstallableUnit> iuListRefs) throws IOException {
+//        // Comparator<? super IInstallableUnit> comparatorBundleName = new
+//        // IUNameAndIdComparator();
+//        // Comparator<? super IInstallableUnit> comparatorBundleName = new
+//        // IUIdComparator();
+//        List<String> iuIdList = new ArrayList<String>(iuIds);
+//        Collections.sort(iuIdList);
+//        out.write("<p>Count: " + iuIdList.size() + EOL);
+//        printStartTable(out, "");
+//        printRowln(out, "<th>" + "IU id" + "</th><th>" + "Reference (old) version" + "</th><th>" + "Current (new) version"
+//                + "</th>");
+//
+//        for (String iuId : iuIdList) {
+//            IInstallableUnit iu = getIUNamed(iuList, iuId);
+//            IInstallableUnit iuRef = getIUNamed(iuListRefs, iuId);
+//            printLineRowItem(out, iu, iuRef);
+//        }
+//        printEndTable(out);
+//    }
+
     private IInstallableUnit getIUNamed(IQueryResult<IInstallableUnit> iuListRefs, String id) {
         IInstallableUnit result = null;
         for (Iterator iterator = iuListRefs.iterator(); iterator.hasNext();) {
@@ -266,11 +379,13 @@ public class IUVersionCheckToReference extends TestRepo {
         FileWriter outfileWriter = null;
         File outfile = null;
         List<IInstallableUnit> inreferenceOnly = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> allreferenceIUs = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> allCurrentIUs = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> newIUs = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> matchingVersions = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsService = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();        
         Set<String> refinboth = new TreeSet<String>();
         Set<String> curinboth = new TreeSet<String>();
 
@@ -299,7 +414,7 @@ public class IUVersionCheckToReference extends TestRepo {
 
             System.out.println("Number in current missing from reference: " + newIUs.size());
             System.out.println("Number in common in reference and current: " + curinboth.size());
-            
+
             dump(newIUs, "newInCurrent.txt");
             dump(curinboth, "inBothCurrentFeatures.txt");
 
@@ -309,13 +424,33 @@ public class IUVersionCheckToReference extends TestRepo {
                 outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
                         + EOL);
             }
-            outfileWriter.write("<h2>group IUs in reference repo, but not current repo</h2>" + EOL);
+            outfileWriter.write("<h2>IUs in reference repo, but not current repo</h2>" + EOL);
             printLinesIUs(outfileWriter, inreferenceOnly);
-            outfileWriter.write("<h2>group IUs in current repo, but not reference repo</h2>" + EOL);
+            outfileWriter.write("<h2>IUs in current repo, but not reference repo</h2>" + EOL);
             printLinesIUs(outfileWriter, newIUs);
-            outfileWriter.write("<h2>group IUs in both current repo and reference repo</h2>" + EOL);
+
+            processForDifferences(curinboth, getAllGroupIUs(), getAllReferenceGroupIUs(), decreasingVersions, matchingVersions,
+                    increaseVersionsMajor, increaseVersionsMinor, increaseVersionsService, increaseVersionsQualifierOnly);
+
+            outfileWriter.write("<h2>IUs in current repo that decrease versions</h2>" + EOL);
+            printTableIUs(outfileWriter, decreasingVersions, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase major versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsMajor, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase minor versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsMinor, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase versions but with qualifier only</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsQualifierOnly, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that increase service versions</h2>" + EOL);
+            printTableIUs(outfileWriter, increaseVersionsService, getAllReferenceIUs());
+
+            outfileWriter.write("<h2>IUs in current repo that have matching versions in reference repo</h2>" + EOL);
+            printTableIUs(outfileWriter, matchingVersions, getAllReferenceIUs());
             
-            printLinesCommonIUs(outfileWriter, curinboth, getAllGroupIUs(), getAllReferenceGroupIUs());
+            //printTableIUs(outfileWriter, curinboth, getAllGroupIUs(), getAllReferenceGroupIUs());
             return true;
         } finally {
             if (outfileWriter != null) {

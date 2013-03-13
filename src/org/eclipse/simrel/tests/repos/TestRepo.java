@@ -123,16 +123,10 @@ public class TestRepo extends BuildRepoTests {
         println(outfileWriter, diff + NBSP + iuId + NBSP + iuRefVersion + NBSP + iuVersion);
     }
     protected void printLineRowItem(FileWriter outfileWriter, IInstallableUnit iu, IInstallableUnit iuRef) throws IOException {
-        //String iupropertyValue = iu.getProperty(iuproperty, null);
         String iuId = iu.getId();
         String iuVersion = iu.getVersion().toString();
         String iuRefVersion = iuRef.getVersion().toString();
-        int diff = iuVersion.compareTo(iuRefVersion);
-        String diffstr = "";
-        if (diff < 0) {
-            diffstr="*";
-        }
-        printRowln(outfileWriter, "<td>" + diffstr + "</td><td>" + iuId +  "</td><td>" + iuRefVersion +  "</td><td>" + iuVersion + "</td>");
+        printRowln(outfileWriter, "<td>" + iuId +  "</td><td>" + iuRefVersion +  "</td><td>" + iuVersion + "</td>");
     }
     protected void printLineListItem(FileWriter outfileWriter, String string) throws IOException {
         println(outfileWriter, string);

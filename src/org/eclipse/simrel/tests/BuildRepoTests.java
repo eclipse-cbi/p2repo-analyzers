@@ -313,8 +313,10 @@ public class BuildRepoTests {
         iuVersioncheck.setRepoURLToTest(repoToTest);
         iuVersioncheck.setRepoURLForReference(referenceRepoToTest);
 
+        if (referenceRepoToTest != null) {
         iuVersioncheck.checkIUVersionsToReference();
         iuVersioncheck.checkIUVersionsToReferenceForFeatures();
+        }
 
         if (featureNameFailures || bundleNameFailures || providerNamesFailure || licenseConsistencyFailure || greedyCheck) {
             setFailuresOccurred(true);
