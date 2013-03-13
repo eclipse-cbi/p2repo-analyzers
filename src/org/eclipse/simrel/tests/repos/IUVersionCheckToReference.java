@@ -41,7 +41,7 @@ public class IUVersionCheckToReference extends TestRepo {
             System.out.println("output: " + outfile.getAbsolutePath());
 
             outfileWriter.write("<h1>All IUs</h1>" + EOL + "<p>(except groups, and categories)</p>");
-          // The "System.out" lines are for sanity check/debugging purposes.
+            // The "System.out" lines are for sanity check/debugging purposes.
             outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             if (getRepoURLForReference().length() > 0) {
                 outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
@@ -59,14 +59,13 @@ public class IUVersionCheckToReference extends TestRepo {
 
             System.out.println("Number in reference missing from current: " + referenceOnly.size());
             System.out.println("Number in common in reference and current: " + refinboth.size());
-            //dump(refinboth, "inBothRef.txt");
+            // dump(refinboth, "inBothRef.txt");
 
             processForNewBundles(newIUs, curinboth);
 
             System.out.println("Number in current missing from reference: " + newIUs.size());
             System.out.println("Number in common in reference and current: " + curinboth.size());
-            //dump(curinboth, "inBothCurrent.txt");
-
+            // dump(curinboth, "inBothCurrent.txt");
 
             outfileWriter.write("<h2>IUs in reference, but not in current repo</h2>" + EOL);
             printLinesIUs(outfileWriter, referenceOnly);
@@ -122,41 +121,43 @@ public class IUVersionCheckToReference extends TestRepo {
             String iuname = (String) iterator.next();
             IInstallableUnit current = getIU(iuname, allCurrent);
             IInstallableUnit reference = getIU(iuname, allRef);
-            Version curVersion = current.getVersion();
-            Version refVersion = reference.getVersion();
-            if (curVersion.equals(refVersion)) {
-                matchingVersions.add(current);
-            } else {
-                Comparable curMajor = curVersion.getSegment(0);
-                Comparable refMajor = refVersion.getSegment(0);
-                if (curMajor.compareTo(refMajor) < 0) {
-                    decreasingVersions.add(current);
-                } else if (curMajor.compareTo(refMajor) > 0) {
-                    increaseVersionsMajor.add(current);
-                } else if (curMajor.compareTo(refMajor) == 0) {
-                    Comparable curMinor = curVersion.getSegment(1);
-                    Comparable refMinor = refVersion.getSegment(1);
-                    if (curMinor.compareTo(refMinor) < 0) {
+            if (reference != null) {
+                Version curVersion = current.getVersion();
+                Version refVersion = reference.getVersion();
+                if (curVersion.equals(refVersion)) {
+                    matchingVersions.add(current);
+                } else {
+                    Comparable curMajor = curVersion.getSegment(0);
+                    Comparable refMajor = refVersion.getSegment(0);
+                    if (curMajor.compareTo(refMajor) < 0) {
                         decreasingVersions.add(current);
-                    } else if (curMinor.compareTo(refMinor) > 0) {
-                        increaseVersionsMinor.add(current);
-                    } else if (curMinor.compareTo(refMinor) == 0) {
-                        Comparable curService = curVersion.getSegment(2);
-                        Comparable refService = refVersion.getSegment(2);
-                        if (curService.compareTo(refService) < 0) {
+                    } else if (curMajor.compareTo(refMajor) > 0) {
+                        increaseVersionsMajor.add(current);
+                    } else if (curMajor.compareTo(refMajor) == 0) {
+                        Comparable curMinor = curVersion.getSegment(1);
+                        Comparable refMinor = refVersion.getSegment(1);
+                        if (curMinor.compareTo(refMinor) < 0) {
                             decreasingVersions.add(current);
-                        } else if (curService.compareTo(refService) > 0) {
-                            increaseVersionsService.add(current);
-                        } else if (curService.compareTo(refService) == 0) {
-                            Comparable curQualifier = curVersion.getSegment(3);
-                            Comparable refQualifier = refVersion.getSegment(3);
-                            if (curQualifier.compareTo(refQualifier) < 0) {
+                        } else if (curMinor.compareTo(refMinor) > 0) {
+                            increaseVersionsMinor.add(current);
+                        } else if (curMinor.compareTo(refMinor) == 0) {
+                            Comparable curService = curVersion.getSegment(2);
+                            Comparable refService = refVersion.getSegment(2);
+                            if (curService.compareTo(refService) < 0) {
                                 decreasingVersions.add(current);
-                            } else if (curQualifier.compareTo(refQualifier) > 0) {
-                                increaseVersionsQualifierOnly.add(current);
-                            } else if (curQualifier.compareTo(refQualifier) == 0) {
-                                System.out.print("Surprising we'd get here, since already checked for equality");
-                                matchingVersions.add(current);
+                            } else if (curService.compareTo(refService) > 0) {
+                                increaseVersionsService.add(current);
+                            } else if (curService.compareTo(refService) == 0) {
+                                Comparable curQualifier = curVersion.getSegment(3);
+                                Comparable refQualifier = refVersion.getSegment(3);
+                                if (curQualifier.compareTo(refQualifier) < 0) {
+                                    decreasingVersions.add(current);
+                                } else if (curQualifier.compareTo(refQualifier) > 0) {
+                                    increaseVersionsQualifierOnly.add(current);
+                                } else if (curQualifier.compareTo(refQualifier) == 0) {
+                                    System.out.print("Surprising we'd get here, since already checked for equality");
+                                    matchingVersions.add(current);
+                                }
                             }
                         }
                     }
@@ -342,26 +343,28 @@ public class IUVersionCheckToReference extends TestRepo {
         }
     }
 
-//    private void printTableIUs(FileWriter out, Set<String> iuIds, IQueryResult<IInstallableUnit> iuList,
-//            IQueryResult<IInstallableUnit> iuListRefs) throws IOException {
-//        // Comparator<? super IInstallableUnit> comparatorBundleName = new
-//        // IUNameAndIdComparator();
-//        // Comparator<? super IInstallableUnit> comparatorBundleName = new
-//        // IUIdComparator();
-//        List<String> iuIdList = new ArrayList<String>(iuIds);
-//        Collections.sort(iuIdList);
-//        out.write("<p>Count: " + iuIdList.size() + EOL);
-//        printStartTable(out, "");
-//        printRowln(out, "<th>" + "IU id" + "</th><th>" + "Reference (old) version" + "</th><th>" + "Current (new) version"
-//                + "</th>");
-//
-//        for (String iuId : iuIdList) {
-//            IInstallableUnit iu = getIUNamed(iuList, iuId);
-//            IInstallableUnit iuRef = getIUNamed(iuListRefs, iuId);
-//            printLineRowItem(out, iu, iuRef);
-//        }
-//        printEndTable(out);
-//    }
+    // private void printTableIUs(FileWriter out, Set<String> iuIds,
+    // IQueryResult<IInstallableUnit> iuList,
+    // IQueryResult<IInstallableUnit> iuListRefs) throws IOException {
+    // // Comparator<? super IInstallableUnit> comparatorBundleName = new
+    // // IUNameAndIdComparator();
+    // // Comparator<? super IInstallableUnit> comparatorBundleName = new
+    // // IUIdComparator();
+    // List<String> iuIdList = new ArrayList<String>(iuIds);
+    // Collections.sort(iuIdList);
+    // out.write("<p>Count: " + iuIdList.size() + EOL);
+    // printStartTable(out, "");
+    // printRowln(out, "<th>" + "IU id" + "</th><th>" +
+    // "Reference (old) version" + "</th><th>" + "Current (new) version"
+    // + "</th>");
+    //
+    // for (String iuId : iuIdList) {
+    // IInstallableUnit iu = getIUNamed(iuList, iuId);
+    // IInstallableUnit iuRef = getIUNamed(iuListRefs, iuId);
+    // printLineRowItem(out, iu, iuRef);
+    // }
+    // printEndTable(out);
+    // }
 
     private IInstallableUnit getIUNamed(IQueryResult<IInstallableUnit> iuListRefs, String id) {
         IInstallableUnit result = null;
@@ -385,7 +388,7 @@ public class IUVersionCheckToReference extends TestRepo {
         List<IInstallableUnit> increaseVersionsMajor = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> increaseVersionsMinor = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> increaseVersionsService = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();        
+        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();
         Set<String> refinboth = new TreeSet<String>();
         Set<String> curinboth = new TreeSet<String>();
 
@@ -449,8 +452,9 @@ public class IUVersionCheckToReference extends TestRepo {
 
             outfileWriter.write("<h2>IUs in current repo that have matching versions in reference repo</h2>" + EOL);
             printTableIUs(outfileWriter, matchingVersions, getAllReferenceIUs());
-            
-            //printTableIUs(outfileWriter, curinboth, getAllGroupIUs(), getAllReferenceGroupIUs());
+
+            // printTableIUs(outfileWriter, curinboth, getAllGroupIUs(),
+            // getAllReferenceGroupIUs());
             return true;
         } finally {
             if (outfileWriter != null) {

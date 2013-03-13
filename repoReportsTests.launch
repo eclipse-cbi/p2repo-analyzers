@@ -16,9 +16,9 @@
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
 <mapEntry key="release" value="juno"/>
 </mapAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -debug"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/home/shared/simrel/juno -DreportRepoDir=/home/www/html/downloads/eclipse/updates/4.2-M-builds/M20130131-1000 -DreferenceRepo=/home/www/html/downloads/eclipse/updates/4.2-M-builds/M20130125-1200"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.5 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/shared/simrel/kepler -DreportRepoDir=/data/httpd/download.eclipse.org/releases/staging -DreferenceRepo=/data/httpd/download.eclipse.org/releases/juno/201302220900"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.sdk.ide"/>
 <booleanAttribute key="show_selected_only" value="false"/>
