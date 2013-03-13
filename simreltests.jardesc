@@ -9,7 +9,7 @@
             <packagesToUnSeal/>
         </sealing>
     </manifest>
-    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/org.eclipse.simrel.tests/aggr_properties.shsource"/>
         <javaElement handleIdentifier="=org.eclipse.simrel.tests/templateFiles"/>
         <folder path="/org.eclipse.simrel.tests/META-INF"/>
@@ -17,19 +17,17 @@
         <folder path="/org.eclipse.simrel.tests/data"/>
         <folder path="/org.eclipse.simrel.tests/OSGI-INF"/>
         <file path="/org.eclipse.simrel.tests/verify.sh"/>
-        <file path="/org.eclipse.simrel.tests/cleanupBuildResults.sh"/>
-        <file path="/org.eclipse.simrel.tests/.project"/>
-        <file path="/org.eclipse.simrel.tests/verifydir.sh"/>
-        <file path="/org.eclipse.simrel.tests/.classpath"/>
         <file path="/org.eclipse.simrel.tests/runTests.xml"/>
+        <file path="/org.eclipse.simrel.tests/verifydir.sh"/>
         <file path="/org.eclipse.simrel.tests/build.properties"/>
+        <file path="/org.eclipse.simrel.tests/cleanupBuildResults.sh"/>
+        <file path="/org.eclipse.simrel.tests/runEclipseAntRunner.sh"/>
+        <file path="/org.eclipse.simrel.tests/invokeAntRunner.xml"/>
         <file path="/org.eclipse.simrel.tests/aggr.properties"/>
         <file path="/org.eclipse.simrel.tests/plugin.xml"/>
         <file path="/org.eclipse.simrel.tests/breedata.txt"/>
         <file path="/org.eclipse.simrel.tests/ant.sh"/>
-        <file path="/org.eclipse.simrel.tests/about.html"/>
-        <file path="/org.eclipse.simrel.tests/runEclipseAntRunner.sh"/>
-        <file path="/org.eclipse.simrel.tests/invokeAntRunner.xml"/>
         <javaElement handleIdentifier="=org.eclipse.simrel.tests/src"/>
+        <file path="/org.eclipse.simrel.tests/about.html"/>
     </selectedElements>
 </jardesc>
