@@ -24,17 +24,6 @@ fi
 
 jarname=$(basename "${filename}")
 
-# most users need only one, Java 5 or Java 6, but sometimes may want to 
-# change JAVA_HOME, below, to switch back and forth.
-# Use JAVA 5 to ensure pack.gz files can be unpacked (installed) with JAVA 5. 
-# Some pack.gz files can not be unpacked with Java 6 (in SimRel repositories), 
-# so use JAVA 6 if you do not care (i.e. your use cases all use JAVA 6)
-# to avoid the error messages.
-#JAVA_5_HOME=/home/shared/webtools/apps/ibm-java2-i386-5011
-#JAVA_5_HOME=/shared/common/jdk-1.5.0-22.x86_64/
-#JAVA_6_HOME=/home/shared/webtools/apps/ibm-java-i386-608
-#JAVA_6_HOME=/shared/common/jdk-1.6.x86_64/
-
 # We always set JAVA_HOME explicitly to what we want, since on many systems, 
 # is it set to some JRE that would not suffice. 
 #JAVA_HOME=${JAVA_6_HOME}

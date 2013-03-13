@@ -8,7 +8,7 @@
 		<exec executable="${env.ECLIPSE_HOME}/eclipse" 
 			failonerror="false" 
 			append="true">
-			<arg line="-consolelog -data ./runEclipseWorkspace -debug -nosplash --launcher.suppressErrors -vm ${env.JAVA_EXEC_DIR} -application org.eclipse.ant.core.antRunner -f runTests.xml" />
+			<arg line="-consolelog -data ${ECLIPSE_HOME_TEST}/runEclipseWorkspace -debug -nosplash --launcher.suppressErrors -vm ${env.JAVA_EXEC_DIR} -application org.eclipse.ant.core.antRunner -f runTests.xml" />
 		</exec>
 	</target>
 </project>

@@ -8,15 +8,15 @@ export BUILD_HOME=/shared/simrel/${release}
 echo "BUILD_HOME: $BUILD_HOME"
 
 # Java should be configured per machine,
-# so this variable point to valid installs
-# we "share" with orbits versions
-JAVA_5_HOME=/shared/orbit/apps/ibm-java2-i386-50
-JAVA_6_HOME=/shared/orbit/apps/ibm-java-i386-60
+# so this variable point to valid installs.
+
+JAVA_6_HOME=/shared/common/jdk1.6.0_27.x86_64
+JAVA_7_HOME=/shared/common/jdk1.7.0_11
 
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME_420=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk.tar.gz
+FULL_FILENAME_422=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=https://hudson.eclipse.org
@@ -94,7 +94,7 @@ AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 BUILDER_VM_ARGS="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
 # We use this redirection, so scripts only need to use "full_filename", but exact version controlled by properties
-FULL_FILENAME=${FULL_FILENAME_420}
+FULL_FILENAME=${FULL_FILENAME_422}
 
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
