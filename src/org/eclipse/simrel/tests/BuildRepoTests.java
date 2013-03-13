@@ -269,7 +269,13 @@ public class BuildRepoTests {
         String repoToTest = "file://" + getDirectoryToCheck();
         String referenceRepoToTest = null;
         if (getDirectoryToCheckForReference() != null) {
-            referenceRepoToTest = "file://" + getDirectoryToCheckForReference();
+            File refRepoToCheck = new File(getDirectoryToCheckForReference());
+            if (refRepoToCheck.exists()) {
+               referenceRepoToTest = "file://" + getDirectoryToCheckForReference();
+            } else {
+                System.out.println("WARNING: the reference repository was found not to exist. No check done.");
+                System.out.println("         referenceRepo: " + getDirectoryToCheckForReference());
+            }
         }
 
         boolean uniquenessCheck = false;
