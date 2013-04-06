@@ -16,7 +16,8 @@ JAVA_7_HOME=/shared/common/jdk1.7.0_11
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME_422=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-platform-4.2.2-linux-gtk-x86_64.tar.gz
+#FULL_FILENAME_422=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-platform-4.2.2-linux-gtk-x86_64.tar.gz
+FULL_FILENAME_430=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-platform-4.3M6-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=https://hudson.eclipse.org
@@ -94,7 +95,7 @@ AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 BUILDER_VM_ARGS="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
 # We use this redirection, so scripts only need to use "full_filename", but exact version controlled by properties
-FULL_FILENAME=${FULL_FILENAME_422}
+FULL_FILENAME=${FULL_FILENAME_430}
 
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
