@@ -56,4 +56,7 @@ if [ ! -e "${VERIFYOUTDIR}"/unsigned.txt ]
 then
     echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned.txt
 fi 
-
+if [ ! -e "${VERIFYOUTDIR}"/nestedjars.txt ]
+then
+    echo  "There were no nested packed jars in the directories checked. " > "${VERIFYOUTDIR}"/nestedjars.txt
+fi 

@@ -4,165 +4,108 @@
 <title>Software Repository Reports</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="Eclipse Foundation, Inc." />
-<link rel="stylesheet" type="text/css"
-    href="/eclipse/eclipse.org-common/stylesheets/visual.css"
-    media="screen" />
-<link rel="stylesheet" type="text/css"
-    href="/eclipse/eclipse.org-common/stylesheets/layout.css"
-    media="screen" />
+<link rel="stylesheet" type="text/css" href="/eclipse/eclipse.org-common/stylesheets/visual.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/eclipse/eclipse.org-common/stylesheets/layout.css" media="screen" />
 </head>
 <body>
     <div id="header">
-        <a href="http://www.eclipse.org/"><img
-            src="/eclipse/eclipse.org-common/stylesheets/header_logo.gif"
-            width="163" height="68" border="0" alt="Eclipse Logo"
-            class="logo" /> </a>
+        <a href="http://www.eclipse.org/"><img src="/eclipse/eclipse.org-common/stylesheets/header_logo.gif" width="163"
+            height="68" border="0" alt="Eclipse Logo" class="logo" /> </a>
     </div>
     <div id="midcolumn">
 
         <h1>Software Repository Reports</h1>
 
         <p>
-            <strong> The "signing test" is still running </strong> (or
-            ended abnormally) and it takes a long time. Check back in a
-            few hours, or monitor the <a
-                href="https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/">Repository
+            <strong> The "signing test" is still running </strong> (or ended abnormally) and it takes a long time. Check back in a
+            few hours, or monitor the <a href="https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/">Repository
                 Aggregation build.</a>
         </p>
 
         <p>
-            The reports are listed in approximate order of priority.
-            Such as, bundles must not have missing legal files, and all
-            bundles need to be signed (with few exceptions), and all
-            bundles must use 4 part version numbers. The remaining
-            reports are important, and ideally would be "clean", but
-            normally would not prevent the release, or inclusion in the
-            common repository. Except where noted, the checks are done
-            directly are jars in the main common repository directories.
-            That is, it does not check the "trusted repositories" we
-            point to via composite indirection. See the <a
-                href="http://wiki.eclipse.org/SimRel/Simultaneous_Release_Reports_FAQ">
-                Reports FAQ</a> for more information about the code that
-            generates the reports.
+            The reports are listed in approximate order of priority. Such as, bundles must not have missing legal files, and all
+            bundles need to be signed (with few exceptions), and all bundles must use 4 part version numbers. The remaining reports
+            are important, and ideally would be "clean", but normally would not prevent the release, or inclusion in the common
+            repository. Except where noted, the checks are done directly are jars in the main common repository directories. That
+            is, it does not check the "trusted repositories" we point to via composite indirection. See the <a
+                href="http://wiki.eclipse.org/SimRel/Simultaneous_Release_Reports_FAQ"> Reports FAQ</a> for more information about
+            the code that generates the reports.
 
         </p>
-        <p>Remember, these automated reports test a minimal view of
-            the repository. For example, a bundle may have an about.html
-            file, so is not listed in "missing files" report, but that
-            does not mean the content of the about.html file is correct.
-            In other words, Committers and Project Leads are still
-            responsible for correctness -- these reports are more
-            focused on obvious incorrectness, usually things that happen
-            by small oversights, and which are often hard to "spot"
-            until too late. Note too that many of the "errors" these
-            reports list, can be caught at development time, in Eclipse
-            IDE, by proper setting of PDE compiler settings.</p>
-        <p>Also, remember, especially since these reports are "new"
-            in this context, the reports may contain out-right errors
-            and will certainly need improvement over time. Contributions
-            welcome. Please open a bug in cross-project component if you
-            see problems or have new contributions.</p>
+        <p>Remember, these automated reports test a minimal view of the repository. For example, a bundle may have an about.html
+            file, so is not listed in "missing files" report, but that does not mean the content of the about.html file is correct.
+            In other words, Committers and Project Leads are still responsible for correctness -- these reports are more focused on
+            obvious incorrectness, usually things that happen by small oversights, and which are often hard to "spot" until too
+            late. Note too that many of the "errors" these reports list, can be caught at development time, in Eclipse IDE, by
+            proper setting of PDE compiler settings.</p>
+        <p>Also, remember, especially since these reports are "new" in this context, the reports may contain out-right errors
+            and will certainly need improvement over time. Contributions welcome. Please open a bug in cross-project component if
+            you see problems or have new contributions.</p>
         <dl>
             <dt>
-                <a href="reports/layoutCheck.txt">Bundles missing
-                    required files</a>
+                <a href="reports/layoutCheck.txt">Bundles missing required files</a>
             </dt>
-            <dd>This report lists bundles and features that are
-                missing important, required files. It looks directly at
-                jars in the common repository. (Currently, does not
-                check those "trusted repositories" we point to via
-                composite indirection). Missing legal files are usually
-                considered a "stop ship" issue, since Eclipse is well
-                known for its IP quality.</dd>
+            <dd>This report lists bundles and features that are missing important, required files. It looks directly at jars in
+                the common repository. (Currently, does not check those "trusted repositories" we point to via composite
+                indirection). Missing legal files are usually considered a "stop ship" issue, since Eclipse is well known for its IP
+                quality.</dd>
             <dt>Unsigned bundles</dt>
             <dd>(pending)</dd>
             <dt>
-                <a href="reports/versionPatternCheck.txt">Bundles
-                    and Features not using 4 part versions</a>
+                <a href="reports/versionPatternCheck.txt">Bundles and Features not using 4 part versions</a>
             </dt>
-            <dd>To have p2 update correctly and OSGi to resolve
-                bundles as expected, it is essential that bundles and
-                features use the required 4 part versioning rules. Every
-                build.</dd>
+            <dd>To have p2 update correctly and OSGi to resolve bundles as expected, it is essential that bundles and features
+                use the required 4 part versioning rules. Every build.</dd>
             <dt>
-                <a href="reports/licenseConsistency.html">Consistent,
-                    current licenses (SUA) in features</a>
+                <a href="reports/licenseConsistency.html">Consistent, current licenses (SUA) in features</a>
             </dt>
-            <dd>Check to make sure features use the current,
-                correct license. The report also lists features in
-                repository with no license (SUA) in the content
-                metadata. This report uses the repository's content
-                metadata, instead of the jar files themselves, in
-                contrast to the "missing files" report, above. Both are
-                important to be correct, as different parts of Eclipse
-                code use one or the other to present information to the
-                user depending on the task.</dd>
-            
-            
+            <dd>Check to make sure features use the current, correct license. The report also lists features in repository with
+                no license (SUA) in the content metadata. This report uses the repository's content metadata, instead of the jar
+                files themselves, in contrast to the "missing files" report, above. Both are important to be correct, as different
+                parts of Eclipse code use one or the other to present information to the user depending on the task.</dd>
+
+
             <dt>
                 <a href="reports/greedyReport.html">Optional Runtime Requirements and Greediness</a>
             </dt>
-            <dd>This report summarizes the 'required' element in the content.jar/xml file and lists 
-            those that appear to be created with the new p2 publishers and those with old (and, cases 
-            where this results in overlap: some greedy, some not.
-            </dd>
-                
-                
-             <dt>
-                <a href="reports/breedata.txt">Use and Distribution
-                    of Bundle-RequiredExecutionEnvironment</a>
-            </dt>
-            <dd>Interesting report showing what BREEs are in use,
-                and which bundles are missing it. All bundles with Java
-                code should have one, but it is not required in
-                resource-only bundles.</dd>
+            <dd>This report summarizes the 'required' element in the content.jar/xml file and lists those that appear to be
+                created with the new p2 publishers and those with old (and, cases where this results in overlap: some greedy, some
+                not.</dd>
+
+
             <dt>
-                <a href="reports/pack200data.txt">Jars missing
-                    corresponding Pack200 file</a>
+                <a href="reports/breedata.txt">Use and Distribution of Bundle-RequiredExecutionEnvironment</a>
             </dt>
-            <dd>Pack200 compression is important to save bandwidth.
-                This report will never be perfect ... that is, there are
-                cases where it is known that a jar can not be cleanly
-                compressed with pack200. But nearly all can. So one or
-                two from a project should be ignored as "OK" ... but a
-                pattern of all jars/bundles from a project not being
-                compressed indicates the project simply has not
-                implemented that yet in their build or contribution
-                process.</dd>
+            <dd>Interesting report showing what BREEs are in use, and which bundles are missing it. All bundles with Java code
+                should have one, but it is not required in resource-only bundles.</dd>
             <dt>
-                <a href="reports/featureNames.html">Feature names
-                    report</a>
+                <a href="reports/pack200data.txt">Jars missing corresponding Pack200 file</a>
+            </dt>
+            <dd>Pack200 compression is important to save bandwidth. This report will never be perfect ... that is, there are
+                cases where it is known that a jar can not be cleanly compressed with pack200. But nearly all can. So one or two
+                from a project should be ignored as "OK" ... but a pattern of all jars/bundles from a project not being compressed
+                indicates the project simply has not implemented that yet in their build or contribution process.</dd>
+            <dt>
+                <a href="reports/featureNames.html">Feature names report</a>
             </dt>
 
-            <dd>Check this report for features using incorrect
-                names or incorrect localization settings. While we can
-                not automatically know what the correct name of a bundle
-                is, we can be sure it does not start with '%', and is
-                not "Feature-Name" or "feature", etc. This test is ran
-                against the content metadata of the repository.</dd>
+            <dd>Check this report for features using incorrect names or incorrect localization settings. While we can not
+                automatically know what the correct name of a bundle is, we can be sure it does not start with '%', and is not
+                "Feature-Name" or "feature", etc. This test is ran against the content metadata of the repository.</dd>
             <dt>
-                <a href="reports/bundleNames.html">Bundle names
-                    report</a>
+                <a href="reports/bundleNames.html">Bundle names report</a>
             </dt>
 
-            <dd>Check this report for bundles using incorrect names
-                or incorrect localization settings. While we can not
-                automatically know what the correct name of a bundle is,
-                we can be sure it does not start with '%', and is not
-                "Bundle-Name" or "plugin-name", etc. This test is ran
-                against the content metadata of the repository.</dd>
+            <dd>Check this report for bundles using incorrect names or incorrect localization settings. While we can not
+                automatically know what the correct name of a bundle is, we can be sure it does not start with '%', and is not
+                "Bundle-Name" or "plugin-name", etc. This test is ran against the content metadata of the repository.</dd>
             <dt>
-                <a href="reports/providerNames.html">Provider name
-                    report</a>
+                <a href="reports/providerNames.html">Provider name report</a>
             </dt>
-            <dd>Check for bundles using incorrect provider names
-                (Bundle-Vendor directive) or incorrect localization
-                settings. The best form of provider name is "Eclipse
-                &lt;project name&gt;". Some projects have chosen a
-                slightly different form, and can not automate every name
-                check, but, again, we know it should not start with '%',
-                not be "provider-name" nor be empty (null). This test is
-                ran against the content metadata of the repository.</dd>
+            <dd>Check for bundles using incorrect provider names (Bundle-Vendor directive) or incorrect localization settings.
+                The best form of provider name is "Eclipse &lt;project name&gt;". Some projects have chosen a slightly different
+                form, and can not automate every name check, but, again, we know it should not start with '%', not be
+                "provider-name" nor be empty (null). This test is ran against the content metadata of the repository.</dd>
 
 
             <dt>
@@ -172,8 +115,7 @@
             <dd>List copyrights used by Features.</dd>
 
             <dt>
-                <a href="reports/descriptions.html">Feature
-                    Descriptions</a>
+                <a href="reports/descriptions.html">Feature Descriptions</a>
             </dt>
 
             <dd>List descriptions used by Features.</dd>
@@ -185,60 +127,38 @@
 
 
             <dt>
-                <a href="reports/nonUniqueVersions.txt">List of
-                    non-unique versions</a>
+                <a href="reports/nonUniqueVersions.txt">List of non-unique versions</a>
             </dt>
-            <dd>List those bundles (technically, IUs) for which
-                there are multiple versions. It is often quite normal
-                for there to be multiple versions (e.g. when differ by
-                major or minor versions), but sometimes looking at the
-                multiple version report can spot unexpected cases where
-                there are multiple versions. Even if so, it will usually
-                not cause problems, but can at least be inefficient use
-                of space (e.g. if differ only by qualifier).</dd>
+            <dd>List those bundles (technically, IUs) for which there are multiple versions. It is often quite normal for there
+                to be multiple versions (e.g. when differ by major or minor versions), but sometimes looking at the multiple version
+                report can spot unexpected cases where there are multiple versions. Even if so, it will usually not cause problems,
+                but can at least be inefficient use of space (e.g. if differ only by qualifier).</dd>
             <dt>
-                <a href="reports/versionPatterns.txt">Version
-                    Qualifier Patterns</a>
+                <a href="reports/versionPatterns.txt">Version Qualifier Patterns</a>
             </dt>
-            <dd>This is an exploratory report of the the types or
-                patterns of version qualifers by bundles and features in
-                the repository. Longer term, this report can be improved
-                to spot typos and also find bundles or features in the
-                repository that do not use 4 part versioning. (A report,
-                above, also detects lack of 4 part versioning, but is
-                based on jars, found in common directory, rather than
-                all of content metadata in repository.)</dd>
+            <dd>This is an exploratory report of the the types or patterns of version qualifers by bundles and features in the
+                repository. Longer term, this report can be improved to spot typos and also find bundles or features in the
+                repository that do not use 4 part versioning. (A report, above, also detects lack of 4 part versioning, but is based
+                on jars, found in common directory, rather than all of content metadata in repository.)</dd>
             <dt>
-                <a href="reports/esdata.txt">Use of
-                    Eclipse-SourceReferences</a>
+                <a href="reports/esdata.txt">Use of Eclipse-SourceReferences</a>
             </dt>
             <dd>
-                List those bundles which are, and which are not, using
-                the <a
-                    href="http://wiki.eclipse.org/PDE/UI/SourceReferences">Eclipse-SourceReferences</a>
-                directive and the value of that directive. This
-                directive (and report) is useful for some projects to
-                help their community find their source code directly
-                from their repository (to help make providing patches
-                easier), but is not useful or appropriate for all
-                projects. Use the directive, and the report, however
-                your project deems appropriate and useful.
+                List those bundles which are, and which are not, using the <a href="http://wiki.eclipse.org/PDE/UI/SourceReferences">Eclipse-SourceReferences</a>
+                directive and the value of that directive. This directive (and report) is useful for some projects to help their
+                community find their source code directly from their repository (to help make providing patches easier), but is not
+                useful or appropriate for all projects. Use the directive, and the report, however your project deems appropriate
+                and useful.
             </dd>
             <dt>
-                <a href="reports/featureDirectoryLengths.html">Feature
-                    Directory Lengths</a>
+                <a href="reports/featureDirectoryLengths.html">Feature Directory Lengths</a>
             </dt>
-            <dd>This is an exploratory report of the length of
-                feature directories length, if feature was installed,
-                (not including the .../eclipse/features part of name).
-                Its purpose it to alert the interested of exceptionally
-                long feature names, which might cause some issues on
-                some operating systems. This report is exploratory,
-                since it is unclear what, if any, should be considered
-                the maximum length, which depends on many factors. But
-                ... if you are creating new features, it'd be best not
-                to exceed the typical sizes.</dd>
-            
+            <dd>This is an exploratory report of the length of feature directories length, if feature was installed, (not
+                including the .../eclipse/features part of name). Its purpose it to alert the interested of exceptionally long
+                feature names, which might cause some issues on some operating systems. This report is exploratory, since it is
+                unclear what, if any, should be considered the maximum length, which depends on many factors. But ... if you are
+                creating new features, it'd be best not to exceed the typical sizes.</dd>
+
             <dt>Signed bundles exceptions</dt>
             <dd>(pending)</dd>
             <dt>Correctly signed bundles</dt>
