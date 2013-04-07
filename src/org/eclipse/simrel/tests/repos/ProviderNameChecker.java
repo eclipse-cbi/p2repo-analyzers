@@ -98,6 +98,11 @@ public class ProviderNameChecker extends TestRepo {
             printLinesProvider(outfileWriter, incorrectOldProviderName);
             outfileWriter.write("<h2>Probably using correct provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, correctProviderName);
+            outfileWriter.write("<h2>List of known provider names</h2>" + EOL);
+            for (int i = 0; i < EXPECTED_PROVIDER_NAMES.length; i++) {
+                println(outfileWriter, EXPECTED_PROVIDER_NAMES[i] + EOL);
+            }
+            
 
             // if (incorrectProviderName.size() > 0) {
             // fail("Errors in naming or localization. For list, see " +
