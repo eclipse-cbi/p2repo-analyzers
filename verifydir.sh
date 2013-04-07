@@ -41,7 +41,7 @@ mkdir -p "${VERIFYOUTDIR}"
 # not defined, the remove would be for the root directory!! 
 if [[ -n "${VERIFYOUTDIR}" ]]
 then 
-       rm -fr "${VERIFYOUTDIR}"/*
+    rm -fr "${VERIFYOUTDIR}"/*
 fi
 
 echo "   verify directory: ${loc}"
