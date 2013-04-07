@@ -23,7 +23,8 @@ public class ProviderNameChecker extends TestRepo {
             "Eclipse Data Tools Platform", "Eclipse Modeling Project", "Eclipse Mylyn", "Eclipse Memory Analyzer",
             "Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit", "Eclipse JGit",
             "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project", "Eclipse Sequoyah",
-            "Eclipse TM Project"                       };
+            "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools", "Eclipse Code Recommenders", 
+            "Eclipse RTP", "Eclipse Process Manager", "Eclipse Xtend"};
 
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
