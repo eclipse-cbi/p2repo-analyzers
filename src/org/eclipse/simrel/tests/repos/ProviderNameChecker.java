@@ -23,8 +23,8 @@ public class ProviderNameChecker extends TestRepo {
             "Eclipse Data Tools Platform", "Eclipse Modeling Project", "Eclipse Mylyn", "Eclipse Memory Analyzer",
             "Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit", "Eclipse JGit",
             "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project", "Eclipse Sequoyah",
-            "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools", "Eclipse Code Recommenders", 
-            "Eclipse RTP", "Eclipse Process Manager", "Eclipse Xtend"};
+            "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools", "Eclipse Code Recommenders",
+            "Eclipse RTP", "Eclipse Process Manager", "Eclipse Xtend" };
 
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
@@ -54,11 +54,12 @@ public class ProviderNameChecker extends TestRepo {
                         // common errors and misspellings
                         else if (providerName.startsWith("%") || providerName.equals("Eclipse")
                                 || providerName.startsWith("eclipse.org") || providerName.startsWith("THALESGROUP")
-                                || providerName.startsWith("INRIA") || providerName.startsWith("Engineering")
-                                || providerName.contains("org.eclipse.jwt") || providerName.contains("www.example.org")
-                                || providerName.contains("www.eclipse.org") || providerName.contains("Provider")
-                                || providerName.contains("provider") || providerName.startsWith("Bundle-")
-                                || providerName.startsWith("bund") || providerName.startsWith("Eclispe")) {
+                                || providerName.equals("unknown") || providerName.startsWith("INRIA")
+                                || providerName.startsWith("Engineering") || providerName.contains("org.eclipse.jwt")
+                                || providerName.contains("www.example.org") || providerName.contains("www.eclipse.org")
+                                || providerName.contains("Provider") || providerName.contains("provider")
+                                || providerName.startsWith("Bundle-") || providerName.startsWith("bund")
+                                || providerName.startsWith("Eclispe")) {
                             incorrectProviderName.add(iu);
                         } else if (providerName.startsWith("Eclipse.org - ")) {
                             correctProviderName.add(iu);
@@ -73,7 +74,11 @@ public class ProviderNameChecker extends TestRepo {
                         else if (providerName.startsWith("Eclipse")) {
                             unknownProviderName.add(iu);
                         } else {
-                            unknownProviderName.add(iu);
+                            if (iu.getId().startsWith("org.eclipse")) {
+                                incorrectProviderName.add(iu);
+                            } else {
+                                unknownProviderName.add(iu);
+                            }
                         }
                         // experiment to find configs and categories
                         if (DEBUG) {
@@ -102,7 +107,6 @@ public class ProviderNameChecker extends TestRepo {
             for (int i = 0; i < EXPECTED_PROVIDER_NAMES.length; i++) {
                 println(outfileWriter, EXPECTED_PROVIDER_NAMES[i] + EOL);
             }
-            
 
             // if (incorrectProviderName.size() > 0) {
             // fail("Errors in naming or localization. For list, see " +
