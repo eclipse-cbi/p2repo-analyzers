@@ -198,9 +198,9 @@ public class Pack200Test extends TestJars {
     private boolean containsJava(InputStream input) {
         // We assume the file is a 'jar' file.
         boolean containsJava = false;
-
+        JarInputStream jarInputStream = null;
         try {
-            JarInputStream jarInputStream = new JarInputStream(input);
+            jarInputStream = new JarInputStream(input);
             while (jarInputStream.available() > 0) {
                 ZipEntry entry = jarInputStream.getNextEntry();
                 if (entry != null) {
@@ -221,6 +221,13 @@ public class Pack200Test extends TestJars {
                     // ignore
                 }
             }
+            if (jarInputStream != null) {
+                try {
+                    jarInputStream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }            
         }
         return containsJava;
     }

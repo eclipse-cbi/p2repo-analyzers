@@ -38,6 +38,8 @@ import org.xml.sax.SAXException;
 
 public class CheckGreedy extends TestRepo {
 
+    private InputStream inputStream;
+
     public boolean testGreedyOptionals() throws ParserConfigurationException, SAXException, IOException {
         Document document = getDocument();
         return checkOptionals(document);
@@ -74,7 +76,7 @@ public class CheckGreedy extends TestRepo {
         Reader characterStream = null;
         URL url = null;
         InputStream rawinputStream = null;
-        InputStream inputStream = null;
+        inputStream = null;
         URLConnection connection = null;
         System.out.println("repoURLToTest: " + getRepoURLToTest());
         url = new URL(getRepoURLToTest() + "/" + "content.jar");
@@ -114,7 +116,7 @@ public class CheckGreedy extends TestRepo {
                 throw new IllegalArgumentException("Neither content.jar nor content.xml file found at URL: " + getRepoURLToTest());
             }
 
-        }
+        } 
 
         if (inputStream != null) {
             characterStream = new InputStreamReader(inputStream);
@@ -282,6 +284,9 @@ public class CheckGreedy extends TestRepo {
             printHTMLReport(nUnits, intenionallyTrueOptionals, intenionallyImpliedTrueOptionals, intenionallyFalseOptionals,
                     blameIU);
             result = true;
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
         return result;
     }
