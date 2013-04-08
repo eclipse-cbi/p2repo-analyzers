@@ -87,11 +87,17 @@
 			<arg value="${reportOutputDir}/reporeports/reports" />
 
 			<!-- we'll check jars only, to save time ... assume pack.gz files would 
-				be correct too <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)"/> -->
+				be correct too. 
+				Changed, when we wanted to also test for nested packed jars.
+			--> 
+			<arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)"/> 
 
 			<!-- restricting to 'common' just for testing ... so finishes relatively 
 				quickly <arg value=".*common.*\.jar$"/> -->
-			<arg value=".*\.jar$" />
+			
+			<!-- 
+			    <arg value=".*\.jar$" />
+			-->
 		</exec>
 
 		<copy tofile="${reportOutputDir}/reporeports/index.html" file="${BUILD_TESTS_DIR}/templateFiles/indexmain.html" overwrite="true" />
