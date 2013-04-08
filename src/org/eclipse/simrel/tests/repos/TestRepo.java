@@ -89,8 +89,8 @@ public class TestRepo extends BuildRepoTests {
          * (org.eclipse.equinox.p2.type.fragment). a.jre has no properties.
          */
         String iuId = iu.getId();
-        boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre")
-                || iuId.startsWith("org.eclipse.equinox.executable_root") || iuId.startsWith("org.eclipse.rcp.configuration_root")
+        boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") 
+                || iuId.endsWith("_root") || iuId.contains(".executable.")
                 || iuId.startsWith("toolingorg.eclipse") || iuId.startsWith("tooling.");
         return isSpecial;
     }
