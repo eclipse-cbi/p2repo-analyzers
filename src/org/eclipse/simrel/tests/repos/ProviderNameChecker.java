@@ -31,8 +31,9 @@ public class ProviderNameChecker extends TestRepo {
         File outfile = null;
         List<IInstallableUnit> incorrectProviderName = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> correctProviderName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> incorrectOldProviderName = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> oldProviderName = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> unknownProviderName = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> suspectProviderName = new ArrayList<IInstallableUnit>();
         String testDirName = getReportOutputDirectory();
         try {
             outfile = new File(testDirName, "providerNames.html");
@@ -53,8 +54,8 @@ public class ProviderNameChecker extends TestRepo {
                         }
                         // common errors and misspellings
                         else if (providerName.startsWith("%") || providerName.equals("Eclipse")
-                                || providerName.startsWith("eclipse.org") || providerName.startsWith("THALESGROUP")
-                                || providerName.equals("unknown") || providerName.startsWith("INRIA")
+                                || providerName.startsWith("eclipse.org") 
+                                || providerName.equals("unknown")
                                 || providerName.startsWith("Engineering") || providerName.contains("org.eclipse.jwt")
                                 || providerName.contains("www.example.org") || providerName.contains("www.eclipse.org")
                                 || providerName.contains("Provider") || providerName.contains("provider")
@@ -66,7 +67,7 @@ public class ProviderNameChecker extends TestRepo {
                         } else if (inListOfExpectedName(providerName)) {
                             correctProviderName.add(iu);
                         } else if (OLD_PROVIDER_NAME.equals(providerName)) {
-                            incorrectOldProviderName.add(iu);
+                            oldProviderName.add(iu);
                         }
                         // order is important, starts with Eclipse, but not one
                         // of the above e.g. "Eclipse Orbit" or "Eclipse.org"?
@@ -75,7 +76,7 @@ public class ProviderNameChecker extends TestRepo {
                             unknownProviderName.add(iu);
                         } else {
                             if (iu.getId().startsWith("org.eclipse")) {
-                                incorrectProviderName.add(iu);
+                                suspectProviderName.add(iu);
                             } else {
                                 unknownProviderName.add(iu);
                             }
@@ -95,15 +96,17 @@ public class ProviderNameChecker extends TestRepo {
 
             outfileWriter.write("<h1>Provider names used in repository</h1>" + EOL);
             outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
+            outfileWriter.write("<h2>Major: Suspect or (probably) incorrect provider name</h2>" + EOL);
+            printLinesProvider(outfileWriter, suspectProviderName);
             outfileWriter.write("<h2>Major: missing or (probably) incorrect provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, incorrectProviderName);
             outfileWriter.write("<h2>Indeterminate: maybe correct, maybe incorrect provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, unknownProviderName);
-            outfileWriter.write("<h2>Minor problem of using old style provider name</h2>" + EOL);
-            printLinesProvider(outfileWriter, incorrectOldProviderName);
-            outfileWriter.write("<h2>Probably using correct provider name</h2>" + EOL);
+            outfileWriter.write("<h2>Old style provider name</h2>" + EOL);
+            printLinesProvider(outfileWriter, oldProviderName);
+            outfileWriter.write("<h2>Probably using correctly branding provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, correctProviderName);
-            outfileWriter.write("<h2>List of known provider names</h2>" + EOL);
+            outfileWriter.write("<h2>List of known branding provider names</h2>" + EOL);
             for (int i = 0; i < EXPECTED_PROVIDER_NAMES.length; i++) {
                 println(outfileWriter, EXPECTED_PROVIDER_NAMES[i] + EOL);
             }
