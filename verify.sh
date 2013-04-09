@@ -109,8 +109,11 @@ then
     # https://bugs.eclipse.org/bugs/show_bug.cgi?id=356382
     # For small pointer about commonj.sdo, see
     # https://bugs.eclipse.org/bugs/show_bug.cgi?id=276999
-    PPAT_KNOWN_UNSIGNED='(org\.eclipse\.jdt\.core\.compiler\.batch.*)|(commonj\.sdo.*)|(artifacts\.jar)|(content\.jar)|(compositeArtifacts.jar)|(compositeContent.jar)'
-    #PPAT_KNOWN_UNSIGNED='(commonj\.sdo.*)|(artifacts\.jar)|(content\.jar)|(compositeArtifacts.jar)|(compositeContent.jar)|(.*\.tests?[_\.].*)|(org.eclipse.jdt.core.compiler.batch.source_.*)|(org.aspectj.runtime_.*)|(org.eclipse.jdt.core.compiler.batch_.*)|(org.eclipse.pde.tools.versioning_.*)|(org.eclipse.pde.tools.versioning_.*)|(org.eclipse.ant.optional.junit_.*)'
+    PPAT_COMMON_UNSIGNED='(artifacts\.jar)|(content\.jar)|(compositeArtifacts.jar)|(compositeContent.jar)'
+    PPAT_ORBIT_UNSIGNED='(commonj\.sdo.*)'
+    PPAT_ECLIPSE_UNSIGNED='(org\.eclipse\.jdt\.core\.compiler\.batch.*)|(org\.eclipse\.jdt\.core\.compiler\.batch\.source_.*)|org\.aspectj\.weaver_.*|(org\.aspectj\.runtime_.*)'
+    PPAT_KNOWN_UNSIGNED="$PPAT_COMMON_UNSIGNED|$PPAT_ORBIT_UNSIGNED|$PPAT_ECLIPSE_UNSIGNED"
+    #echo "KNOWN UNSIGNED: $PPAT_KNOWN_UNSIGNED" >&2
     if  [[ ${jarname} =~ $PPAT_KNOWN_UNSIGNED ]]       
     then
         printf '%-100s \t\t' "   ${jarname}: "  >> "${KNOWN_EXCEPTION}"
