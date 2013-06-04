@@ -34,7 +34,7 @@ jarname=$(basename "${filename}")
 JAVA_5_HOME=/shared/orbit/apps/ibm-java2-i386-50
 #JAVA_6_HOME=/shared/orbit/apps/ibm-java-i386-60
 JAVA_6_HOME=/shared/common/jdk1.6.0_27.x86_64
-JAVA_7_HOME=/opt/public/common/jdk1.7.0
+JAVA_7_HOME=/opt/public/common/jdk1.7.0_11
 # We always set JAVA_HOME explicitly to what we want, since on many systems, 
 # is it set to some JRE that would not suffice. 
 JAVA_HOME=${JAVA_6_HOME}
