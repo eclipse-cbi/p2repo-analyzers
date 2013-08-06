@@ -19,7 +19,7 @@ source aggr_properties.shsource
 # are very specific per machine. 
 # the top directory of build-related directories
 export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
-export JAVA_HOME=${JAVA_HOME:-/shared/common/jdk1.6.0_27.x86_64}
+export JAVA_HOME=${JAVA_HOME:-/shared/common/jdk1.6.0-latest}
 
 # These remaining variable should not need to be overriddent, as they 
 # are relatively constant, or computed from others. 
