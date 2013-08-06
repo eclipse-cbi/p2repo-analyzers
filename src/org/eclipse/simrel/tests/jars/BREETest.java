@@ -125,7 +125,7 @@ public class BREETest extends TestJars {
         for (int i = 0; i < totalsize; i++) {
             File child = children[i];
             String name = child.getName();
-            // with Juno, since we have all jars on file system, in addition to
+            // with kepler, since we have all jars on file system, in addition to
             // pack.gz files,
             // we do not need to check the pack.gz ones. We can assume they are
             // idential to their .jar version.
