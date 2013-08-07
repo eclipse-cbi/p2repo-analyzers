@@ -10,22 +10,11 @@
 #    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
 # 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and contains an instance of eclipse SDK (3.7). 
 
-if [[ -z "${release}" ]]
-then
-    echo 
-    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
-    echo "   release=kepler ./$( basename $0 )"
-    echo
-    exit 1
-else
-    echo
-    echo "release: ${release}"
-    echo
-fi
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
-source aggr_properties.shsource
+# not expected on production machine, so we send error output to bit bucket
+source aggr_properties.shsource 2>/dev/null
 
 RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
 BRANCH_TESTS=${BRANCH_TESTS:-master}
@@ -54,7 +43,7 @@ do
         ;;
         f)    freshFlag=true
         ;;
-		c)    cleanFlag=true
+        c)    cleanFlag=true
         ;;
         ?)    usage
         exit 2
@@ -71,13 +60,13 @@ shift $(($OPTIND - 1))
 # if needed for debugging
 if $verboseFlag
 then
-	env
-	echo "fresh install: $freshFlag"
-	echo "verbose output: $verboseFlag"
-	echo "force clean prereqs: $cleanFlag"
-	echo "BUILD_TESTS: ${RELENG_TESTS}"
- 	echo "TMPDIR_TESTS=${TMPDIR_TESTS}"
-		
+    env
+    echo "fresh install: $freshFlag"
+    echo "verbose output: $verboseFlag"
+    echo "force clean prereqs: $cleanFlag"
+    echo "BUILD_TESTS: ${RELENG_TESTS}"
+    echo "TMPDIR_TESTS=${TMPDIR_TESTS}"
+
 fi
 
 echo "CGITURL: ${CGITURL}"
@@ -100,6 +89,7 @@ echo "Current Directory: ${PWD}"
 if ! $freshFlag && [[ ! -e ${RELENG_TESTS} ]]
 then
     echo "${RELENG_TESTS} does not exist as sub directory";
+    usage
     exit 1;
 fi
 
@@ -109,6 +99,7 @@ fi
 if [ -z "${RELENG_TESTS}" ]
 then
     echo "The variable RELENG_TESTS must be defined to run this script"
+    usage
     exit 1;
 fi
 
@@ -129,13 +120,14 @@ if [[ $RC != 0 ]]
 then
     echo "   ERROR: Failed to get ${BRANCH_TESTS}.zip from  ${CGITURL}/${BUILD_TESTS}/snapshot/${BRANCH_TESTS}.zip"
     echo "   RC: $RC"
+    usage
     exit $RC
 fi
 
 quietZipFlag=-q
 if $verboseFlag
 then
-	quietZipFlag=
+    quietZipFlag=
 fi
 
 unzip ${quietZipFlag} -o ${BRANCH_TESTS}.zip -d ${TMPDIR_TESTS} 
@@ -143,14 +135,15 @@ RC=$?
 if [[ $RC != 0 ]] 
 then
     echo "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS}.zip to ${TMPDIR_TESTS}"
-        echo "   RC: $RC"
+    echo "   RC: $RC"
+    usage
     exit $RC
 fi
 
 rsynchvFlag=
 if $verboseFlag
 then
-	rsynchvFlag=-v
+    rsynchvFlag=-v
 fi
 
 rsync $rsynchvFlag -r ${TMPDIR_TESTS}/${BRANCH_TESTS}/ ${RELENG_TESTS}
@@ -158,8 +151,9 @@ RC=$?
 if [[ $RC != 0 ]] 
 then
     echo "ERROR: Failed to copy ${RELENG_TESTS} from ${TMPDIR_TESTS}/${BRANCH_TESTS}/"
-        echo "   RC: $RC"
-        exit $RC
+    echo "   RC: $RC"
+    usage
+    exit $RC
 fi
 
 
@@ -170,19 +164,19 @@ echo "    Done. "
 
 if $cleanFlag
 then
-	# should very rarely need to do this, Like, once release. 
-	# But Eclipse (OSGi?) creates some files with 
-	# only group read access, so to complete remove them, must use 
-	# hudsonbuild ID to get completely clean. 
-	echo "    removing all of testInstance directory"
-	rm -fr testInstance
+    # should very rarely need to do this, Like, once release. 
+    # But Eclipse (OSGi?) creates some files with 
+    # only group read access, so to complete remove them, must use 
+    # hudsonbuild ID to get completely clean. 
+    echo "    removing all of testInstance directory"
+    rm -fr testInstance
 fi
 
 if ! $verboseFlag
 then
-	# cleanup unless verbose/debugging
- rm ${BRANCH_TESTS}.zip* 2>/dev/null
-rm -fr ${TMPDIR_TESTS} 2>/dev/null
+    # cleanup unless verbose/debugging
+    rm ${BRANCH_TESTS}.zip* 2>/dev/null
+    rm -fr ${TMPDIR_TESTS} 2>/dev/null
 fi
 
 # TODO ... a bit quirky ... need to install releng tests using this file, but then 
