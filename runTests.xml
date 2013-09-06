@@ -20,8 +20,7 @@
 
 	<property name="reportRepoDir" value="${stagingDirectory}" />
 
-	<property name="referenceRepo" value="${REPO_ROOT}/releases/juno/201303010900/" />
-
+	<property name="referenceRepo" value="${REPO_ROOT}/releases/luna/201308230900/" />
 
 	<property name="eclipseExecutable" value="${ECLIPSE_TEST_EXE}" />
 
