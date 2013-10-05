@@ -5,7 +5,7 @@
 # Note: for deployment on production machine, no "custom" properties need to be set in aggr_properties.shsource, 
 # assuming the "hudson build script" has been set up appropriately. 
 # 1. need to set "use custom workspace" so some of the relative directory assumptions are true ... 
-     such as for Luna, set 
+#    such as for Luna, set 
 #    /shared/simrel/${release}/org.eclipse.simrel.tests
 # 2. copy "by hand" (or scp) this getRelengTests.sh file to /shared/simrel/${release} and run from hudson from there, the parent of 
 #    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
