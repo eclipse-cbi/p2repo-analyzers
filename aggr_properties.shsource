@@ -16,8 +16,7 @@ JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-#FULL_FILENAME_422=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-platform-4.2.2-linux-gtk-x86_64.tar.gz
-FULL_FILENAME_430=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/S-4.3M5a-201302041400/eclipse-platform-4.3M5a-linux-gtk-x86_64.tar.gz
+FULL_FILENAME_430=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.3.1-201309111000/eclipse-platform-4.3.1-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=https://hudson.eclipse.org
@@ -51,7 +50,7 @@ JAVA_CMD=${JAVA_EXEC_DIR}/java
 ECLIPSE_INSTALL=${BUILD_HOME}/prereqs
 
 # properties say what to consider eclipse home
-ECLIPSE_HOME_43=${ECLIPSE_INSTALL}/eclipse435a
+ECLIPSE_HOME_43=${ECLIPSE_INSTALL}/eclipse43SR1
 
 ECLIPSE_HOME=${ECLIPSE_HOME_43}
 
@@ -102,8 +101,8 @@ TMPDIR_BUILD=sbbuild
 BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
 BRANCH_TESTS=master
-TMPDIR_TESTS=sbtests
-CGITURL=http://git.eclipse.org/c/simrel
+export TMPDIR_TESTS=sbtests
+export CGITURL=http://git.eclipse.org/c/simrel
 
 # should be '/aggregate' if using "trusted repos" ... else, empty
 #AGGR=/aggregate
