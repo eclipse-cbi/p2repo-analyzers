@@ -1,4 +1,4 @@
-
+example
    Directory checked: /home/files/testSDKRepo
 
    Checked 641 of 658 jars.
