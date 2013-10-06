@@ -49,17 +49,17 @@ while getopts 'hvfc' OPTION
 do
     case $OPTION in
         h)    usage
-        exit 1
-        ;;
+            exit 1
+            ;;
         v)    verboseFlag=true
-        ;;
+            ;;
         f)    freshFlag=true
-        ;;
+            ;;
         c)    cleanFlag=true
-        ;;
+            ;;
         ?)    usage
-        exit 2
-        ;;
+            exit 2
+            ;;
     esac
 done
 
@@ -186,9 +186,9 @@ fi
 
 #if ! $verboseFlag
 #then
-    # cleanup unless verbose/debugging
-    rm ${BRANCH_TESTS////_}.zip* 
-    rm -fr ${TMPDIR_TESTS} 
+# cleanup unless verbose/debugging
+rm ${BRANCH_TESTS////_}.zip* 
+rm -fr ${TMPDIR_TESTS} 
 #fi
 
 # TODO ... a bit quirky ... need to install releng tests using this file, but then 
