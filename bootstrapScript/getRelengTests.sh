@@ -184,12 +184,12 @@ then
     rm -fr testInstance
 fi
 
-if ! $verboseFlag
-then
+#if ! $verboseFlag
+#then
     # cleanup unless verbose/debugging
     rm ${BRANCH_TESTS////_}.zip* 
     rm -fr ${TMPDIR_TESTS} 
-fi
+#fi
 
 # TODO ... a bit quirky ... need to install releng tests using this file, but then 
 # also run "installTests" target from releng tools build.xml file. 
