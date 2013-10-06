@@ -130,7 +130,7 @@ wget --no-verbose -O ${BRANCH_TESTS////_}.zip ${CGITURL}/${RELENG_TESTS}.git/sna
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    echo "   ERROR: Failed to get ${BRANCH_TESTS}.zip from  ${CGITURL}/${BUILD_TESTS}/snapshot/${BRANCH_TESTS}.zip"
+    echo "   ERROR: Failed to get ${BRANCH_TESTS////_}.zip from  ${CGITURL}/${BUILD_TESTS}/snapshot/${BRANCH_TESTS}.zip"
     echo "   RC: $RC"
     usage
     exit $RC
@@ -146,7 +146,7 @@ unzip ${quietZipFlag} -o ${BRANCH_TESTS////_}.zip -d ${TMPDIR_TESTS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    echo "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS}.zip to ${TMPDIR_TESTS}"
+    echo "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TESTS////_}.zip to ${TMPDIR_TESTS}"
     echo "   RC: $RC"
     usage
     exit $RC
@@ -187,8 +187,8 @@ fi
 if ! $verboseFlag
 then
     # cleanup unless verbose/debugging
-    rm ${BRANCH_TESTS////_}.zip* 2>/dev/null
-    rm -fr ${TMPDIR_TESTS} 2>/dev/null
+    rm ${BRANCH_TESTS////_}.zip* 
+    rm -fr ${TMPDIR_TESTS} 
 fi
 
 # TODO ... a bit quirky ... need to install releng tests using this file, but then 
