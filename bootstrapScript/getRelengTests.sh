@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# it is assumed we are executing this in RELENG_TESTS or the parent of RELENG_TESTS
+
 
 # Note: for deployment on production machine, no "custom" properties need to be set in aggr_properties.shsource, 
 # assuming the "hudson build script" has been set up appropriately. 
@@ -11,11 +11,22 @@
 #    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
 # 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and contains an instance of eclipse SDK (3.7). 
 
+# if freshFlag is set, then "not freshFlag" is false and will skip 
+# the sanity check.   
+if ! $freshFlag && [[ ! -e ${BUILD_TOOLS} ]]
+then
+    echo "${BUILD_TOOLS} does not exist as sub directory";
+    usage
+    exit 1;
+fi
 
-# finds file on users path, before current directory
-# hence, non-production users can set their own values for test machines
-# not expected on production machine, so we send error output to bit bucket
+
+# remember to leave no slashes on first filename in source command,
+# so that users path is used to find it (first, if it exists)
+# variables that user might want/need to override, should be defined, 
+# in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
 source aggr_properties.shsource 2>/dev/null
+source ${BUILD_HOME}/org.eclipse.simrel.tests/aggr_properties.shsource
 
 RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
 BRANCH_TESTS=${BRANCH_TESTS:-master}
