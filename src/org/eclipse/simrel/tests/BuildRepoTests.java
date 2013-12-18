@@ -16,7 +16,7 @@ import org.eclipse.simrel.tests.jars.ESTest;
 import org.eclipse.simrel.tests.jars.Pack200Test;
 import org.eclipse.simrel.tests.jars.TestLayoutTest;
 import org.eclipse.simrel.tests.jars.VersionTest;
-import org.eclipse.simrel.tests.repos.CheckGreedy;
+//import org.eclipse.simrel.tests.repos.CheckGreedy;
 import org.eclipse.simrel.tests.repos.FeatureDisplayableDataChecker;
 import org.eclipse.simrel.tests.repos.FeatureNameLengths;
 import org.eclipse.simrel.tests.repos.IUNameChecker;
@@ -297,10 +297,11 @@ public class BuildRepoTests {
         featureNameFailures = iuNames.testFeatureNames();
         bundleNameFailures = iuNames.testBundleNames();
 
-        CheckGreedy checkGreedy = new CheckGreedy();
-        checkGreedy.setRepoURLToTest(repoToTest);
-        checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
-        greedyCheck = checkGreedy.testGreedyOptionals();
+//        Bug 424376 - repo reports fails to run on latest staging contents
+//        CheckGreedy checkGreedy = new CheckGreedy();
+//        checkGreedy.setRepoURLToTest(repoToTest);
+//        checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
+//        greedyCheck = checkGreedy.testGreedyOptionals();
 
         ProviderNameChecker providerNameChecker = new ProviderNameChecker();
         providerNameChecker.setRepoURLToTest(repoToTest);
