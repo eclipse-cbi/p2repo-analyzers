@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -55,7 +56,7 @@ import org.xml.sax.SAXException;
  */
 public class TestLayoutTest extends TestJars {
 
-    private static final String outputFilename = "layoutCheck.txt";
+    private static final String outputFilename       = "layoutCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
     private static final String EXTENSION_PACEKD_JAR = ".pack.gz";
     private static final String EXTENSION_ZIP        = ".zip";
@@ -112,15 +113,9 @@ public class TestLayoutTest extends TestJars {
             File child = children[i];
             String id = getBundleId(child);
             if (id != null) {
-                if (id.endsWith(".source") || id.endsWith(".infopop") || id.endsWith(".doc.user") || id.endsWith(".doc")
-                        || id.endsWith(".doc.isv") || id.endsWith(".doc.dev") || id.endsWith(".doc.api")
-                        || id.endsWith("standard.schemas") || id.endsWith(".branding")) {
-                    processBundle(child, getExpected(id, true));
-                    checked++;
-                } else {
-                    processBundle(child, getExpected(id, false));
-                    checked++;
-                }
+                boolean sourceIU = isSourceIUName(id);
+                processBundle(child, getExpected(id, sourceIU));
+                checked++;
             }
 
         }
@@ -139,53 +134,58 @@ public class TestLayoutTest extends TestJars {
         return failuresOccured;
     }
 
+    private boolean isSourceIUName(String id) {
+        return id.endsWith(".source") || id.endsWith(".infopop") || id.endsWith(".doc.user") || id.endsWith(".doc")
+                || id.endsWith(".doc.isv") || id.endsWith(".doc.dev") || id.endsWith(".doc.api") || id.endsWith("standard.schemas")
+                || id.endsWith(".branding");
+    }
+
     /*
      * Check the configuration file and return a set of regular expressions
      * which match the list of files that are expected to be in the bundle.
      */
     private Set getExpected(String id, boolean source) {
+        return findConfiguration(id, source, false);
+    }
+
+    private Set getFeatureExpected(String id, boolean source, boolean zip) {
+        return findConfiguration(id, source, true);
+    }
+
+    private Set<String> findConfiguration(String id, boolean source, boolean feature) {
         // is the config cached?
         if (config == null) {
-            getConfig();
+            loadConfig();
         }
         String line = config.getProperty(id);
         if (line == null) {
-            if (source) {
-                line = config.getProperty(KEY_DFT_SRC_JAR);
+            if (feature) {
+                line = config.getProperty(KEY_DFT_FEATURE);
             } else {
-                line = config.getProperty(KEY_DFT_BIN_JAR);
+                if (source) {
+                    line = config.getProperty(KEY_DFT_SRC_JAR);
+                } else {
+                    line = config.getProperty(KEY_DFT_BIN_JAR);
+                }
             }
         }
         if (line == null) {
             handleFatalError("Unable to load settings for: " + id);
         }
-        Set result = new HashSet();
+        if (id.endsWith(".source")) {
+            // cut the source suffix to get the binary IU id
+            line = MessageFormat.format(line, id.substring(0, id.lastIndexOf('.')));
+        } else {
+            line = MessageFormat.format(line, id);
+        }
+        Set<String> result = new HashSet<String>();
         for (StringTokenizer tokenizer = new StringTokenizer(line, ","); tokenizer.hasMoreTokens();) {
             result.add(tokenizer.nextToken().trim());
         }
         return result;
     }
 
-    private Set getFeatureExpected(String id, boolean source, boolean zip) {
-        // is the config cached?
-        if (config == null) {
-            getConfig();
-        }
-        String line = config.getProperty(id);
-        if (line == null) {
-            line = config.getProperty(KEY_DFT_FEATURE);
-        }
-        if (line == null) {
-            handleFatalError("Unable to load settings for: " + id);
-        }
-        Set result = new HashSet();
-        for (StringTokenizer tokenizer = new StringTokenizer(line, ","); tokenizer.hasMoreTokens();) {
-            result.add(tokenizer.nextToken().trim());
-        }
-        return result;
-    }
-
-    private void getConfig() {
+    private void loadConfig() {
         config = new Properties();
         InputStream input = null;
         try {
