@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -48,6 +49,8 @@ public class RepositoryTest {
             System.err.println("Repository directory was not specified. Use -D" + BuildRepoTests.REPORT_REPO_DIR_PARAM
                     + "=/dir/location to pass the repository location");
         }
+        for (Entry<Object, Object> entry : System.getProperties().entrySet())
+            System.out.println(entry.getKey() + "=" + entry.getValue());
         dirToTest = directoryToCheck;
         repoToTest = "file://" + directoryToCheck;
         refRepoDir = tests.getDirectoryToCheckForReference();
