@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cspecExtension xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns="http://www.eclipse.org/buckminster/CSpec-1.0">
+<cspecExtension xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns="http://www.eclipse.org/buckminster/CSpec-1.0">
 	<dependencies>
 		<dependency name="org.eclipse.platform" componentType="eclipse.feature" />
 		<dependency name="org.eclipse.jdt.debug.ui" componentType="osgi.bundle" />
 		<dependency name="org.eclipse.pde.core" componentType="osgi.bundle" />
-		<dependency name="org.eclipse.pde.junit.runtime"
-			componentType="osgi.bundle" />
+		<dependency name="org.eclipse.pde.junit.runtime" componentType="osgi.bundle" />
+		<dependency name="org.eclipse.jdt.junit4.runtime" componentType="osgi.bundle" />
 	</dependencies>
 </cspecExtension>
