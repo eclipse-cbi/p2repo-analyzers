@@ -2,7 +2,6 @@ package org.eclipse.simrel.tests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,7 +45,7 @@ public class RepositoryTest {
         BuildRepoTests tests = new BuildRepoTests();
         String directoryToCheck = tests.getDirectoryToCheck();
         if (directoryToCheck == null) {
-            fail("Repository directory was not specified. Use -D" + BuildRepoTests.REPORT_REPO_DIR_PARAM
+            System.err.println("Repository directory was not specified. Use -D" + BuildRepoTests.REPORT_REPO_DIR_PARAM
                     + "=/dir/location to pass the repository location");
         }
         dirToTest = directoryToCheck;
