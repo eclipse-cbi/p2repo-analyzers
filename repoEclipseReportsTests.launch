@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <booleanAttribute key="append.args" value="true"/>
 <stringAttribute key="application" value="org.eclipse.simrel.tests.repoReport"/>
 <booleanAttribute key="askclear" value="true"/>
@@ -19,12 +18,12 @@
 <setAttribute key="name.schedenig.eclipse.grepconsole.FilterDisabledIds"/>
 <setAttribute key="name.schedenig.eclipse.grepconsole.FilterEnabledIds"/>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="release" value="kepler"/>
+<mapEntry key="release" value="luna"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -debug"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.6 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/shared/eclipse -DreportRepoDir=/data/shared/eclipse/builds/4M/siteDir/updates/4.3-M-builds/M20130829-1300 -DreferenceRepo=/data/httpd/download.eclipse.org/eclipse/updates/4.3/R-4.3-201306052000"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.6 -XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/home/shared/simrel/luna -DreportRepoDir=/home/shared/simrel/luna/aggregation/final"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.sdk.ide"/>
 <booleanAttribute key="show_selected_only" value="false"/>
