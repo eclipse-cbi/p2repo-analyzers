@@ -49,10 +49,8 @@ public class RepositoryTest {
             System.err.println("Repository directory was not specified. Use -D" + BuildRepoTests.REPORT_REPO_DIR_PARAM
                     + "=/dir/location to pass the repository location");
         }
-        if (System.getProperty("DUMP_ENV_PROPS", null) != null) {
-            for (Entry<Object, Object> entry : System.getProperties().entrySet())
-                System.out.println(entry.getKey() + "=" + entry.getValue());
-        }
+        for (Entry<Object, Object> entry : System.getProperties().entrySet())
+            System.out.println(entry.getKey() + "=" + entry.getValue());
         dirToTest = directoryToCheck;
         repoToTest = "file://" + directoryToCheck;
         refRepoDir = tests.getDirectoryToCheckForReference();
@@ -102,7 +100,7 @@ public class RepositoryTest {
     public void testFeatureDisplayableData() throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
         FeatureDisplayableDataChecker checker = new FeatureDisplayableDataChecker();
         if (configureChecker(checker)) {
-            assertTrue("Correct displayable data (checkLicenseConsistency,checkCopyrights,checkDescriptions)", !checker.testDisplayableData());
+            assertTrue("Correct displayable data", !checker.testDisplayableData());
         }
     }
 
