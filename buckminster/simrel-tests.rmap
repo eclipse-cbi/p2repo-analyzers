@@ -2,6 +2,7 @@
 <rmap xmlns="http://www.eclipse.org/buckminster/RMap-1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
 
+	<property key="checkout.location" value="${workspace.root}/" />
 	<property key="eclipse.download" value="http://download.eclipse.org" />
 
 	<locator pattern="^org\.eclipse\.simrel\.tests$" searchPathRef="local.releng" />
