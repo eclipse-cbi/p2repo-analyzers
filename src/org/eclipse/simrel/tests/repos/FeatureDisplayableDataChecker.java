@@ -26,21 +26,29 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     private String        previousPackageHeader             = null;
 
     public static void main(String[] args) {
-        // FeatureDisplayableDataChecker featureDisplayableDataChecker = new
-        // FeatureDisplayableDataChecker();
-        // featureDisplayableDataChecker
-        // .setRepoURLToTest("/home/davidw/build/final/aggregate");
-        // featureDisplayableDataChecker.setOutputDirectory("/home/davidw/temp");
-        // try {
-        // featureDisplayableDataChecker.testDisplayableData();
-        // } catch (ProvisionException e) {
-        // e.printStackTrace();
-        // } catch (URISyntaxException e) {
-        // e.printStackTrace();
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
+        _testFeatureDisplayableDataChecer();
 
+        _testGetInitialSegments();
+    }
+
+    private static void _testFeatureDisplayableDataChecer() {
+        System.out.println("\n\n\tLocal test of  FeatureDisplayableDataChecker.\n\n");
+        FeatureDisplayableDataChecker featureDisplayableDataChecker = new FeatureDisplayableDataChecker();
+        featureDisplayableDataChecker.setRepoURLToTest("file:///home/shared/simrel/luna/aggregation/final");
+        featureDisplayableDataChecker.setMainOutputDirectory("/home/shared/simrel/luna");
+        try {
+            featureDisplayableDataChecker.testDisplayableData();
+        } catch (ProvisionException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void _testGetInitialSegments() {
+        System.out.println("\n\n\tTesting getInitialSegments method.\n\n");
         FeatureDisplayableDataChecker instance = new FeatureDisplayableDataChecker();
         System.out.println(instance.getInitialSegments(""));
         System.out.println(instance.getInitialSegments("one"));
@@ -71,8 +79,8 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         List<IInstallableUnit> license2011 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> license2010 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> badLicense = new ArrayList<IInstallableUnit>();
-        checkLicenses(standardLicense2014, standardLicense2011, standardLicense2010, allFeatures, license2014, license2011, license2010, badLicense, noLicense,
-                extraLicense);
+        checkLicenses(standardLicense2014, standardLicense2011, standardLicense2010, allFeatures, license2014, license2011,
+                license2010, badLicense, noLicense, extraLicense);
 
         printReportLicense(license2014, license2011, license2010, badLicense, noLicense, extraLicense);
         result = ((badLicense.size() > 0) || (extraLicense.size() > 0) || (noLicense.size() > 0));
@@ -80,59 +88,53 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     }
 
     private void checkLicenses(ILicense platformLicense2014, ILicense platformLicense2011, ILicense platformLicense2010,
-            IQueryResult<IInstallableUnit> allFeatures, List<IInstallableUnit> license2014,  List<IInstallableUnit> license2011, List<IInstallableUnit> license2010,
-            List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense, List<IInstallableUnit> extraLicense) {
+            IQueryResult<IInstallableUnit> allFeatures, List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
+            List<IInstallableUnit> license2010, List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense,
+            List<IInstallableUnit> extraLicense) {
         System.out.println("Number of IUs during license check: " + allFeatures.toUnmodifiableSet().size());
         int nFeatures = 0;
-        int nNonFeatures = 0;
         for (IInstallableUnit feature : allFeatures.toUnmodifiableSet()) {
-            // System.out.println("Feature ID: " + feature.getId());
-            // ignore IUs that are not features
-            // TODO: but, we get "groups" ... what kind of groups are not
-            // feature groups?
-            if (feature.getId().endsWith(".feature.group")) {
-                nFeatures++;
-                Collection<ILicense> licenses = feature.getLicenses(null);
-                if (licenses.isEmpty()) {
-                    noLicense.add(feature);
-                    continue;
-                }
-                if (licenses.size() != 1) {
-                    extraLicense.add(feature);
-                    continue;
-                }
-                ILicense featureLicense = licenses.iterator().next();
-                if (platformLicense2010.getUUID().equals(featureLicense.getUUID())) {
-                    license2010.add(feature);
-                    continue;
-                }
-                if (platformLicense2011.getUUID().equals(featureLicense.getUUID())) {
-                    license2011.add(feature);
-                    continue;
-                }
-                if (platformLicense2014.getUUID().equals(featureLicense.getUUID())) {
-                    license2014.add(feature);
-                    continue;
-                }
-                // if we get here, we have some kind of bad license, or its
-                // missing.
-                String featureLicenseText = featureLicense.getBody();
-                if (featureLicenseText == null || featureLicenseText.length() == 0) {
-                    noLicense.add(feature);
-                }
-                // "bad" in this context means different from one of the
-                // standard ones.
-                badLicense.add(feature);
-            } else {
-                nNonFeatures++;
+            nFeatures++;
+            Collection<ILicense> licenses = feature.getLicenses(null);
+            if (licenses.isEmpty()) {
+                noLicense.add(feature);
+                continue;
             }
+            if (licenses.size() != 1) {
+                extraLicense.add(feature);
+                continue;
+            }
+            ILicense featureLicense = licenses.iterator().next();
+            if (platformLicense2010.getUUID().equals(featureLicense.getUUID())) {
+                license2010.add(feature);
+                continue;
+            }
+            if (platformLicense2011.getUUID().equals(featureLicense.getUUID())) {
+                license2011.add(feature);
+                continue;
+            }
+            if (platformLicense2014.getUUID().equals(featureLicense.getUUID())) {
+                license2014.add(feature);
+                continue;
+            }
+            // if we get here, we have some kind of bad license, or its
+            // missing.
+            String featureLicenseText = featureLicense.getBody();
+            if (featureLicenseText == null || featureLicenseText.length() == 0) {
+                noLicense.add(feature);
+            }
+            // "bad" in this context means different from one of the
+            // standard ones.
+            badLicense.add(feature);
+
         }
-        System.out.println("Number features during license check: " + nFeatures);
-        System.out.println("Number non-featues during license check: " + nNonFeatures);
+        System.out.println("Number features or products during license check: " + nFeatures);
+
     }
 
-    private void printReportLicense(List<IInstallableUnit> license2014, List<IInstallableUnit> license2011, List<IInstallableUnit> license2010,
-            List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense, List<IInstallableUnit> extraLicense) {
+    private void printReportLicense(List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
+            List<IInstallableUnit> license2010, List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense,
+            List<IInstallableUnit> extraLicense) {
 
         FileWriter outfileWriter = null;
         File outfile = null;
@@ -155,14 +157,14 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printHeader(outfileWriter, 3, "Features with no license attribute");
             Collections.sort(noLicense, new IUIdComparator());
             for (IInstallableUnit unit : noLicense) {
-                println(outfileWriter, unit.getId());
+                println(outfileWriter, printableIdString(unit));
             }
 
             printHeader(outfileWriter, 3, "Features with different (or no) license (and first few lines of license text)");
             Collections.sort(badLicense, new IUIdComparator());
             for (IInstallableUnit unit : badLicense) {
                 makeHeaderIfNeeded(outfileWriter, unit.getId());
-                println(outfileWriter, unit.getId());
+                println(outfileWriter,  printableIdString(unit));
                 Collection<ILicense> licenses = unit.getLicenses();
                 ILicense featureLicense = licenses.iterator().next();
                 String licenseText = featureLicense.getBody();
@@ -176,17 +178,17 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printHeader(outfileWriter, 3, "Features with old (2010) license");
             Collections.sort(license2010, new IUIdComparator());
             for (IInstallableUnit unit : license2010) {
-                println(outfileWriter, unit.getId());
+                println(outfileWriter,  printableIdString(unit));
             }
             printHeader(outfileWriter, 3, "Features with old (2011) license");
             Collections.sort(license2011, new IUIdComparator());
             for (IInstallableUnit unit : license2011) {
-                println(outfileWriter, unit.getId());
+                println(outfileWriter,  printableIdString(unit));
             }
             printHeader(outfileWriter, 3, "Features with current (2014) license");
             Collections.sort(license2014, new IUIdComparator());
             for (IInstallableUnit unit : license2014) {
-                println(outfileWriter, unit.getId());
+                println(outfileWriter,  printableIdString(unit));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -205,6 +207,18 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         // fail("Errors in license consistency. For list, see " +
         // outfile.getAbsolutePath());
         // }
+    }
+
+    private String printableIdString(IInstallableUnit unit) {
+        String printIdString = unit.getId();
+        // we want to mark "products" in a special way, since not sure where 
+        // they are displayed.
+        String productString = unit.getProperty("org.eclipse.equinox.p2.type.product");
+        boolean productValue = "true".equals(productString);
+        if (productValue) {
+            printIdString += " [Product]";
+        }
+        return printIdString;
     }
 
     private void makeHeaderIfNeeded(FileWriter outputfile, String id) throws IOException {
