@@ -100,7 +100,7 @@ BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
 BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
-BRANCH_TESTS=master
+BRANCH_TESTS=dhubner/junit
 export TMPDIR_TESTS=sbtests
 export CGITURL=http://git.eclipse.org/c/simrel
 
