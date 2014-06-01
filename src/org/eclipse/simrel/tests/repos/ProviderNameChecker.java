@@ -45,9 +45,10 @@ public class ProviderNameChecker extends TestRepo {
                     boolean isCategory = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
                     // TODO: should we exclude fragments?
                     boolean isFragment = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
+                    boolean isProduct = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.product"));
 
                     // || iu.getId().endsWith("feature.group")
-                    if (!isCategory && !isSpecial(iu) && !isFragment) {
+                    if (!isCategory && !isSpecial(iu) && !isFragment && !isProduct) {
                         String providerName = iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
                         if (providerName == null) {
                             incorrectProviderName.add(iu);
