@@ -331,7 +331,6 @@ public class BuildRepoTests {
     public String getDirectoryToCheck() {
         if (directoryToCheck == null) {
             directoryToCheck = System.getProperty(REPORT_REPO_DIR_PARAM, null);
-            directoryToCheck = "/Users/dhuebner/hudsonbuild/tmf-xtext-head/buildroot/buckminster.workspace/output/org.eclipse.xtext.build_2.6.0-eclipse.feature/site.p2";
         }
         return directoryToCheck;
     }
