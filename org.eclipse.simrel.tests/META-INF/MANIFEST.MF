@@ -17,8 +17,14 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.simrel.tests,
- org.eclipse.simrel.tests.jars,
- org.eclipse.simrel.tests.repos,
- org.eclipse.simrel.tests.utils,
+ org.eclipse.simrel.tests.jars;uses:="org.eclipse.simrel.tests,org.eclipse.simrel.tests.utils",
+ org.eclipse.simrel.tests.repos;
+  uses:="org.eclipse.equinox.p2.metadata,
+   org.eclipse.equinox.p2.core,
+   org.w3c.dom,
+   org.eclipse.equinox.p2.repository.metadata,
+   org.eclipse.simrel.tests,
+   org.eclipse.equinox.p2.query",
+ org.eclipse.simrel.tests.utils;uses:="org.eclipse.equinox.p2.metadata",
  templateFiles
 Bundle-ClassPath: simreltests.jar

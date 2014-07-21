@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
+import org.eclipse.simrel.tests.common.checker.ReportType;
+
 /**
  * @author dhuebner
  *
@@ -25,7 +27,8 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 	}
 
 	public void dumpReports() {
-		getReports().forEach(report -> new ConsoleReporter().dumpReport(report));
+		getReports()
+				.forEach(report -> new ConsoleReporter().dumpReport(report));
 	}
 
 	@Override
@@ -35,17 +38,26 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 
 	class ConsoleReporter implements ICheckReporter {
 
+		private boolean dumpTime = false;
+
 		@Override
 		public void dumpReport(CheckReport report) {
-			String string;
-			if (report != null) {
-				String time = new SimpleDateFormat("hh:mm:ss-SSS").format(new Date(report.getTimeMs()));
-				string = time + " -> " + report.getCheckerId() + " " + report.getIU().getId() + " " + report.getType()
-						+ ":" + report.getMessage();
-			} else {
-				string = System.currentTimeMillis() + " -> ERROR: Null report";
+			if (report == null) {
+				System.out.println("ERROR: Null report");
 			}
-			System.out.println(string);
+
+			if (report.getType() != ReportType.INFO) {
+				String time = "";
+				if (dumpTime) {
+					time = new SimpleDateFormat("hh:mm:ss-SSS")
+							.format(new Date(report.getTimeMs()));
+				}
+				String message = report.getType() + ": "
+						+ report.getCheckResult() + " "
+						+ report.getIU().getId() + "  <- " + time + " "
+						+ report.getCheckerId();
+				System.out.println(message);
+			}
 		}
 	}
 }

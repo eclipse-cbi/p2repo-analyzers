@@ -12,18 +12,19 @@ import java.util.Set;
  *
  */
 public class CheckerRegistry {
-	private Set<IUChecker> checkers = new HashSet<>();
+	private Set<IInstalationUnitChecker> checkers = new HashSet<>();
 	private Set<IArtifactChecker> artifactCheckers = new HashSet<>();
 
 	public CheckerRegistry() {
 		checkers.add(new FeatureNameChecker());
 		checkers.add(new LicenseConsistencyChecker());
+		checkers.add(new ProviderNameChecker());
 		checkers = Collections.unmodifiableSet(checkers);
 		artifactCheckers.add(new BREEChecker());
 		artifactCheckers = Collections.unmodifiableSet(artifactCheckers);
 	}
 
-	public Set<IUChecker> getCheckers() {
+	public Set<IInstalationUnitChecker> getCheckers() {
 		return checkers;
 	}
 

@@ -21,7 +21,7 @@ import org.eclipse.simrel.tests.common.utils.IUUtil;
  *
  */
 @SuppressWarnings("restriction")
-public class LicenseConsistencyChecker implements IUChecker {
+public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 	private static String STANDARD_LICENSES_PROPERTIES_FILE = "standardLicenses.properties";
 	private License standardLicense2010;
 	private License standardLicense2011;
@@ -67,32 +67,32 @@ public class LicenseConsistencyChecker implements IUChecker {
 	private void checkLicense(Collection<ILicense> licenses, CheckReport report) {
 		if (licenses.isEmpty()) {
 			report.setType(ReportType.NOT_IN_TRAIN);
-			report.setMessage("Licence is missing");
+			report.setCheckResult("Licence is missing");
 		} else if (licenses.size() != 1) {
 			report.setType(ReportType.BAD_GUY);
-			report.setMessage("Extra Licence found");
+			report.setCheckResult("Extra Licence found");
 		} else {
 			ILicense featureLicense = licenses.iterator().next();
 			if (standardLicense2010.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.BAD_GUY);
-				report.setMessage("Old 2010 License");
+				report.setCheckResult("Old 2010 License");
 			} else if (standardLicense2011.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.BAD_GUY);
-				report.setMessage("Old 2011 License");
+				report.setCheckResult("Old 2011 License");
 			} else if (standardLicense2014.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.INFO);
-				report.setMessage("New 2014 License");
+				report.setCheckResult("New 2014 License");
 			} else {
 				// if we get here, we have some kind of bad license, or its
 				// missing.
 				String featureLicenseText = featureLicense.getBody();
 				report.setType(ReportType.NOT_IN_TRAIN);
 				if (featureLicenseText == null || featureLicenseText.length() == 0) {
-					report.setMessage("Missing license content");
+					report.setCheckResult("Missing license content");
 				} else {
 					// "bad" in this context means different from one of the
 					// standard ones.
-					report.setMessage("Not an eclipse license");
+					report.setCheckResult("Not an eclipse license");
 				}
 			}
 		}

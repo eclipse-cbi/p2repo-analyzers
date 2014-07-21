@@ -15,12 +15,13 @@ public class CheckReport {
 	private long timeMs;
 	private IInstallableUnit iu;
 	private String checkerId;
-	private String message;
+	private String checkResult;
 
 	public CheckReport(Class<?> checkerId, IInstallableUnit iu) {
 		super();
 		this.iu = iu;
 		this.checkerId = checkerId.getName();
+		this.setTimeMs(System.currentTimeMillis());
 	}
 
 	public void setType(ReportType type) {
@@ -39,12 +40,12 @@ public class CheckReport {
 		return this.checkerId;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setCheckResult(String result) {
+		this.checkResult = result;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getCheckResult() {
+		return checkResult;
 	}
 
 	public long getTimeMs() {

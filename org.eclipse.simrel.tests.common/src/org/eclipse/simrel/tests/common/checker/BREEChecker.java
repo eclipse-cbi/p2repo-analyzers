@@ -35,24 +35,24 @@ public class BREEChecker implements IArtifactChecker {
 				// has BREE, confirm is java file
 				if (containsJava(child)) {
 					report.setType(ReportType.INFO);
-					report.setMessage(bree);
+					report.setCheckResult(bree);
 				} else {
 					report.setType(ReportType.BAD_GUY);
-					report.setMessage("None Java with BREE: " + bree);
+					report.setCheckResult("None Java with BREE: " + bree);
 				}
 			} else {
 				// no BREE, confirm is non-java
 				if (containsJava(child)) {
 					report.setType(ReportType.BAD_GUY);
-					report.setMessage("Java without BREE");
+					report.setCheckResult("Java without BREE");
 				}
 			}
 		} catch (SecurityException e) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=378764
 			report.setType(ReportType.NOT_IN_TRAIN);
-			report.setMessage("Invalid jar: " + child.getName());
+			report.setCheckResult("Invalid jar: " + child.getName());
 		}
-		if (report.getMessage() != null) {
+		if (report.getCheckResult() != null) {
 			report.setTimeMs(System.currentTimeMillis());
 			consumer.accept(report);
 		}
