@@ -28,34 +28,23 @@ import org.osgi.framework.BundleException;
  *
  */
 public class IUUtil {
-	private static final String PROPERTY_BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT = "Bundle-RequiredExecutionEnvironment";
 
 	public static boolean isFeature(IInstallableUnit iu) {
-		return iu
-				.getArtifacts()
-				.stream()
-				.anyMatch(
-						art -> "org.eclipse.update.feature".equals(art
-								.getClassifier()));
+		return iu.getArtifacts().stream().anyMatch(art -> "org.eclipse.update.feature".equals(art.getClassifier()));
 	}
 
-	public static P2RepositoryDescription createRepositoryDescription(
-			URI p2RepoURL) throws ProvisionException,
+	public static P2RepositoryDescription createRepositoryDescription(URI p2RepoURL) throws ProvisionException,
 			OperationCanceledException {
 		P2RepositoryDescription description = new P2RepositoryDescription();
 		description.setRepoURL(p2RepoURL);
-		IMetadataRepository repo = Activator.getMetadataRepositoryManager()
-				.loadRepository(p2RepoURL, null);
+		IMetadataRepository repo = Activator.getMetadataRepositoryManager().loadRepository(p2RepoURL, null);
 		if (repo == null) {
-			handleFatalError("no metadata repository found at "
-					+ p2RepoURL.toString());
+			handleFatalError("no metadata repository found at " + p2RepoURL.toString());
 		}
 		description.setMetadataRepository(repo);
-		IArtifactRepository artRepo = Activator.getArtifactRepositoryManager()
-				.loadRepository(p2RepoURL, null);
+		IArtifactRepository artRepo = Activator.getArtifactRepositoryManager().loadRepository(p2RepoURL, null);
 		if (artRepo == null) {
-			handleFatalError("no artifact repository found at "
-					+ p2RepoURL.toString());
+			handleFatalError("no artifact repository found at " + p2RepoURL.toString());
 		}
 		description.setArtifactRepository((IFileArtifactRepository) artRepo);
 		return description;
@@ -65,7 +54,52 @@ public class IUUtil {
 		System.err.println(string);
 	}
 
-	public static String getBREEFromJAR(File file) {
+	public static boolean isSpecial(IInstallableUnit iu) {
+		// TODO: I assume 'executable roots', etc. have no readable name?
+		/*
+		 * TODO: what are these special things? What ever they are, they have no
+		 * provider name. config.a.jre is identified as a fragment
+		 * (org.eclipse.equinox.p2.type.fragment). a.jre has no properties.
+		 */
+		String iuId = iu.getId();
+		boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") || iuId.endsWith("_root")
+				|| iuId.contains(".executable.") || iuId.contains("configuration_root")
+				|| iuId.contains("executable_root") || iuId.startsWith("toolingorg.eclipse")
+				|| iuId.startsWith("tooling.");
+		return isSpecial;
+	}
+
+	/*
+	 * Return the bundle id from the manifest pointed to by the given input
+	 * stream.
+	 */
+	public static String getBundleManifestEntry(InputStream input, String key) {
+		String bree = null;
+		try {
+			Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
+			bree = (String) attributes.get(key);
+		} catch (BundleException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+
+		return bree;
+	}
+
+	/*
+	 * The given file points to a bundle contained in an archive. Look into the
+	 * bundle manifest file to find the bundle identifier.
+	 */
+	public static String getBundleManifestEntry(File file, String key) {
 		InputStream input = null;
 		JarFile jar = null;
 		try {
@@ -77,7 +111,7 @@ public class IUUtil {
 				return null;
 			}
 			input = jar.getInputStream(entry);
-			return getBREEFromManifest(input, file.getAbsolutePath());
+			return getBundleManifestEntry(input, key);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			// addError(e.getMessage());
@@ -98,51 +132,5 @@ public class IUUtil {
 				}
 			}
 		}
-	}
-
-	public static boolean isSpecial(IInstallableUnit iu) {
-		// TODO: I assume 'executable roots', etc. have no readable name?
-		/*
-		 * TODO: what are these special things? What ever they are, they have no
-		 * provider name. config.a.jre is identified as a fragment
-		 * (org.eclipse.equinox.p2.type.fragment). a.jre has no properties.
-		 */
-		String iuId = iu.getId();
-		boolean isSpecial = iuId.startsWith("a.jre")
-				|| iuId.startsWith("config.a.jre") || iuId.endsWith("_root")
-				|| iuId.contains(".executable.")
-				|| iuId.contains("configuration_root")
-				|| iuId.contains("executable_root")
-				|| iuId.startsWith("toolingorg.eclipse")
-				|| iuId.startsWith("tooling.");
-		return isSpecial;
-	}
-
-	/*
-	 * Return the bundle id from the manifest pointed to by the given input
-	 * stream.
-	 */
-	private static String getBREEFromManifest(InputStream input, String path) {
-		String bree = null;
-		try {
-			Map<String, String> attributes = ManifestElement
-					.parseBundleManifest(input, null);
-			bree = (String) attributes
-					.get(PROPERTY_BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT);
-		} catch (BundleException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-
-		return bree;
 	}
 }
