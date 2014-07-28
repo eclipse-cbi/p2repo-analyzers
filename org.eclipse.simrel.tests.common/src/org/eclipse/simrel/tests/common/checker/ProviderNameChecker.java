@@ -3,6 +3,7 @@
  */
 package org.eclipse.simrel.tests.common.checker;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -79,12 +80,13 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	}
 
-	private Set<String> getKnownProviderNames() {
+	public Set<String> getKnownProviderNames() {
 		if (knownProviderNames == null) {
-			knownProviderNames = new HashSet<>();
+			Set<String> temp = new HashSet<>();
 			for (String string : EXPECTED_PROVIDER_NAMES) {
-				knownProviderNames.add(string);
+				temp.add(string);
 			}
+			knownProviderNames = Collections.unmodifiableSet(temp);
 		}
 		return knownProviderNames;
 	}
