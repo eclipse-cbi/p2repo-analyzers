@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +25,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.osgi.util.ManifestElement;
@@ -62,8 +59,8 @@ public class BREETest extends TestJars {
 
     }
 
-    private static final String            outputFilename                                 = "breedata.txt";
-    private static final FullJarNameParser nameParser                                     = new FullJarNameParser();
+    private static final String            outputFilename = "breedata.txt";
+    private static final FullJarNameParser nameParser     = new FullJarNameParser();
 
     public static void main(String[] args) {
 
@@ -172,7 +169,7 @@ public class BREETest extends TestJars {
     }
 
     private boolean needsBree(File child) {
-        return exportsPackages(child) || containsJava(child);
+        return exportsPackages(child);
     }
 
     private boolean exportsPackages(File child) {
@@ -274,78 +271,7 @@ public class BREETest extends TestJars {
         return new Integer(count.intValue() + 1);
     }
 
-    private boolean containsJava(File jarfile) {
-        // We assume the file is a 'jar' file.
-        boolean containsJava = false;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(jarfile, false, ZipFile.OPEN_READ);
-            Enumeration<JarEntry> entries = jar.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry entry = entries.nextElement();
-                if (entry.getName().endsWith(".class")) {
-                    containsJava = true;
-                    break;
-                } else if (entry.getName().endsWith(".jar")) {
-                    InputStream input = jar.getInputStream(entry);
-                    if (containsJava(input)) {
-                        containsJava = true;
-                        break;
-                    }
-                }
-            }
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        }
-        return containsJava;
-    }
-
-    private boolean containsJava(InputStream input) {
-        // We assume the file is a 'jar' file.
-        boolean containsJava = false;
-        JarInputStream jarInputStream = null;
-        try {
-            jarInputStream = new JarInputStream(input);
-            while (jarInputStream.available() > 0) {
-                ZipEntry entry = jarInputStream.getNextEntry();
-                if (entry != null) {
-                    if (entry.getName().endsWith(".class")) {
-                        containsJava = true;
-                        break;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jarInputStream != null) {
-                try {
-                    jarInputStream.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-
-        }
-        return containsJava;
-    }
 
     private String getBundleName(String fullname) {
         String result = null;

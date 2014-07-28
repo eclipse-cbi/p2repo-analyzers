@@ -4,15 +4,7 @@
 package org.eclipse.simrel.tests.common.checker;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.function.Consumer;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
@@ -62,7 +54,7 @@ public class BREEChecker implements IArtifactChecker {
 	}
 
 	private boolean needsBree(File child) {
-		return exportsPackages(child) || containsJava(child);
+		return exportsPackages(child);
 	}
 
 	private boolean exportsPackages(File child) {
@@ -72,78 +64,4 @@ public class BREEChecker implements IArtifactChecker {
 		}
 		return false;
 	}
-
-	private boolean containsJava(File jarfile) {
-		// We assume the file is a 'jar' file.
-		boolean containsJava = false;
-		JarFile jar = null;
-		try {
-			jar = new JarFile(jarfile, false, ZipFile.OPEN_READ);
-			Enumeration<JarEntry> entries = jar.entries();
-			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
-				if (entry.getName().endsWith(".class")) {
-					containsJava = true;
-					break;
-				} else if (entry.getName().endsWith(".jar")) {
-					InputStream input = jar.getInputStream(entry);
-					if (containsJava(input)) {
-						containsJava = true;
-						break;
-					}
-				}
-			}
-
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			if (jar != null) {
-				try {
-					jar.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-		return containsJava;
-	}
-
-	private boolean containsJava(InputStream input) {
-		// We assume the file is a 'jar' file.
-		boolean containsJava = false;
-		JarInputStream jarInputStream = null;
-		try {
-			jarInputStream = new JarInputStream(input);
-			while (jarInputStream.available() > 0) {
-				ZipEntry entry = jarInputStream.getNextEntry();
-				if (entry != null) {
-					if (entry.getName().endsWith(".class")) {
-						containsJava = true;
-						break;
-					}
-				}
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-			if (jarInputStream != null) {
-				try {
-					jarInputStream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-
-		}
-		return containsJava;
-	}
-
 }
