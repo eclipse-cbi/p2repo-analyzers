@@ -35,6 +35,7 @@ import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.eclipse.simrel.tests.utils.ReportWriter;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 
 /**
  * @since 3.3
@@ -61,9 +62,8 @@ public class BREETest extends TestJars {
 
     }
 
-    private static final String            outputFilename                                 = "breedata.txt";
-    private static final String            PROPERTY_BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT = "Bundle-RequiredExecutionEnvironment";
-    private static final FullJarNameParser nameParser                                     = new FullJarNameParser();
+    private static final String            outputFilename = "breedata.txt";
+    private static final FullJarNameParser nameParser     = new FullJarNameParser();
 
     public static void main(String[] args) {
 
@@ -125,7 +125,8 @@ public class BREETest extends TestJars {
         for (int i = 0; i < totalsize; i++) {
             File child = children[i];
             String name = child.getName();
-            // with kepler, since we have all jars on file system, in addition to
+            // with kepler, since we have all jars on file system, in addition
+            // to
             // pack.gz files,
             // we do not need to check the pack.gz ones. We can assume they are
             // idential to their .jar version.
@@ -139,10 +140,11 @@ public class BREETest extends TestJars {
             if ((bundleName != null) && !breeExceptions.contains(bundleName)) {
                 checked++;
                 try {
-                    String bree = getBREEFromJAR(child);
+                    String bree = getJarManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+                    boolean needsBree = needsBree(child);
                     if ((bree != null) && (bree.length() > 0)) {
                         // has BREE, confirm is java file
-                        if (containsJava(child)) {
+                        if (needsBree) {
                             incrementCounts(javaWithBree, bree);
                         } else {
                             trackFalseInclusions(nonjavaWithBree, child, bree);
@@ -150,7 +152,7 @@ public class BREETest extends TestJars {
                         }
                     } else {
                         // no BREE, confirm is non-java
-                        if (containsJava(child)) {
+                        if (needsBree) {
                             trackOmissions(javaWithoutBree, child);
                             failuresOccured = true;
                         } else {
@@ -167,6 +169,18 @@ public class BREETest extends TestJars {
         printreport(invalidJars, javaWithBree, nonjavaWithBree, javaWithoutBree, nonJavaNoBREE, totalsize, checked);
 
         return failuresOccured;
+    }
+
+    private boolean needsBree(File child) {
+        return exportsPackages(child) || containsJava(child);
+    }
+
+    private boolean exportsPackages(File child) {
+        String entry = getJarManifestEntry(child, Constants.EXPORT_PACKAGE);
+        if (entry != null && !entry.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     private void printreport(List invalidJars, Map javaWithBree, List nonjavaWithBree, List javaWithoutBree, int nonJavaNoBREE,
@@ -260,6 +274,15 @@ public class BREETest extends TestJars {
         return new Integer(count.intValue() + 1);
     }
 
+    private String getBundleName(String fullname) {
+        String result = null;
+        boolean parsable = nameParser.parse(fullname);
+        if (parsable) {
+            result = nameParser.getProjectString();
+        }
+        return result;
+    }
+
     private boolean containsJava(File jarfile) {
         // We assume the file is a 'jar' file.
         boolean containsJava = false;
@@ -328,29 +351,20 @@ public class BREETest extends TestJars {
                     // ignore
                 }
             }
- 
+
         }
         return containsJava;
-    }
-
-    private String getBundleName(String fullname) {
-        String result = null;
-        boolean parsable = nameParser.parse(fullname);
-        if (parsable) {
-            result = nameParser.getProjectString();
-        }
-        return result;
     }
 
     /*
      * Return the bundle id from the manifest pointed to by the given input
      * stream.
      */
-    private String getBREEFromManifest(InputStream input, String path) {
+    private String getJarManifestEntry(InputStream input, String key) {
         String bree = null;
         try {
             Map attributes = ManifestElement.parseBundleManifest(input, null);
-            bree = (String) attributes.get(PROPERTY_BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT);
+            bree = (String) attributes.get(key);
         } catch (BundleException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -372,7 +386,7 @@ public class BREETest extends TestJars {
      * The given file points to a bundle contained in an archive. Look into the
      * bundle manifest file to find the bundle identifier.
      */
-    private String getBREEFromJAR(File file) {
+    private String getJarManifestEntry(File file, String key) {
         InputStream input = null;
         JarFile jar = null;
         try {
@@ -384,7 +398,7 @@ public class BREETest extends TestJars {
                 return null;
             }
             input = jar.getInputStream(entry);
-            return getBREEFromManifest(input, file.getAbsolutePath());
+            return getJarManifestEntry(input, key);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             // addError(e.getMessage());
