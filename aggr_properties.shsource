@@ -93,8 +93,6 @@ AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 # -Declipse.p2.mirrors=false
 BUILDER_VM_ARGS="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
-# We use this redirection, so scripts only need to use "full_filename", but exact version controlled by properties
-FULL_FILENAME=${FULL_FILENAME_430}
 
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
