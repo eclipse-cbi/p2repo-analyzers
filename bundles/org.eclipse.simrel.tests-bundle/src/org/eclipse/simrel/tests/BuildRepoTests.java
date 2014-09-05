@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.simrel.tests.jars.BREETest;
@@ -24,7 +22,6 @@ import org.eclipse.simrel.tests.repos.IUVersionCheckToReference;
 import org.eclipse.simrel.tests.repos.ProviderNameChecker;
 import org.eclipse.simrel.tests.repos.VersionChecking;
 import org.eclipse.simrel.tests.utils.ReportWriter;
-import org.xml.sax.SAXException;
 
 /**
  * Highest super class of common repo and build directory tests. Should be only
@@ -194,7 +191,7 @@ public class BuildRepoTests {
         System.out.println("WARNING: " + messagestring);
 
     }
-    public boolean execute() throws ParserConfigurationException, SAXException {
+    public boolean execute() {
 
         try {
             // these 'do' methods can set failuresOccurred to true
@@ -264,8 +261,7 @@ public class BuildRepoTests {
         }
     }
 
-    private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException, URISyntaxException,
-            ParserConfigurationException, SAXException {
+    private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException, URISyntaxException {
         String repoToTest = "file://" + getDirectoryToCheck();
         String referenceRepoToTest = null;
         if (getDirectoryToCheckForReference() != null) {

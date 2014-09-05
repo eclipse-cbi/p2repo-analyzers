@@ -49,19 +49,23 @@ public class TestRepo extends BuildRepoTests {
         out.write("<li>" + wholeLine + "</li>" + EOL);
 
     }
+
     protected void printRowln(FileWriter out, String wholeLine) throws IOException {
         out.write("<tr>" + wholeLine + "</tr>" + EOL);
     }
+
     protected void printStartTable(FileWriter out, String attributes) throws IOException {
         String attributeString = attributes;
         if (attributeString == null) {
             attributeString = "";
         }
-        out.write("<table " + attributeString + ">"+ EOL);
+        out.write("<table " + attributeString + ">" + EOL);
     }
+
     protected void printEndTable(FileWriter out) throws IOException {
         out.write("</table>" + EOL);
     }
+
     protected void printparagraph(FileWriter out, String wholeLine) throws IOException {
         out.write("<p>" + convertEOLtoBR(wholeLine) + "</p>" + EOL);
 
@@ -89,9 +93,8 @@ public class TestRepo extends BuildRepoTests {
          * (org.eclipse.equinox.p2.type.fragment). a.jre has no properties.
          */
         String iuId = iu.getId();
-        boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") 
-                || iuId.endsWith("_root") || iuId.contains(".executable.")
-                || iuId.contains("configuration_root") || iuId.contains("executable_root")
+        boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") || iuId.endsWith("_root")
+                || iuId.contains(".executable.") || iuId.contains("configuration_root") || iuId.contains("executable_root")
                 || iuId.startsWith("toolingorg.eclipse") || iuId.startsWith("tooling.");
         return isSpecial;
     }
@@ -115,20 +118,23 @@ public class TestRepo extends BuildRepoTests {
         String iuVersion = iu.getVersion().toString();
         println(outfileWriter, iuId + NBSP + iuVersion + NBSP + BR + iupropertyValue);
     }
+
     protected void printLineListItem(FileWriter outfileWriter, IInstallableUnit iu, IInstallableUnit iuRef) throws IOException {
-        //String iupropertyValue = iu.getProperty(iuproperty, null);
+        // String iupropertyValue = iu.getProperty(iuproperty, null);
         String iuId = iu.getId();
         String iuVersion = iu.getVersion().toString();
         String iuRefVersion = iuRef.getVersion().toString();
         int diff = iuVersion.compareTo(iuRefVersion);
         println(outfileWriter, diff + NBSP + iuId + NBSP + iuRefVersion + NBSP + iuVersion);
     }
+
     protected void printLineRowItem(FileWriter outfileWriter, IInstallableUnit iu, IInstallableUnit iuRef) throws IOException {
         String iuId = iu.getId();
         String iuVersion = iu.getVersion().toString();
         String iuRefVersion = iuRef.getVersion().toString();
-        printRowln(outfileWriter, "<td>" + iuId +  "</td><td>" + iuRefVersion +  "</td><td>" + iuVersion + "</td>");
+        printRowln(outfileWriter, "<td>" + iuId + "</td><td>" + iuRefVersion + "</td><td>" + iuVersion + "</td>");
     }
+
     protected void printLineListItem(FileWriter outfileWriter, String string) throws IOException {
         println(outfileWriter, string);
     }
@@ -171,14 +177,19 @@ public class TestRepo extends BuildRepoTests {
     private IQueryResult<IInstallableUnit> getAllIUscore(String repoURL) throws URISyntaxException, ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
         URI repoLocation = new URI(repoURL);
-        IMetadataRepository repo = getMetadataRepositoryManager().loadRepository(repoLocation, null);
-        if (repo == null) {
-            handleFatalError("no repository found at " + repoLocation.toString());
-        } else {
-            allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
-            if (allIUs.isEmpty()) {
-                handleFatalError("no IUs in repository" + repoLocation.toString());
+        IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
+        if (repomgr != null) {
+            IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
+            if (repo == null) {
+                handleFatalError("no repository found at " + repoLocation.toString());
+            } else {
+                allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
+                if (allIUs.isEmpty()) {
+                    handleFatalError("no IUs in repository" + repoLocation.toString());
+                }
             }
+        } else {
+            System.out.println("Could not getMetadataRepositoryManager");
         }
         return allIUs;
     }
@@ -248,7 +259,7 @@ public class TestRepo extends BuildRepoTests {
             }
 
         }
-       
+
         return repoURLForReference;
     }
 
