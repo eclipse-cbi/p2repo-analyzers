@@ -99,7 +99,7 @@
 			-->
 		</exec>
 
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="${BUILD_TESTS_DIR}/templateFiles/indexmain.html" overwrite="true" />
+		<copy tofile="${reportOutputDir}/reporeports/index.html" file="${BUILD_TESTS_DIR}/src/templateFiles/indexmain.html" overwrite="true" />
 	</target>
 
 </project>
