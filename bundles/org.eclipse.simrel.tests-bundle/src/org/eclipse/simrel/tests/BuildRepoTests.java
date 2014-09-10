@@ -113,10 +113,10 @@ public class BuildRepoTests {
             File reportDir = new File(reportDirName);
             success = reportDir.mkdirs();
             if (!success) {
-                handleFatalError("could not create report direcotry: " + topReportDir);
+                handleFatalError("could not create report directory: " + topReportDir);
             }
             try {
-                copyTemplateForIndexFile("/indexPending.html");
+                copyTemplateForIndexFile("indexPending.html");
             } catch (IOException e) {
                 handleFatalError("could not copy indexPending.html file into place. " + e.getMessage());
             }
@@ -199,7 +199,7 @@ public class BuildRepoTests {
 
             doDirectoryTests();
 
-            copyTemplateForIndexFile("/indexmainpresign.html");
+            copyTemplateForIndexFile("indexmainpresign.html");
 
         } catch (ProvisionException e) {
             e.printStackTrace();
