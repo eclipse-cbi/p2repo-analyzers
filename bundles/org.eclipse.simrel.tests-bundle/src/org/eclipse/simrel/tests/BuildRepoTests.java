@@ -116,7 +116,7 @@ public class BuildRepoTests {
                 handleFatalError("could not create report directory: " + topReportDir);
             }
             try {
-                copyTemplateForIndexFile("indexPending.html");
+                copyTemplateForIndexFile("/templateFiles/indexPending.html");
             } catch (IOException e) {
                 handleFatalError("could not copy indexPending.html file into place. " + e.getMessage());
             }
@@ -199,7 +199,7 @@ public class BuildRepoTests {
 
             doDirectoryTests();
 
-            copyTemplateForIndexFile("indexmainpresign.html");
+            copyTemplateForIndexFile("/templateFiles/indexmainpresign.html");
 
         } catch (ProvisionException e) {
             e.printStackTrace();
