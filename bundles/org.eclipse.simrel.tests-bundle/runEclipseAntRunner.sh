@@ -25,7 +25,7 @@ export JAVA_HOME=${JAVA_HOME:-/shared/common/jdk1.6.0-latest}
 # are relatively constant, or computed from others. 
 export RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
 export JAVA_EXEC_DIR=${JAVA_EXEC_DIR:-${JAVA_HOME}/jre/bin}
-export BUILD_TESTS_DIR=${BUILD_TESTS_DIR:-${BUILD_HOME}/${RELENG_TESTS}}
+export BUILD_TESTS_DIR=${BUILD_TESTS_DIR:-${BUILD_HOME}/${RELENG_TESTS_DIR}}
 export ECLIPSE_HOME_TEST=${ECLIPSE_HOME_TEST:-${BUILD_HOME}/testInstance}
 export export ECLIPSE_TEST_EXE=${ECLIPSE_TEST_EXE:-${ECLIPSE_HOME_TEST}/eclipse/eclipse}
 
