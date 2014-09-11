@@ -23,7 +23,7 @@ export JAVA_HOME=${JAVA_HOME:-/shared/common/jdk1.6.0-latest}
 
 # These remaining variable should not need to be overriddent, as they 
 # are relatively constant, or computed from others. 
-export RELENG_TESTS=${RELENG_TESTS:-org.eclipse.simrel.tests}
+export RELENG_TESTS_DIR=${RELENG_TESTS_DIR:-org.eclipse.simrel.tests}
 export JAVA_EXEC_DIR=${JAVA_EXEC_DIR:-${JAVA_HOME}/jre/bin}
 export BUILD_TESTS_DIR=${BUILD_TESTS_DIR:-${BUILD_HOME}/${RELENG_TESTS_DIR}}
 export ECLIPSE_HOME_TEST=${ECLIPSE_HOME_TEST:-${BUILD_HOME}/testInstance}
