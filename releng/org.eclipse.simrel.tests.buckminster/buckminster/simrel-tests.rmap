@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
-  <rm:property key="eclipse.download" value="http://download.eclipse.org"/>
-  <rm:property key="checkout.location" value="../"/>
-  <rm:locator pattern="org.eclipse.simrel.tests.buckminster" componentTypes="buckminster" searchPathRef="local.releng"/>
-  <rm:locator pattern="^org\.eclipse\.simrel\.tests.*$" componentTypes="unknown,osgi.bundle,eclipse.feature" searchPathRef="local.bundles" failOnError="false"/>
-  <rm:locator searchPathRef="platform"/>
-  <rm:searchPath name="local.releng">
-    <rm:provider componentTypes="buckminster" readerType="local" mutable="false">
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="{0}/releng/{1}">
-        <bc:propertyRef key="checkout.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="local.bundles">
-    <rm:provider componentTypes="osgi.bundle" readerType="local" mutable="false">
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="{0}/bundles/{1}">
-        <bc:propertyRef key="checkout.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="platform">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:property key="buckminster.source" value="false"/>
-      <rm:property key="buckminster.mutable" value="false"/>
-      <rm:uri format="{0}/eclipse/updates/4.4">
-        <bc:propertyRef key="eclipse.download"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-</rm:rmap>
+<rmap xmlns="http://www.eclipse.org/buckminster/RMap-1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
+
+	<property key="eclipse.download" value="http://download.eclipse.org" />
+	<property key="checkout.location" value="../" />
+
+	<locator pattern="org.eclipse.simrel.tests.buckminster" searchPathRef="local.releng" />
+	<locator pattern="^org\.eclipse\.simrel\.tests\..*$" searchPathRef="local.bundles" />
+	
+	<locator searchPathRef="platform" />
+
+	<searchPath name="local.releng">
+		<provider componentTypes="buckminster" readerType="local"
+			source="true" mutable="false">
+			<uri format="{0}/releng/{1}">
+				<bc:propertyRef key="checkout.location" />
+				<bc:propertyRef key="buckminster.component" />
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="local.bundles">
+		<provider componentTypes="osgi.bundle" readerType="local"
+			source="true" mutable="false">
+			<uri format="{0}/bundles/{1}">
+				<bc:propertyRef key="checkout.location" />
+				<bc:propertyRef key="buckminster.component" />
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="platform">
+		<provider componentTypes="eclipse.feature,osgi.bundle"
+			readerType="p2" source="false" mutable="false">
+			<uri format="{0}/eclipse/updates/4.4">
+				<bc:propertyRef key="eclipse.download" />
+			</uri>
+		</provider>
+	</searchPath>
+
+</rmap>
