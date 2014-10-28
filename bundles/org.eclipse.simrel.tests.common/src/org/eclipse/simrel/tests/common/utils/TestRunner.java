@@ -46,10 +46,10 @@ public class TestRunner {
 			CheckerRegistry registry = new CheckerRegistry();
 			System.out.println("IU Checker:");
 			registry.getCheckers().forEach(
-					(IInstalationUnitChecker element) -> System.out.println(element.getClass().getSimpleName()));
+					(final IInstalationUnitChecker element) -> System.out.println(element.getClass().getSimpleName()));
 			System.out.println("Artifact Checker:");
 			registry.getArtifactCheckers().forEach(
-					(IArtifactChecker element) -> System.out.println(element.getClass().getSimpleName()));
+					(final IArtifactChecker element) -> System.out.println(element.getClass().getSimpleName()));
 
 			analyser.analyse(p2Repo, registry, reporter);
 			System.out.println("run analyse " + (System.currentTimeMillis() - time) + "ms");
@@ -91,7 +91,7 @@ public class TestRunner {
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.BAD_GUY).count());
 	}
 
-	private Stream<CheckReport> reportsByCheckerId(String checkerId) {
+	private Stream<CheckReport> reportsByCheckerId(final String checkerId) {
 		Stream<CheckReport> stream = reporter.getReports().parallelStream();
 		Stream<CheckReport> featureReports = stream.filter(report -> report.getCheckerId().equals(checkerId));
 		return featureReports;

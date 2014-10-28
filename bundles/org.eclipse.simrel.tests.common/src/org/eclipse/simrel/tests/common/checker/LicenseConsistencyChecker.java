@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.checker;
 
 import java.io.IOException;
@@ -17,8 +22,7 @@ import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 @SuppressWarnings("restriction")
 public class LicenseConsistencyChecker implements IInstalationUnitChecker {
@@ -39,14 +43,14 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 		String body2014 = properties.getProperty("license2014");
 		String body2011 = properties.getProperty("license2011");
 		String body2010 = properties.getProperty("license2010");
-		standardLicense2014 = new License(null, body2014, null);
-		standardLicense2011 = new License(null, body2011, null);
-		standardLicense2010 = new License(null, body2010, null);
+		this.standardLicense2014 = new License(null, body2014, null);
+		this.standardLicense2011 = new License(null, body2011, null);
+		this.standardLicense2010 = new License(null, body2010, null);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.simrel.tests.common.IP2RepositoryChecker#check(java.util.
 	 * function.Consumer,
@@ -54,7 +58,8 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 	 * org.eclipse.equinox.p2.metadata.IInstallableUnit)
 	 */
 	@Override
-	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit feature) {
+	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
+			final IInstallableUnit feature) {
 		if (IUUtil.isFeature(feature)) {
 			Collection<ILicense> licenses = feature.getLicenses(null);
 			CheckReport report = new CheckReport(LicenseConsistencyChecker.class, feature);
@@ -64,7 +69,7 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 		}
 	}
 
-	private void checkLicense(Collection<ILicense> licenses, CheckReport report) {
+	private void checkLicense(final Collection<ILicense> licenses, final CheckReport report) {
 		if (licenses.isEmpty()) {
 			report.setType(ReportType.NOT_IN_TRAIN);
 			report.setCheckResult("Licence is missing");
@@ -73,13 +78,13 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 			report.setCheckResult("Extra Licence found");
 		} else {
 			ILicense featureLicense = licenses.iterator().next();
-			if (standardLicense2010.getUUID().equals(featureLicense.getUUID())) {
+			if (this.standardLicense2010.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.BAD_GUY);
 				report.setCheckResult("Old 2010 License");
-			} else if (standardLicense2011.getUUID().equals(featureLicense.getUUID())) {
+			} else if (this.standardLicense2011.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.BAD_GUY);
 				report.setCheckResult("Old 2011 License");
-			} else if (standardLicense2014.getUUID().equals(featureLicense.getUUID())) {
+			} else if (this.standardLicense2014.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.INFO);
 				report.setCheckResult("New 2014 License");
 			} else {

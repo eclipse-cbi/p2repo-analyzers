@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.checker;
 
 import java.util.function.Consumer;
@@ -9,23 +14,23 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
-import org.eclipse.simrel.tests.repos.FeatureNameLengths;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 public class FeatureNameChecker implements IInstalationUnitChecker {
+	public static final int MAX_CRITERIA = 100;
 
 	@Override
-	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
+	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
+			final IInstallableUnit iu) {
 		// simulate what directory name would be, when installed
 		if (IUUtil.isFeature(iu)) {
 			String featureName = iu.getId().substring(0, iu.getId().length() - ".feature.group".length());
 			String line = featureName + "_" + iu.getVersion();
 			CheckReport checkReport = new CheckReport(FeatureNameChecker.class, iu);
 			checkReport.setCheckResult(String.valueOf(line.length()));
-			if (line.length() > FeatureNameLengths.MAX_CRITERIA) {
+			if (line.length() > MAX_CRITERIA) {
 				checkReport.setCheckResult(line);
 				checkReport.setType(ReportType.BAD_GUY);
 			}

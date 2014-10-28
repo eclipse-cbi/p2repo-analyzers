@@ -1,6 +1,10 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package org.eclipse.simrel.tests.common;
 
 import java.util.Set;
@@ -11,22 +15,20 @@ import java.util.stream.StreamSupport;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
-import org.eclipse.equinox.p2.repository.artifact.IFileArtifactRepository;
 import org.eclipse.simrel.tests.common.checker.CheckerRegistry;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 public class P2RepositoryAnalyser {
 
-	public void analyse(P2RepositoryDescription repoDescr, CheckerRegistry registry,
-			Consumer<? super CheckReport> consumer) {
+	public void analyse(final P2RepositoryDescription repoDescr, final CheckerRegistry registry,
+			final Consumer<? super CheckReport> consumer) {
 		analyse(repoDescr, registry, consumer, false);
 	}
 
 	public void analyse(final P2RepositoryDescription repoDescr, final CheckerRegistry registry,
-			final Consumer<? super CheckReport> consumer, boolean split) {
+			final Consumer<? super CheckReport> consumer, final boolean split) {
 
 		IQueryResult<IInstallableUnit> iQueryResult = collectInstalableUnits(repoDescr);
 		Stream<IInstallableUnit> parallelStream;
@@ -39,15 +41,15 @@ public class P2RepositoryAnalyser {
 		parallelStream.forEach(iu -> {
 			registry.getCheckers().stream().forEach(checker -> checker.check(consumer, repoDescr, iu));
 			iu.getArtifacts()
-					.parallelStream()
-					.map(key -> ((IFileArtifactRepository) repoDescr.getArtifactRepository()).getArtifactFile(key))
-					.forEach(
-							artifact -> registry.getArtifactCheckers().stream()
-									.forEach(artChecker -> artChecker.check(consumer, repoDescr, iu, artifact)));
+			.parallelStream()
+			.map(key -> repoDescr.getArtifactRepository().getArtifactFile(key))
+			.forEach(
+					artifact -> registry.getArtifactCheckers().stream()
+					.forEach(artChecker -> artChecker.check(consumer, repoDescr, iu, artifact)));
 		});
 	}
 
-	protected IQueryResult<IInstallableUnit> collectInstalableUnits(P2RepositoryDescription descr) {
+	protected IQueryResult<IInstallableUnit> collectInstalableUnits(final P2RepositoryDescription descr) {
 		return descr.getMetadataRepository().query(QueryUtil.createIUAnyQuery(), null);
 	}
 

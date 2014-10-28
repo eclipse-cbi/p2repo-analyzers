@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.checker;
 
 import java.util.Collections;
@@ -16,7 +21,7 @@ import org.eclipse.simrel.tests.common.utils.IUUtil;
 /**
  * @author Dennis Huebner
  *
- * 
+ *
  */
 public class ProviderNameChecker implements IInstalationUnitChecker {
 
@@ -32,7 +37,8 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 	private Set<String> knownProviderNames = null;
 
 	@Override
-	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
+	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
+			final IInstallableUnit iu) {
 		// ignore categories
 		boolean isCategory = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
 		// TODO: should we exclude fragments?
@@ -81,33 +87,33 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 	}
 
 	public Set<String> getKnownProviderNames() {
-		if (knownProviderNames == null) {
+		if (this.knownProviderNames == null) {
 			Set<String> temp = new HashSet<>();
-			for (String string : EXPECTED_PROVIDER_NAMES) {
+			for (String string : this.EXPECTED_PROVIDER_NAMES) {
 				temp.add(string);
 			}
-			knownProviderNames = Collections.unmodifiableSet(temp);
+			this.knownProviderNames = Collections.unmodifiableSet(temp);
 		}
-		return knownProviderNames;
+		return this.knownProviderNames;
 	}
 
-	private void suspectProviderName(CheckReport checkReport) {
+	private void suspectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
 	}
 
-	private void incorrectProviderName(CheckReport checkReport) {
+	private void incorrectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
 	}
 
-	private void unknownProviderName(CheckReport checkReport) {
+	private void unknownProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.BAD_GUY);
 	}
 
-	private void oldProviderName(CheckReport checkReport) {
+	private void oldProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.BAD_GUY);
 	}
 
-	private void correctProviderName(CheckReport checkReport) {
+	private void correctProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.INFO);
 	}
 }

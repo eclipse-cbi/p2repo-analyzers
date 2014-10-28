@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.utils;
 
 import java.io.File;
@@ -23,18 +28,14 @@ import org.eclipse.simrel.tests.common.Activator;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.osgi.framework.BundleException;
 
-/**
- * @author dhuebner
- *
- */
 public class IUUtil {
 
-	public static boolean isFeature(IInstallableUnit iu) {
+	public static boolean isFeature(final IInstallableUnit iu) {
 		return iu.getArtifacts().stream().anyMatch(art -> "org.eclipse.update.feature".equals(art.getClassifier()));
 	}
 
-	public static P2RepositoryDescription createRepositoryDescription(URI p2RepoURL) throws ProvisionException,
-			OperationCanceledException {
+	public static P2RepositoryDescription createRepositoryDescription(final URI p2RepoURL) throws ProvisionException,
+	OperationCanceledException {
 		P2RepositoryDescription description = new P2RepositoryDescription();
 		description.setRepoURL(p2RepoURL);
 		IMetadataRepository repo = Activator.getMetadataRepositoryManager().loadRepository(p2RepoURL, null);
@@ -50,11 +51,11 @@ public class IUUtil {
 		return description;
 	}
 
-	private static void handleFatalError(String string) {
+	private static void handleFatalError(final String string) {
 		System.err.println(string);
 	}
 
-	public static boolean isSpecial(IInstallableUnit iu) {
+	public static boolean isSpecial(final IInstallableUnit iu) {
 		// TODO: I assume 'executable roots', etc. have no readable name?
 		/*
 		 * TODO: what are these special things? What ever they are, they have no
@@ -73,11 +74,11 @@ public class IUUtil {
 	 * Return the bundle id from the manifest pointed to by the given input
 	 * stream.
 	 */
-	public static String getBundleManifestEntry(InputStream input, String key) {
+	public static String getBundleManifestEntry(final InputStream input, final String key) {
 		String bree = null;
 		try {
 			Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
-			bree = (String) attributes.get(key);
+			bree = attributes.get(key);
 		} catch (BundleException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -99,7 +100,7 @@ public class IUUtil {
 	 * The given file points to a bundle contained in an archive. Look into the
 	 * bundle manifest file to find the bundle identifier.
 	 */
-	public static String getBundleManifestEntry(File file, String key) {
+	public static String getBundleManifestEntry(final File file, final String key) {
 		InputStream input = null;
 		JarFile jar = null;
 		try {

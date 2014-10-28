@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.checker;
 
 import java.io.File;
@@ -13,14 +18,13 @@ import org.eclipse.simrel.tests.common.utils.IUUtil;
 import org.osgi.framework.Constants;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 public class BREEChecker implements IArtifactChecker {
 
 	@Override
-	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu,
-			File child) {
+	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
+			final IInstallableUnit iu, final File child) {
 		CheckReport report = new CheckReport(BREEChecker.class, iu);
 		try {
 			@SuppressWarnings("deprecation")
@@ -53,11 +57,11 @@ public class BREEChecker implements IArtifactChecker {
 		}
 	}
 
-	private boolean needsBree(File child) {
+	private boolean needsBree(final File child) {
 		return exportsPackages(child);
 	}
 
-	private boolean exportsPackages(File child) {
+	private boolean exportsPackages(final File child) {
 		String entry = IUUtil.getBundleManifestEntry(child, Constants.EXPORT_PACKAGE);
 		if (entry != null && !entry.isEmpty()) {
 			return true;

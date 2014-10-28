@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common.checker;
 
 import java.util.Collections;
@@ -8,27 +13,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 public class CheckerRegistry {
 	private Set<IInstalationUnitChecker> checkers = new HashSet<>();
 	private Set<IArtifactChecker> artifactCheckers = new HashSet<>();
 
 	public CheckerRegistry() {
-		checkers.add(new FeatureNameChecker());
-		checkers.add(new LicenseConsistencyChecker());
-		checkers.add(new ProviderNameChecker());
-		checkers = Collections.unmodifiableSet(checkers);
-		artifactCheckers.add(new BREEChecker());
-		artifactCheckers = Collections.unmodifiableSet(artifactCheckers);
+		this.checkers.add(new FeatureNameChecker());
+		this.checkers.add(new LicenseConsistencyChecker());
+		this.checkers.add(new ProviderNameChecker());
+		this.checkers = Collections.unmodifiableSet(this.checkers);
+		this.artifactCheckers.add(new BREEChecker());
+		this.artifactCheckers = Collections.unmodifiableSet(this.artifactCheckers);
 	}
 
 	public Set<IInstalationUnitChecker> getCheckers() {
-		return checkers;
+		return this.checkers;
 	}
 
 	public Set<IArtifactChecker> getArtifactCheckers() {
-		return artifactCheckers;
+		return this.artifactCheckers;
 	}
 }

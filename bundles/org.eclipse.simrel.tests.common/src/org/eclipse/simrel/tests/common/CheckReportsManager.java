@@ -1,6 +1,11 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package org.eclipse.simrel.tests.common;
 
 import java.sql.Date;
@@ -11,29 +16,27 @@ import java.util.function.Consumer;
 import org.eclipse.simrel.tests.common.checker.ReportType;
 
 /**
- * @author dhuebner
- *
+ * @author dhuebner - Initial contribution and API
  */
 public class CheckReportsManager implements Consumer<CheckReport> {
 
 	private ConcurrentLinkedQueue<CheckReport> queue = new ConcurrentLinkedQueue<>();
 
 	public int reported() {
-		return queue.size();
+		return this.queue.size();
 	}
 
 	public ConcurrentLinkedQueue<CheckReport> getReports() {
-		return queue;
+		return this.queue;
 	}
 
 	public void dumpReports() {
-		getReports()
-				.forEach(report -> new ConsoleReporter().dumpReport(report));
+		getReports().forEach(report -> new ConsoleReporter().dumpReport(report));
 	}
 
 	@Override
-	public void accept(CheckReport report) {
-		queue.add(report);
+	public void accept(final CheckReport report) {
+		this.queue.add(report);
 	}
 
 	class ConsoleReporter implements ICheckReporter {
@@ -41,21 +44,18 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 		private boolean dumpTime = false;
 
 		@Override
-		public void dumpReport(CheckReport report) {
+		public void dumpReport(final CheckReport report) {
 			if (report == null) {
 				System.out.println("ERROR: Null report");
 			}
 
 			if (report.getType() != ReportType.INFO) {
 				String time = "";
-				if (dumpTime) {
-					time = new SimpleDateFormat("hh:mm:ss-SSS")
-							.format(new Date(report.getTimeMs()));
+				if (this.dumpTime) {
+					time = new SimpleDateFormat("hh:mm:ss-SSS").format(new Date(report.getTimeMs()));
 				}
-				String message = report.getType() + ": "
-						+ report.getCheckResult() + " "
-						+ report.getIU().getId() + "  <- " + time + " "
-						+ report.getCheckerId();
+				String message = report.getType() + ": " + report.getCheckResult() + " " + report.getIU().getId()
+						+ "  <- " + time + " " + report.getCheckerId();
 				System.out.println(message);
 			}
 		}
