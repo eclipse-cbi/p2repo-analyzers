@@ -20,8 +20,8 @@ import org.eclipse.simrel.tests.utils.StringLengthComparator;
 
 public class FeatureNameLengths extends TestRepo {
 
+    public static final int  MAX_CRITERIA  = 100;
     private Map  distribution = null;
-    private int  maxCriteria  = 100;
     private List longestNames = new ArrayList();
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
@@ -58,7 +58,7 @@ public class FeatureNameLengths extends TestRepo {
 
             String line = featureName + "_" + iu.getVersion();
             tabulate(line.length());
-            if (line.length() > maxCriteria) {
+            if (line.length() > MAX_CRITERIA) {
                 longestNames.add(line);
             }
         }
@@ -90,7 +90,7 @@ public class FeatureNameLengths extends TestRepo {
             println(outfileWriter, "=======================" + EOL);
             if (longestNames.size() > 0) {
 
-                println(outfileWriter, NBSP + "Features directory names with lengths above " + maxCriteria + EOL);
+                println(outfileWriter, NBSP + "Features directory names with lengths above " + MAX_CRITERIA + EOL);
                 Collections.sort(longestNames, new StringLengthComparator());
                 for (int i = 0; i < longestNames.size(); i++) {
                     String line = (String) longestNames.get(i);
@@ -98,7 +98,7 @@ public class FeatureNameLengths extends TestRepo {
                 }
             } else {
                 println(outfileWriter, NBSP + " No feature directory names lengths were longer than the maxCriteria, "
-                        + maxCriteria + EOL);
+                        + MAX_CRITERIA + EOL);
             }
         } finally {
             if (outfileWriter != null) {
