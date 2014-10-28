@@ -2,5 +2,6 @@
     <cs:dependencies>
         <cs:dependency name="org.eclipse.simrel.tests.common"/>
         <cs:dependency name="org.eclipse.simrel.tests"/>
+        <cs:dependency name="org.eclipse.simrel.tests.junit"/>
     </cs:dependencies>
 </cs:cspec>

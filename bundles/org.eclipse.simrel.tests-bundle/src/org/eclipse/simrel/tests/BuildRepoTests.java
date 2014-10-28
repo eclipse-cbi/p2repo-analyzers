@@ -36,7 +36,7 @@ public class BuildRepoTests {
      * this is property where users can specify main directory where output goes
      */
     private static final String REPORT_OUTPUT_DIR_PARAM = "reportOutputDir";
-    private static final String REPORT_REPO_DIR_PARAM   = "reportRepoDir";
+    static final String REPORT_REPO_DIR_PARAM   = "reportRepoDir";
     private static final String REFERENCE_REPO_PARAM    = "referenceRepo";
     /**
      * the top directory is where high level files go, such as "index.html"
