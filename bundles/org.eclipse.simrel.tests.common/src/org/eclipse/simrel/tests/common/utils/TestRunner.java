@@ -25,8 +25,8 @@ import org.junit.Test;
 
 public class TestRunner {
 
-	private static final int FEATURES_IN_REPO = 76;
-	private static final String XTEXT = "file:///Users/dhuebner/Desktop/xtext.p2.repository/";
+//	private static final int FEATURES_IN_REPO = 76;
+//	private static final String XTEXT = "file:///Users/dhuebner/Desktop/xtext.p2.repository/";
 	private static final String LUNA = "file:///Users/dhuebner/git/xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
 	private static CheckReportsManager reporter = null;
 
