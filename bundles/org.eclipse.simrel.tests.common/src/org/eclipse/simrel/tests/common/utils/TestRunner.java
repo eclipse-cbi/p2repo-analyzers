@@ -33,9 +33,6 @@ public class TestRunner {
 	@BeforeClass
 	public static void setupOnce() throws ProvisionException, OperationCanceledException {
 		if (reporter == null) {
-			P2RepositoryAnalyser analyser = new P2RepositoryAnalyser();
-			reporter = new CheckReportsManager();
-
 			long start = System.currentTimeMillis();
 			long time = start;
 
@@ -44,13 +41,10 @@ public class TestRunner {
 			time = System.currentTimeMillis();
 
 			CheckerRegistry registry = new CheckerRegistry();
-			System.out.println("IU Checker:");
-			registry.getCheckers().forEach(
-					(final IInstalationUnitChecker element) -> System.out.println(element.getClass().getSimpleName()));
-			System.out.println("Artifact Checker:");
-			registry.getArtifactCheckers().forEach(
-					(final IArtifactChecker element) -> System.out.println(element.getClass().getSimpleName()));
-
+			dumpCheckerRegistry(registry);
+			
+			P2RepositoryAnalyser analyser = new P2RepositoryAnalyser();
+			reporter = new CheckReportsManager();
 			analyser.analyse(p2Repo, registry, reporter);
 			System.out.println("run analyse " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
@@ -59,6 +53,15 @@ public class TestRunner {
 			System.out.println("do dump " + (System.currentTimeMillis() - time) + "ms");
 			System.out.println("overall " + (System.currentTimeMillis() - start) + "ms");
 		}
+	}
+
+	private static void dumpCheckerRegistry(CheckerRegistry registry) {
+		System.out.println("IU Checker:");
+		registry.getCheckers().forEach(
+				(final IInstalationUnitChecker element) -> System.out.println(element.getClass().getSimpleName()));
+		System.out.println("Artifact Checker:");
+		registry.getArtifactCheckers().forEach(
+				(final IArtifactChecker element) -> System.out.println(element.getClass().getSimpleName()));
 	}
 
 	@Test
