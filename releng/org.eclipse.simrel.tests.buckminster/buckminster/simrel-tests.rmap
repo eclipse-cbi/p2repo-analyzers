@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
 
 	<property key="eclipse.download" value="http://download.eclipse.org" />
-	<property key="checkout.location" value="../" />
+	<property key="checkout.location" value="${user.home}/git/org.eclipse.simrel.tests" />
 
 	<locator pattern="org.eclipse.simrel.tests.buckminster" searchPathRef="local.releng" />
 	<locator pattern="^org\.eclipse\.simrel\.tests.*$" searchPathRef="local.bundles" />
@@ -24,6 +24,13 @@
 		<provider componentTypes="osgi.bundle" readerType="local"
 			source="true" mutable="false">
 			<uri format="{0}/bundles/{1}">
+				<bc:propertyRef key="checkout.location" />
+				<bc:propertyRef key="buckminster.component" />
+			</uri>
+		</provider>
+		<provider componentTypes="osgi.bundle" readerType="local"
+			source="true" mutable="false">
+			<uri format="{0}/bundles/{1}-bundle">
 				<bc:propertyRef key="checkout.location" />
 				<bc:propertyRef key="buckminster.component" />
 			</uri>
