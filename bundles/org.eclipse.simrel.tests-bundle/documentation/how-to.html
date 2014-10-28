@@ -1,0 +1,54 @@
+<h1>Running your own Repository Reports</h1>
+<h2>Introduction</h2>
+<p>This document gives a brief outline of how to run the "repo reports" locally, 
+against a repository on your local file system. </p>
+
+<p>There are some tests, that look at jars specifically, 
+that require the jars to be on local file system and essentially use plain 'ol Java file IO and regex-type checks on 
+the contents. 
+
+<p>Another class of tests, read the content.jar/xml meta-data and reports on the data or relationships in 
+that meta data. <p>
+
+<p>Yet another, small class of tests, verify the jars are signed. These tests are not really "Java" or "workspace" related, 
+but instead, use shell scripts to invoke "jarsigner -verify" repeatedly
+on a directory of jars. These shell scripts are not very efficient, but ... do get the basic signature verification checks done 
+in the most neutral, flexible way possible. They make 
+sure jars are signed and that pack.gz files can be unpacked, and then the signature of the resulting jar verified. 
+You can change the 
+VM level used since there are known issues with each level of VM; some jars can not be unpacked
+with java 5, say, or those with nested jars can not be unpacked with Java 7. Which VM level to use depends on your goals and 
+end-user and adopter needs. (We use Java 6 during the report generation on for Simultaneous Release.)</p>
+
+<h2>Running the repo tests</h2>
+
+These instructions are focus for "running from your workspace", but could also easily be done "from the command line" if you know how 
+to run Eclipse Applications from the command line. 
+
+<h3>The Basics</h3>
+
+The Eclipse Application is named 'org.eclipse.simrel.tests.repoReport'. It takes two "system properties"; one to specify 
+where you want the output to go, and another to specify where the repo is on the file system. For example:
+<ul>
+<li>-DreportOutputDir=/home/shared/eclipse/repoReport</li> 
+<li>-DreportRepoDir=/home/www/html/downloads/eclipse/updates/4.2-I-builds/I20120531-1500/</li> 
+</ul>
+
+<h3>The Details</h3>
+
+<p>The source project is named 'org.eclipse.simrel.tests' and is currently in Git in repository named 'simrel/org.eclipse.simrel.tests.git'. See {{Git|simrel|org.eclipse.simrel.tests.git}}.</p>
+
+<p>Once you load that project into your workspace, it will include one "launch configuration" that can be used as a starting example, 
+edited and used to launch 
+the application from your workspace.<p>
+
+<p>On a large repository, it take 5 or 10 minutes to complete, and then you just to look at the
+results (usually) with a web browser starting with the 'index.html' at the location you specified in 'reportOutputDir' property.<p>
+
+<h3>Signing verification</h3>
+
+There are two scripts in the 'org.eclipse.juno.tests' that work together to check signatures: verify.sh and verifydir.sh. Written for Linux, but could be re-written for Windows, I'd guess. I normally put these on my path, such as in my ~/bin directory. The run time, I navigate to the "top" of the repository, and execute ./verifydir.sh which uses the current directory (if none specified) and iterates through all the files looking for "*.jar" and '*pack.gz' files and eventually calls 'verify.sh' on a specific file. You will need to edit verify.sh and define the Java directory on your local system where "jarsigner" can be found. Once ran, the scripts create report files in ~/verifyoutputdir (in your home folder, erasing what ever was there before) and you can check those report files for "errors" or "unsigned" items. 
+
+<h2>Getting help or making contributions</h2>
+
+You can ask questions on cross-project list if the tests do not work as expected. Or, even better, you can make improvements/fixes directly on this wiki, if the instructions can be better. Feel free to supply patches on the cross-project component in bugzilla.

@@ -1,4 +1,4 @@
 bin
 *.temp.launch
 /*.jpage
-.DS_Store
+/*.launch

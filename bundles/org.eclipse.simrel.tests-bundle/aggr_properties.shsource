@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+# common variables used in scripts
+
+# It is required to specify a top level directory, that will contain all else involved with build, control and output
+if [[ -z "${BUILD_HOME}" ]]
+then
+export BUILD_HOME=/shared/simrel/${release}
+
+echo "BUILD_HOME: $BUILD_HOME"
+fi
+
+# Java should be configured per machine,
+# so this variable point to valid installs.
+
+export JAVA_6_HOME=/shared/common/jdk1.6.0-latest
+export JAVA_7_HOME=/shared/common/jdk1.7.0-latest
+
+REPO_ROOT=/home/data/httpd/download.eclipse.org
+
+# each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
+FULL_FILENAME=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.4.1-201409250400/eclipse-SDK-4.4.1-linux-gtk-x86_64.tar.gz
+
+# note the "https" may have to be "http" on local, non production machines
+hostForURL=${hostForURL:-https://hudson.eclipse.org}
+
+LOG_URL="${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BUILD_NUMBER}/console"
+
+
+
+
+# ##################################
+# typically the remaining variables not have to be
+# changed on a local, non-production machine,
+# as they just compute variables based on above, 
+# or provide relatively machine-independent values.
+
+BUILD_TOOLS=org.eclipse.simrel.tools
+BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
+
+BUILD_MODEL=org.eclipse.simrel.build
+BUILD_MODEL_DIR=${BUILD_HOME}/${BUILD_MODEL}
+
+RELENG_TESTS_REPO=org.eclipse.simrel.tests
+RELENG_TESTS_PATH=bundles/org.eclipse.simrel.tests-bundle
+RELENG_TESTS_DIR=org.eclipse.simrel.tests
+
+BUILD_TESTS_DIR=${BUILD_HOME}/${RELENG_TESTS_DIR}
+
+# we use Java 6 by default. https://bugs.eclipse.org/bugs/show_bug.cgi?id=340267
+export JAVA_HOME=${JAVA_7_HOME}
+export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
+export JAVA_CMD=${JAVA_EXEC_DIR}/java
+
+# platform installs.
+ECLIPSE_INSTALL=${BUILD_HOME}/prereqs
+
+# properties say what to consider eclipse home
+ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
+
+ECLIPSE_HOME=${ECLIPSE_HOME_44}
+
+ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
+export ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
+
+stagingDirectory=${REPO_ROOT}/releases/${stagingsegment}
+releaseDirectory=${REPO_ROOT}/releases/${release}
+testRepoDirectory=${stagingDirectory}
+
+export ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
+
+# Holds the results of the build
+BUILD_RESULTS=${BUILD_HOME}/buildresults
+AGGREGATOR_RESULTS=${BUILD_HOME}/aggregation
+TEST_RESULTS=${BUILD_HOME}
+
+# remember, for ant, properties must be "read in" at beginning of ant build file to get variables expanded
+# also, remember, shell scripts need quotes, but ant can not have them
+#AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation"
+AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation --allowLegacySites false"
+
+# clean build
+#we will clean the aggregation directory ourselves, as work around for bug 354321
+#AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action CLEAN_BUILD"
+AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action BUILD"
+
+AGGREGATOR_APP_ARGS_BUILDONLY="${AGGREGATOR_APP_BASE}  --action BUILD"
+
+AGGREGATOR_APP_ARGS_VALIDATEONLY="${AGGREGATOR_APP_BASE} --action VALIDATE"
+
+# only one or the other
+# --mavenResult
+# --trustedContributions Eclipse,Equinox 
+
+# add this to production aggregtor app args only
+# --production 
+
+# NOTE: quotes needed in bash scripts ... NOT in ant properties! 
+# -Declipse.p2.mirrors=false
+BUILDER_VM_ARGS="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
+
+BRANCH_BUILD=${BRANCH_BUILD:-master}
+TMPDIR_BUILD=sbbuild
+BRANCH_TOOLS=master
+TMPDIR_TOOLS=sbtools
+export BRANCH_TESTS=master
+TMPDIR_TESTS=sbtests
+CGITURL=http://git.eclipse.org/c/simrel
+
+# should be '/aggregate' if using "trusted repos" ... else, empty
+#AGGR=/aggregate
+AGGR=
+
