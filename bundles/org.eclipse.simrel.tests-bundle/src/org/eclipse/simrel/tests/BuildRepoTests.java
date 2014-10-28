@@ -170,7 +170,7 @@ public class BuildRepoTests {
      * 
      * @return
      */
-    protected String getReportOutputDirectory() {
+    public String getReportOutputDirectory() {
         if (reportOutputDirectoryName == null) {
             reportOutputDirectoryName = getTopReportOutputDirectory() + "/" + REPORT_SUB_OUTPUT_DIR;
         }
