@@ -3,7 +3,6 @@
 
 <product name="SimRel Reports Headless Launcher" uid="org.eclipse.simrel.reports.product" id="org.eclipse.simrel.tests.org_eclipse_simrel_reports" application="org.eclipse.simrel.tests.repoReport" version="1.3.1.qualifier" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -14,18 +13,15 @@
 
    <windowImages/>
 
-
-   <launcher>
+   <launcher name="simrel-reports">
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="javax.annotation"/>
@@ -46,16 +42,14 @@
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
-      <plugin id="org.eclipse.fx.osgi" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.compatibility.state" fragment="true"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.simrel.tests"/>
-      <plugin id="org.eclipse.simrel.tests.common"/>
-      <plugin id="org.eclipse.simrel.tests.junit"/>
-      <plugin id="org.hamcrest.core"/>
-      <plugin id="org.junit"/>
    </plugins>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+   </configurations>
 
 </product>
