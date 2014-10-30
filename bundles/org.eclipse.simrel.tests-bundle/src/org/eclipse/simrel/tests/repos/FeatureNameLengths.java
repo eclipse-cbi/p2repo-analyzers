@@ -16,9 +16,14 @@ import java.util.Set;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.StringLengthComparator;
 
 public class FeatureNameLengths extends TestRepo {
+
+    public FeatureNameLengths(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private Map  distribution = null;
     public final static int  MAX_CRITERIA  = 100;
@@ -31,7 +36,7 @@ public class FeatureNameLengths extends TestRepo {
     }
 
     public static void main(String[] args) {
-        FeatureNameLengths featureNameLengths = new FeatureNameLengths();
+        FeatureNameLengths featureNameLengths = new FeatureNameLengths(RepoTestsConfiguration.createFromSystemProperties());
         featureNameLengths.setRepoURLToTest("/home/files/buildzips/junoRC3/wtp-repo");
         featureNameLengths.setMainOutputDirectory("/temp");
         try {

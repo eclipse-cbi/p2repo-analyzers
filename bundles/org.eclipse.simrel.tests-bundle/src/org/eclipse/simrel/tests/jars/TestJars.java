@@ -7,9 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.simrel.tests.BuildRepoTests;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.ReportWriter;
 
 public abstract class TestJars extends BuildRepoTests {
+
+    public TestJars(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private String bundleDirectory;
     private String featureDirectory;
@@ -77,8 +82,7 @@ public abstract class TestJars extends BuildRepoTests {
 
     protected void printInvalidJars(List invalidJars, ReportWriter reportWriter) throws FileNotFoundException {
         if (invalidJars.size() > 0) {
-            reportWriter
-                    .writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
+            reportWriter.writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
             Collections.sort(invalidJars);
             for (Iterator iterator = invalidJars.iterator(); iterator.hasNext();) {
                 Object bundle = iterator.next();

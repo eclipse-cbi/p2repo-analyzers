@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.simrel.tests.BuildRepoTests;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.TestActivator;
 import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -36,6 +37,10 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=306627
  */
 public class TestRepo extends BuildRepoTests {
+    public TestRepo(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     protected static final boolean         DEBUG = false;
     protected static final String          EOL   = System.getProperty("line.separator", "\n");
     protected static final String          NBSP  = " &nbsp; ";
@@ -235,7 +240,7 @@ public class TestRepo extends BuildRepoTests {
 
     public String getRepoURLToTest() {
         if (repoURLToTest == null) {
-            repoURLToTest = System.getProperty("repoURLToTest");
+            repoURLToTest = getConfigurations().getRepoURLToTest();
 
             if (repoURLToTest == null) {
                 handleFatalError("the 'repoURLToTest' property was not set");
@@ -248,8 +253,7 @@ public class TestRepo extends BuildRepoTests {
 
     public String getRepoURLForReference() {
         if (repoURLForReference == null) {
-            repoURLForReference = System.getProperty("repoURLForReference");
-
+            repoURLForReference = getConfigurations().getRepoURLForReference();
             if (repoURLForReference == null) {
                 handleWarning("the 'repoURLForReference' property was not set");
                 repoURLForReference = "";

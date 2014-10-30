@@ -18,10 +18,15 @@ import org.eclipse.equinox.p2.metadata.ICopyright;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.ILicense;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.repos.TestRepo;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class FeatureDisplayableDataChecker extends TestRepo {
+    public FeatureDisplayableDataChecker(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static String STANDARD_LICENSES_PROPERTIES_FILE = "standardLicenses.properties";
     private String        previousPackageHeader             = null;
 
@@ -33,7 +38,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
     private static void _testFeatureDisplayableDataChecer() {
         System.out.println("\n\n\tLocal test of  FeatureDisplayableDataChecker.\n\n");
-        FeatureDisplayableDataChecker featureDisplayableDataChecker = new FeatureDisplayableDataChecker();
+        FeatureDisplayableDataChecker featureDisplayableDataChecker = new FeatureDisplayableDataChecker(RepoTestsConfiguration.createFromSystemProperties());
         featureDisplayableDataChecker.setRepoURLToTest("file:///home/shared/simrel/luna/aggregation/final");
         featureDisplayableDataChecker.setMainOutputDirectory("/home/shared/simrel/luna");
         try {
@@ -49,7 +54,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
     private static void _testGetInitialSegments() {
         System.out.println("\n\n\tTesting getInitialSegments method.\n\n");
-        FeatureDisplayableDataChecker instance = new FeatureDisplayableDataChecker();
+        FeatureDisplayableDataChecker instance = new FeatureDisplayableDataChecker(RepoTestsConfiguration.createFromSystemProperties());
         System.out.println(instance.getInitialSegments(""));
         System.out.println(instance.getInitialSegments("one"));
         System.out.println(instance.getInitialSegments("one.two"));

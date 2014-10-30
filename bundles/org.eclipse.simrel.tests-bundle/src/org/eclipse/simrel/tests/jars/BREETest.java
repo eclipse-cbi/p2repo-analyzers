@@ -31,6 +31,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.osgi.util.ManifestElement;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.eclipse.simrel.tests.utils.ReportWriter;
@@ -41,6 +42,10 @@ import org.osgi.framework.Constants;
  * @since 3.3
  */
 public class BREETest extends TestJars {
+
+    public BREETest(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     static class BREEFileData implements Comparable {
         String filename;
@@ -67,7 +72,7 @@ public class BREETest extends TestJars {
 
     public static void main(String[] args) {
 
-        BREETest testlayout = new BREETest();
+        BREETest testlayout = new BREETest(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("/home/files/testSDKRepo");
         try {
             testlayout.testBREESettingRule();

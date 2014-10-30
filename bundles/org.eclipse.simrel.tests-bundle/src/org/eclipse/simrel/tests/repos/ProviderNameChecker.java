@@ -13,10 +13,15 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.repos.TestRepo;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class ProviderNameChecker extends TestRepo {
+    public ProviderNameChecker(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static final String OLD_PROVIDER_NAME       = "Eclipse.org";
     private String[]            EXPECTED_PROVIDER_NAMES = { "Eclipse Equinox Project", "Eclipse PTP", "Eclipse Orbit",
             "Eclipse Web Tools Platform", "Eclipse CDT", "Eclipse Agent Modeling Platform", "Eclipse BIRT Project",

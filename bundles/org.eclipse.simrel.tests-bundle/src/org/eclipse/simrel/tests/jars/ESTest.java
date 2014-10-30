@@ -26,6 +26,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
 import org.eclipse.osgi.util.ManifestElement;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.eclipse.simrel.tests.utils.ReportWriter;
@@ -39,13 +40,17 @@ import org.osgi.framework.BundleException;
  */
 public class ESTest extends TestJars {
 
+    public ESTest(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static final Object            PROPERTY_ECLIPSE_SOURCEREFERENCES = "Eclipse-SourceReferences";
     private static final FullJarNameParser nameParser                        = new FullJarNameParser();
     private static final String            outputFilename                    = "esdata.txt";
 
     public static void main(String[] args) {
 
-        ESTest testlayout = new ESTest();
+        ESTest testlayout = new ESTest(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("/home/files/buildzips/junoRC2/eclipseJEE/");
         try {
             testlayout.testESSettingRule();

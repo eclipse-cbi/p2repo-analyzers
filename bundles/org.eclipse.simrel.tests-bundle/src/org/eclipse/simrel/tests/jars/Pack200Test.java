@@ -26,6 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.eclipse.simrel.tests.utils.PackGzFileNameFilter;
@@ -36,6 +37,10 @@ import org.eclipse.simrel.tests.utils.ReportWriter;
  */
 public class Pack200Test extends TestJars {
 
+    public Pack200Test(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static final String      EXTENSION_JAR        = ".jar";
     private static final String      EXTENSION_PACEKD_JAR = ".jar.pack.gz";
     private static FullJarNameParser nameParser           = new FullJarNameParser();
@@ -43,7 +48,7 @@ public class Pack200Test extends TestJars {
 
     public static void main(String[] args) {
 
-        Pack200Test testlayout = new Pack200Test();
+        Pack200Test testlayout = new Pack200Test(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("D:\\temp\\staging\\");
         try {
             testlayout.testBundlePack();
