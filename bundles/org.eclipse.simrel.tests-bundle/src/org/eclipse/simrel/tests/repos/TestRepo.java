@@ -217,7 +217,12 @@ public class TestRepo extends BuildRepoTests {
     private IQueryResult<IInstallableUnit> getAllGroupIUscore(String repoURL) throws URISyntaxException, ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
         URI repoLocation = new URI(repoURL);
-        IMetadataRepository repo = getMetadataRepositoryManager().loadRepository(repoLocation, null);
+        IMetadataRepositoryManager repositoryManager = getMetadataRepositoryManager();
+        if (repositoryManager == null) {
+            handleFatalError("IMetadataRepositoryManager service is not registered.");
+            return null;
+        }
+        IMetadataRepository repo = repositoryManager.loadRepository(repoLocation, null);
         if (repo == null) {
             handleFatalError("no repository found at " + repoLocation.toString());
         } else {
