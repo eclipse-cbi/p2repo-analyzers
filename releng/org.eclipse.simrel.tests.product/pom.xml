@@ -20,6 +20,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
+
 				</configuration>
 			</plugin>
 			<plugin>
@@ -38,6 +39,13 @@
 						<goals>
 							<goal>archive-products</goal>
 						</goals>
+						<configuration>
+							<formats>
+								<!-- zips breaks symlinks for UNIX -->
+								<macosx>tar.gz</macosx>
+								<linux>tar.gz</linux>
+							</formats>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
