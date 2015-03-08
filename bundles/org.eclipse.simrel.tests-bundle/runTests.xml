@@ -33,7 +33,7 @@
 
   <property
     name="referenceRepo"
-    value="${REPO_ROOT}/releases/luna/201406250900/" />
+    value="${REPO_ROOT}/releases/luna/201502271000/" />
 
   <property
     name="eclipseExecutable"
