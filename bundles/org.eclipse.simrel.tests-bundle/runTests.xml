@@ -39,7 +39,7 @@
     name="eclipseExecutable"
     value="${ECLIPSE_TEST_EXE}" />
 
-  <tartget name="cleanBuild">
+  <tartget name="validateOnly">
     <echo message="No validation-only tests, yet" />
     <echoproperties />
   </tartget>
