@@ -39,6 +39,22 @@
     name="eclipseExecutable"
     value="${ECLIPSE_TEST_EXE}" />
 
+  <tartget name="cleanBuild">
+    <echo message="No validation-only tests, yet" />
+    <echoproperties />
+  </tartget>
+
+  <tartget name="cachedBuild">
+    <echo message="No cached build tests, yet" />
+    <echoproperties />
+  </tartget>
+
+  <tartget
+    name="cleanBuild"
+    depends="runTests">
+    <echo message="ran standard clean build reports/tests" />
+  </tartget>
+
   <target name="runTests">
     <echo message="Creating Reports" />
 
