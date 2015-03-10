@@ -106,7 +106,7 @@
       value="org.eclipse.simrel.tests.repoReport" />
     <property
       name="VM_ARGS"
-      value="-Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${reportRepoDir} -DreferenceRepo=${referenceRepo}" />
+      value="-Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=file://${reportRepoDir} -DreferenceRepo=file://${referenceRepo}" />
 		<!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
     <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
     <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
