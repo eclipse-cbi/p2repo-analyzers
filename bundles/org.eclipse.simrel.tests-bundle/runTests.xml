@@ -113,7 +113,7 @@
     <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="in runReports: VM_ARGS: ${VM_ARGS}" />
     <echo message="in runReports: reportOutputDir: ${reportOutputDir}" />
-    <echo message="in runReports: reportRepoDir: ${reportRepoDir}" />
+    <echo message="in runReports: reportRepoDir: ${testRepoDirectory}" />
     <echo message="in runReports: referenceRepo: ${referenceRepo}" />
     <exec
       executable="${eclipseTestExecutable}"
