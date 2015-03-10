@@ -102,19 +102,20 @@
 
   <target name="runReports">
     <property
-      name="APP_NAME"
+      name="REPORT_APP_NAME"
       value="org.eclipse.simrel.tests.repoReport" />
     <property
       name="VM_ARGS"
       value="-Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${reportRepoDir} -DreferenceRepo=${referenceRepo}" />
 		<!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
     <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
-    <echo message="in runReports: APP_NAME: ${APP_NAME}" />
+    <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
     <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="in runReports: VM_ARGS: ${VM_ARGS}" />
     <echo message="in runReports: reportOutputDir: ${reportOutputDir}" />
     <echo message="in runReports: reportRepoDir: ${testRepoDirectory}" />
     <echo message="in runReports: referenceRepo: ${referenceRepo}" />
+    <echo message="in runReports: basedir: ${basedir}" />
     <exec
       executable="${eclipseTestExecutable}"
       dir="${basedir}"
@@ -124,7 +125,7 @@
       <arg value="-debug" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
-      <arg value="${APP_NAME}" />
+      <arg value="${REPORT_APP_NAME}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
