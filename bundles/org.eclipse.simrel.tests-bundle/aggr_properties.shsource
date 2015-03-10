@@ -63,7 +63,7 @@ ECLIPSE_HOME=${ECLIPSE_HOME_44}
 ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
 export ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
 
-stagingDirectory=${REPO_ROOT}/releases/${stagingsegment}
+#stagingDirectory=${REPO_ROOT}/releases/${stagingsegment}
 releaseDirectory=${REPO_ROOT}/releases/${release}
 testRepoDirectory=${BUILD_HOME}/aggregation/final/
 
