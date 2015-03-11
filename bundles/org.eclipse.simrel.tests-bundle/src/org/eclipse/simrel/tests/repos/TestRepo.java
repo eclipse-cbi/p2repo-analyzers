@@ -176,7 +176,9 @@ public class TestRepo extends BuildRepoTests {
 
     private IQueryResult<IInstallableUnit> getAllIUscore(String repoURL) throws URISyntaxException, ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
-        URI repoLocation = new URI(repoURL);
+        URI repoLocation = null;
+        try {
+        repoLocation = new URI(repoURL);
         IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
         if (repomgr != null) {
             IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
@@ -190,6 +192,10 @@ public class TestRepo extends BuildRepoTests {
             }
         } else {
             System.out.println("Could not getMetadataRepositoryManager");
+        }
+        } catch (org.eclipse.equinox.p2.core.ProvisionException e) {
+            System.out.println("repoURL: " + repoURL);
+            System.out.println("repoLocation:" + repoLocation);
         }
         return allIUs;
     }
