@@ -137,7 +137,7 @@
 
     <!-- TODO: move this to java app too. May still want to have seperate, since takes so much longer -->
   <target name="runSignatureVerification">
-    <exec executable="${BUILD_TESTS_DIR}/verifydir.sh" dir="${testRepoDirectory}" >
+    <exec executable="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/verifydir.sh" dir="${testRepoDirectory}" >
       <arg value="${testRepoDirectory}" />
       <arg value="${reportOutputDir}/reporeports/reports" />
 
