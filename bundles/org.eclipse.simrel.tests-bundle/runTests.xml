@@ -13,7 +13,7 @@
     name="aggrPropertyFile"
     value="aggr.properties" />
 
-  <property file="${aggrPropertyFile}" />
+  <loadproperties srcfile="${aggrPropertyFile}" />
 
 	<!-- unless otherwise defined in aggrPropertyFile, assume build home is 
 		basedir -->
@@ -62,7 +62,7 @@
 
     <echoproperties />
 
-    <fail unless="stagingsegment" />
+    <!-- <fail unless="stagingsegment" /> -->
     <echo message="reportOutputDir: ${reportOutputDir}" />
     <mkdir dir="${reportOutputDir}/reporeports" />
 
