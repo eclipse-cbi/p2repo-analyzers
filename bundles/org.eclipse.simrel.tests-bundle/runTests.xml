@@ -25,7 +25,7 @@
 		file goes in "reportOutputDir" + reporeports, and verifydiroutput goes in "reportOutputDir" + reporeports + reports + verifyoutdir  -->
   <property
     name="reportOutputDir"
-    value="${TEST_RESULTS}" />
+    value="${basedir}" />
 
   <!--
   <property
@@ -131,7 +131,7 @@
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
-      <arg line="${VM_ARGS}" />
+      <arg line="${VM_TEST_ARGS}" />
     </exec>
   </target>
 
