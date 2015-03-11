@@ -194,8 +194,10 @@ public class TestRepo extends BuildRepoTests {
             System.out.println("Could not getMetadataRepositoryManager");
         }
         } catch (org.eclipse.equinox.p2.core.ProvisionException e) {
+            // Logging some extra information here, and then rethrow.
             System.out.println("repoURL: " + repoURL);
             System.out.println("repoLocation:" + repoLocation);
+            throw e;
         }
         return allIUs;
     }
