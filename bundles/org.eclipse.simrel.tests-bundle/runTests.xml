@@ -61,8 +61,8 @@
     name="cleanBuild"
     depends="runTests">
     <echo>
-       Ran standard clean build reports and tests.
-       See report in ${reportOutputDir}.
+      Ran standard clean build reports and tests.
+      See report in ${reportOutputDir}.
     </echo>
   </target>
 
@@ -73,19 +73,9 @@
 
     <antcall target="runReports" />
 
-		<!-- no longer needed, handled by app
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="templateFiles/indexmainpresign.html"
-			overwrite="true" />
-		-->
-
     <antcall target="runSignatureVerification" />
 
-		<!-- <mkdir dir="${reportOutputDir}/output-eclipse"/> <testLayouttask tempWorkingDir="/tmp/tempWorkingLocation"
-			directoryToCheck="/home/data/httpd/download.eclipse.org/eclipse/updates/3.7milestones/S-3.7RC3-I201105261708/"
-			outputResultsDirectory="${reportOutputDir}/output-eclipse" failuresoccurred="failuresoccurred"/> -->
-
-		<!-- TODO: use tmp on staging directory to avoid filling up /tmp? -->
-    <delete dir="/tmp/tempWorkingLocation" />
+		<!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
 
 		<!-- currently, we never "fail" ... but, will in future -->
     <fail if="failuresoccurred" />
