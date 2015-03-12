@@ -4,9 +4,9 @@
   default="runTests">
 
   <property environment="env" />
-	<!-- This property file name is itself a property, so it can be overridden 
-		on one machine versus another. We do it this way, instead of just specifying 
-		-propertyFile on command line, so that the property values can be "nested" 
+	<!-- This property file name is itself a property, so it can be overridden
+		on one machine versus another. We do it this way, instead of just specifying
+		-propertyFile on command line, so that the property values can be "nested"
 		in other property values and evaluated lazily. -->
 
   <property
@@ -15,17 +15,18 @@
 
   <loadproperties srcfile="${aggrPropertyFile}" />
 
-	<!-- unless otherwise defined in aggrPropertyFile, assume build home is 
-		basedir -->
-  <property
-    name="env.BUILD_HOME"
-    value="${basedir}" />
-
-	<!-- By default, we'll put test output files in "reportOutputDir" + reporeports + reports so the index.html 
-		file goes in "reportOutputDir" + reporeports, and verifydiroutput goes in "reportOutputDir" + reporeports + reports + verifyoutdir  -->
+  <!-- We'll put test output files right in "the p2 repository". Though, later
+       we will want to "save old reports", without saving the entire repository.
+	     .../reporeports/reports contains the actual reports.
+	     .../reporeports contains the index.html file. 
+	     .../reporeports/reports/verifyoutdir contains the "signing verification" reports.
+  -->
   <property
     name="reportOutputDir"
-    value="${basedir}" />
+    value="${testRepoDirectory}/buildInfo/reporeports" />
+
+  <!-- buildInfo should already exist, and contain "properties" of build -->
+  <mkdir dir="${reportOutputDir}" />
 
   <!--
   <property
@@ -41,6 +42,11 @@
     name="eclipseTestExecutable"
     value="${ECLIPSE_TEST_EXE}" />
 
+  <!--
+     Each "type" of build, ends by calling one of these targets. 
+     So far, only the "clean build" has any real tests, be eventually others 
+     could have some checks/tests.
+  -->
   <target name="validateOnly">
     <echo message="No validation-only tests, yet" />
     <echoproperties />
@@ -54,33 +60,16 @@
   <target
     name="cleanBuild"
     depends="runTests">
-    <echo message="ran standard clean build reports/tests" />
+    <echo>
+       Ran standard clean build reports and tests.
+       See report in ${reportOutputDir}.
+    </echo>
   </target>
 
   <target name="runTests">
     <echo message="Creating Reports" />
 
     <echoproperties />
-
-    <!-- <fail unless="stagingsegment" /> -->
-    <echo message="reportOutputDir: ${reportOutputDir}" />
-    <mkdir dir="${reportOutputDir}/reporeports" />
-
-		<!-- NOTE: we strongly assume 'reportOutputDir' is dedicated completely 
-			for our use. Do not set to user.home!! normally, on production machine 
-			reportOutputDir = /shared/simrel/${release}/.
-			If not specfified, the application assumes 
-			reportOutputDir = ${user.dir}/temp/simrel -->
-    <delete>
-      <fileset dir="${reportOutputDir}/reporeports">
-      </fileset>
-    </delete>
-    <mkdir dir="${reportOutputDir}/reporeports" />
-
-		<!-- no longer needed, handled by app
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="templateFiles/indexPending.html"
-			overwrite="true" />
-		-->
 
     <antcall target="runReports" />
 
@@ -91,8 +80,8 @@
 
     <antcall target="runSignatureVerification" />
 
-		<!-- <mkdir dir="${reportOutputDir}/output-eclipse"/> <testLayouttask tempWorkingDir="/tmp/tempWorkingLocation" 
-			directoryToCheck="/home/data/httpd/download.eclipse.org/eclipse/updates/3.7milestones/S-3.7RC3-I201105261708/" 
+		<!-- <mkdir dir="${reportOutputDir}/output-eclipse"/> <testLayouttask tempWorkingDir="/tmp/tempWorkingLocation"
+			directoryToCheck="/home/data/httpd/download.eclipse.org/eclipse/updates/3.7milestones/S-3.7RC3-I201105261708/"
 			outputResultsDirectory="${reportOutputDir}/output-eclipse" failuresoccurred="failuresoccurred"/> -->
 
 		<!-- TODO: use tmp on staging directory to avoid filling up /tmp? -->
@@ -140,21 +129,23 @@
     <echo message="basedir: ${basedir}" />
     <echo message="testRepoDirectory: ${testRepoDirectory}" />
     <echo message="reportOutputDir: ${reportOutputDir}" />
-      <echo message="BUILD_TESTS_DIR: ${BUILD_TESTS_DIR}" />
-    <exec executable="/bin/bash" dir="${testRepoDirectory}" >
+    <echo message="BUILD_TESTS_DIR: ${BUILD_TESTS_DIR}" />
+    <exec
+      executable="/bin/bash"
+      dir="${testRepoDirectory}">
       <arg value="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/verifydir.sh" />
       <arg value="${testRepoDirectory}" />
       <arg value="${reportOutputDir}/reporeports/reports" />
 
-			<!-- we'll check jars only, to save time ... assume pack.gz files would 
-				be correct too. 
+			<!-- we'll check jars only, to save time ... assume pack.gz files would
+				be correct too.
 				Changed, when we wanted to also test for nested packed jars.
 			-->
-      <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)" /> 
+      <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)" />
 
-			<!-- restricting to 'common' just for testing ... so finishes relatively quickly 
+			<!-- restricting to 'common' just for testing ... so finishes relatively quickly
 				<arg value=".*common.*\.jar$"/> -->
-			<!-- 
+			<!--
 			    <arg value=".*\.jar$" />
 			-->
     </exec>
