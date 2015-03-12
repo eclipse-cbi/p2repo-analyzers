@@ -161,7 +161,7 @@
 
     <copy
       tofile="${reportOutputDir}/reporeports/index.html"
-      file="${BUILD_TESTS_DIR}/src/templateFiles/indexmain.html"
+      file="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/src/templateFiles/indexmain.html"
       overwrite="true" />
   </target>
 
