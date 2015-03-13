@@ -106,8 +106,3 @@ TMPDIR_TOOLS=sbtools
 export BRANCH_TESTS=master
 TMPDIR_TESTS=sbtests
 CGITURL=http://git.eclipse.org/c/simrel
-
-# should be '/aggregate' if using "trusted repos" ... else, empty
-#AGGR=/aggregate
-AGGR=
-
