@@ -187,10 +187,12 @@ public class BuildRepoTests {
         throw new RuntimeException(messagestring);
 
     }
+
     protected void handleWarning(String messagestring) {
         System.out.println("WARNING: " + messagestring);
 
     }
+
     public boolean execute() {
 
         try {
@@ -267,7 +269,7 @@ public class BuildRepoTests {
         if (getDirectoryToCheckForReference() != null) {
             File refRepoToCheck = new File(getDirectoryToCheckForReference());
             if (refRepoToCheck.exists()) {
-               referenceRepoToTest = "file://" + getDirectoryToCheckForReference();
+                referenceRepoToTest = "file://" + getDirectoryToCheckForReference();
             } else {
                 System.out.println("WARNING: the reference repository was found not to exist. No check done.");
                 System.out.println("         referenceRepo: " + getDirectoryToCheckForReference());
@@ -293,11 +295,11 @@ public class BuildRepoTests {
         featureNameFailures = iuNames.testFeatureNames();
         bundleNameFailures = iuNames.testBundleNames();
 
-//        Bug 424376 - repo reports fails to run on latest staging contents
-//        CheckGreedy checkGreedy = new CheckGreedy();
-//        checkGreedy.setRepoURLToTest(repoToTest);
-//        checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
-//        greedyCheck = checkGreedy.testGreedyOptionals();
+        // Bug 424376 - repo reports fails to run on latest staging contents
+        // CheckGreedy checkGreedy = new CheckGreedy();
+        // checkGreedy.setRepoURLToTest(repoToTest);
+        // checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
+        // greedyCheck = checkGreedy.testGreedyOptionals();
 
         ProviderNameChecker providerNameChecker = new ProviderNameChecker();
         providerNameChecker.setRepoURLToTest(repoToTest);
@@ -317,8 +319,8 @@ public class BuildRepoTests {
         iuVersioncheck.setRepoURLForReference(referenceRepoToTest);
 
         if (referenceRepoToTest != null) {
-        iuVersioncheck.checkIUVersionsToReference();
-        iuVersioncheck.checkIUVersionsToReferenceForFeatures();
+            iuVersioncheck.checkIUVersionsToReference();
+            iuVersioncheck.checkIUVersionsToReferenceForFeatures();
         }
 
         if (featureNameFailures || bundleNameFailures || providerNamesFailure || licenseConsistencyFailure || greedyCheck) {

@@ -178,21 +178,21 @@ public class TestRepo extends BuildRepoTests {
         IQueryResult<IInstallableUnit> allIUs = null;
         URI repoLocation = null;
         try {
-        repoLocation = new URI(repoURL);
-        IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
-        if (repomgr != null) {
-            IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
-            if (repo == null) {
-                handleFatalError("no repository found at " + repoLocation.toString());
-            } else {
-                allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
-                if (allIUs.isEmpty()) {
-                    handleFatalError("no IUs in repository" + repoLocation.toString());
+            repoLocation = new URI(repoURL);
+            IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
+            if (repomgr != null) {
+                IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
+                if (repo == null) {
+                    handleFatalError("no repository found at " + repoLocation.toString());
+                } else {
+                    allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
+                    if (allIUs.isEmpty()) {
+                        handleFatalError("no IUs in repository" + repoLocation.toString());
+                    }
                 }
+            } else {
+                System.out.println("Could not getMetadataRepositoryManager");
             }
-        } else {
-            System.out.println("Could not getMetadataRepositoryManager");
-        }
         } catch (org.eclipse.equinox.p2.core.ProvisionException e) {
             // Logging some extra information here, and then rethrow.
             System.out.println("repoURL: " + repoURL);

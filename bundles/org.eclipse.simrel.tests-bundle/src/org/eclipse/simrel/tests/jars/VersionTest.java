@@ -29,7 +29,7 @@ import org.eclipse.simrel.tests.utils.ReportWriter;
  */
 public class VersionTest extends TestJars {
 
-    private static final String outputFilename = "versionPatternCheck.txt";
+    private static final String outputFilename       = "versionPatternCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
     private static final String EXTENSION_PACEKD_JAR = ".jar.pack.gz";
     private static final String EXTENSION_ZIP        = ".zip";
@@ -39,7 +39,7 @@ public class VersionTest extends TestJars {
     private String              ANY                  = ".*";
     private Pattern             threedots            = Pattern.compile(ANY + LITERAL_PERIOD + ANY + LITERAL_PERIOD + ANY
                                                              + LITERAL_PERIOD + ANY);
-    public ReportWriter        reportWriter;
+    public ReportWriter         reportWriter;
 
     public static void main(String[] args) {
 

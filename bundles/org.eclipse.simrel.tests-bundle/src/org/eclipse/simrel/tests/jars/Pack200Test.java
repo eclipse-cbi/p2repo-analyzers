@@ -118,7 +118,7 @@ public class Pack200Test extends TestJars {
             reportWriter.writeln("   Errors found: " + errors.size());
 
             printInvalidJars(invalidJars, reportWriter);
-            
+
             if (errors.size() > 0) {
                 Collections.sort(errors);
                 for (Iterator iter = errors.iterator(); iter.hasNext();) {
@@ -179,11 +179,10 @@ public class Pack200Test extends TestJars {
             }
         } catch (ZipException e) {
             System.out.println("Failed to open jar file (zip exception): " + jarfile.getAbsolutePath());
-        
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (jar != null) {
                 try {
                     jar.close();
@@ -227,7 +226,7 @@ public class Pack200Test extends TestJars {
                 } catch (IOException e) {
                     // ignore
                 }
-            }            
+            }
         }
         return containsJava;
     }

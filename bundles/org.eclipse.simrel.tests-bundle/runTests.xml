@@ -4,10 +4,10 @@
   default="runTests">
 
   <property environment="env" />
-	<!-- This property file name is itself a property, so it can be overridden
-		on one machine versus another. We do it this way, instead of just specifying
-		-propertyFile on command line, so that the property values can be "nested"
-		in other property values and evaluated lazily. -->
+  <!-- This property file name is itself a property, so it can be overridden
+    on one machine versus another. We do it this way, instead of just specifying
+    -propertyFile on command line, so that the property values can be "nested"
+    in other property values and evaluated lazily. -->
 
   <property
     name="aggrPropertyFile"
@@ -17,9 +17,9 @@
 
   <!-- We'll put test output files right in "the p2 repository". Though, later
        we will want to "save old reports", without saving the entire repository.
-	     .../reporeports/reports contains the actual reports.
-	     .../reporeports contains the index.html file. 
-	     .../reporeports/reports/verifyoutdir contains the "signing verification" reports.
+       .../reporeports/reports contains the actual reports.
+       .../reporeports contains the index.html file.
+       .../reporeports/reports/verifyoutdir contains the "signing verification" reports.
   -->
   <property
     name="reportOutputDir"
@@ -43,8 +43,8 @@
     value="${ECLIPSE_TEST_EXE}" />
 
   <!--
-     Each "type" of build, ends by calling one of these targets. 
-     So far, only the "clean build" has any real tests, be eventually others 
+     Each "type" of build, ends by calling one of these targets.
+     So far, only the "clean build" has any real tests, be eventually others
      could have some checks/tests.
   -->
   <target name="validateOnly">
@@ -75,9 +75,9 @@
 
     <antcall target="runSignatureVerification" />
 
-		<!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
+    <!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
 
-		<!-- currently, we never "fail" ... but, will in future -->
+    <!-- currently, we never "fail" ... but, will in future -->
     <fail if="failuresoccurred" />
   </target>
 
@@ -88,7 +88,7 @@
     <property
       name="VM_TEST_ARGS"
       value="-Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${testRepoDirectory} -DreferenceRepo=${referenceRepoDir}" />
-		<!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
+    <!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
     <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
     <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
     <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
@@ -127,17 +127,17 @@
       <arg value="${testRepoDirectory}" />
       <arg value="${reportOutputDir}/reporeports/reports" />
 
-			<!-- we'll check jars only, to save time ... assume pack.gz files would
-				be correct too.
-				Changed, when we wanted to also test for nested packed jars.
-			-->
+      <!-- we'll check jars only, to save time ... assume pack.gz files would
+        be correct too.
+        Changed, when we wanted to also test for nested packed jars.
+      -->
       <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)" />
 
-			<!-- restricting to 'common' just for testing ... so finishes relatively quickly
-				<arg value=".*common.*\.jar$"/> -->
-			<!--
-			    <arg value=".*\.jar$" />
-			-->
+      <!-- restricting to 'common' just for testing ... so finishes relatively quickly
+        <arg value=".*common.*\.jar$"/> -->
+      <!--
+          <arg value=".*\.jar$" />
+      -->
     </exec>
 
     <copy

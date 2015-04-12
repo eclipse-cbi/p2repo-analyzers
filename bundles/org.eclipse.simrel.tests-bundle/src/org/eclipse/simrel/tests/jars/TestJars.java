@@ -77,8 +77,7 @@ public abstract class TestJars extends BuildRepoTests {
 
     protected void printInvalidJars(List invalidJars, ReportWriter reportWriter) throws FileNotFoundException {
         if (invalidJars.size() > 0) {
-            reportWriter
-                    .writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
+            reportWriter.writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
             Collections.sort(invalidJars);
             for (Iterator iterator = invalidJars.iterator(); iterator.hasNext();) {
                 Object bundle = iterator.next();

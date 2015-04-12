@@ -13,11 +13,11 @@ public class RepoReportApplication implements IApplication {
         boolean testfailures = false;
         BuildRepoTests runAllReports = new BuildRepoTests();
 
-       // runAllReports.setMainOutputDirectory("/home/davidw/temp");
-       // runAllReports.copyTemplateForIndexFile("/indexPending.html");
+        // runAllReports.setMainOutputDirectory("/home/davidw/temp");
+        // runAllReports.copyTemplateForIndexFile("/indexPending.html");
 
-        //runAllReports.setDirectoryToCheck("/home/www/html/downloads/releases/juno/201202030900");
-        //runAllReports.setDirectoryToCheckForReference("/home/www/html/downloads/releases/juno/201112160900");
+        // runAllReports.setDirectoryToCheck("/home/www/html/downloads/releases/juno/201202030900");
+        // runAllReports.setDirectoryToCheckForReference("/home/www/html/downloads/releases/juno/201112160900");
         // runAllReports.setDirectoryToCheck("/home/davidw/temp/gtest");
         // runAllReports.setDirectoryToCheckForReference("/home/davidw/temp/gtest");
 
@@ -26,7 +26,7 @@ public class RepoReportApplication implements IApplication {
 
         testfailures = runAllReports.execute();
 
-        //runAllReports.copyTemplateForIndexFile("/indexmainpresign.html");
+        // runAllReports.copyTemplateForIndexFile("/indexmainpresign.html");
 
         if (testfailures) {
             appresult = new Integer(-1);
