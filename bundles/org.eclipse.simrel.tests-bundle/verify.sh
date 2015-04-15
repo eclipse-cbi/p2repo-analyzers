@@ -33,9 +33,10 @@ jarname=$(basename "${filename}")
 JAVA_5_HOME=/shared/common/jdk1.5.0-latest
 JAVA_6_HOME=/shared/common/jdk1.6.0-latest
 JAVA_7_HOME=/shared/common/jdk1.7.0-latest
+JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
 # We always set JAVA_HOME explicitly to what we want, since on many systems,
 # is it set to some JRE that would not suffice.
-JAVA_HOME=${JAVA_8_HOME}
+JAVA_HOME=${JAVA_6_HOME}
 
 echo "JAVA_HOME: ${JAVA_HOME}" > "${VERIFYOUTDIR}"/info.txt
 echo "verify script: ${0}" >> "${VERIFYOUTDIR}"/info.txt
