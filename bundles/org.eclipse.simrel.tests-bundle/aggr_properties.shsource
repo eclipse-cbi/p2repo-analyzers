@@ -3,10 +3,9 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-if [[ -z "${BUILD_HOME}" ]]
-then
-export BUILD_HOME=/shared/simrel/${release}
-
+export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
+# TODO: make sure build home does not end with 
+# literal {release}
 echo "BUILD_HOME: $BUILD_HOME"
 fi
 
@@ -20,7 +19,7 @@ export JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.4.1-201409250400/eclipse-SDK-4.4.1-linux-gtk-x86_64.tar.gz
+FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=${hostForURL:-https://hudson.eclipse.org}
@@ -49,7 +48,8 @@ RELENG_TESTS_DIR=org.eclipse.simrel.tests
 BUILD_TESTS_DIR=${BUILD_HOME}/${RELENG_TESTS_DIR}
 
 # we use Java 6 by default. https://bugs.eclipse.org/bugs/show_bug.cgi?id=340267
-export JAVA_HOME=${JAVA_6_HOME}
+# Now Java 8. https://bugs.eclipse.org/bugs/show_bug.cgi?id=463010
+export JAVA_HOME=${JAVA_8_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
@@ -80,10 +80,7 @@ TEST_RESULTS=${BUILD_HOME}
 #AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --mirrorReferences --referenceExcludePattern .*/site.xml --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --trustedContributions Eclipse,Equinox  --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation"
 AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation --allowLegacySites false"
 
-# clean build
-#we will clean the aggregation directory ourselves, as work around for bug 354321
-#AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action CLEAN_BUILD"
-AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action BUILD"
+AGGREGATOR_APP_ARGS_CLEAN_BUILD="${AGGREGATOR_APP_BASE}  --action CLEAN_BUILD"
 
 AGGREGATOR_APP_ARGS_BUILDONLY="${AGGREGATOR_APP_BASE}  --action BUILD"
 
