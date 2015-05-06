@@ -123,7 +123,7 @@
     <exec
       executable="/bin/bash"
       dir="${testRepoDirectory}">
-      <env kep="TMP_DIR" path="${WORKSPACE}/tmp" />
+      <env key="TMP_DIR" path="${WORKSPACE}/tmp" />
       <arg value="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/verifydir.sh" />
       <arg value="${testRepoDirectory}" />
       <arg value="${reportOutputDir}/reporeports/reports" />
