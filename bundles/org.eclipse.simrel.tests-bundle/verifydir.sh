@@ -74,6 +74,9 @@ then
     rm -fr "${VERIFYOUTDIR}"/*
 fi
 
+# remember, best to pass in env variable of ${WORKSPACE}/tmp when running on Hudson
+export TMP_DIR=${TMP_DIR:-/tmp}
+
 # We display general info at beginning, and at end, just so it is easier not to miss.
 info
 
