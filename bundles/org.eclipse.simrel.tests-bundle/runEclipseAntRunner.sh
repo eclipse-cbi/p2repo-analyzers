@@ -14,6 +14,7 @@ else
 fi
  
 source aggr_properties.shsource
+source ${PWD}/aggr_properties.shsource
 
 # These first few variables commonly need to overridden on test machines, they 
 # are very specific per machine. 
