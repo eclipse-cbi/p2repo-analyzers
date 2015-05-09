@@ -47,18 +47,18 @@
      So far, only the "clean build" has any real tests, be eventually others
      could have some checks/tests.
   -->
-  <target name="validateOnly">
+  <target name="validateOnlyTests">
     <echo message="No validation-only tests, yet" />
     <echoproperties />
   </target>
 
-  <target name="cachedBuild">
+  <target name="cachedBuildTests">
     <echo message="No cached build tests, yet" />
     <echoproperties />
   </target>
 
   <target
-    name="cleanBuild"
+    name="cleanBuildTests"
     depends="runTests">
     <echo>
       Ran standard clean build reports and tests.
