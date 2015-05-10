@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -31,7 +31,7 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 /**
  * Tests that licenses in the repository are consistent with the platform
  * feature license.
- * 
+ *
  * This was based on test code originally attached to bug 306627
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=306627
  */
@@ -141,7 +141,7 @@ public class TestRepo extends BuildRepoTests {
 
     /**
      * Use for debugging and exploration
-     * 
+     *
      * @param outFileWriter
      * @param iu
      * @throws IOException

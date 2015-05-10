@@ -3,7 +3,7 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: IBM Corporation - initial API and implementation
 
  ******************************************************************************/
@@ -34,7 +34,7 @@ import org.osgi.framework.BundleException;
 /**
  * Test to check MANIFEST.MF files in jars in a repository for presence of
  * Eclipse-SourceReferences.
- * 
+ *
  * @since 3.7
  */
 public class ESTest extends TestJars {

@@ -26,9 +26,9 @@ import org.eclipse.simrel.tests.utils.ReportWriter;
 /**
  * Highest super class of common repo and build directory tests. Should be only
  * the most common methods here or constants here, such as were to put output.
- * 
+ *
  * @author davidw
- * 
+ *
  */
 public class BuildRepoTests {
 
@@ -64,7 +64,7 @@ public class BuildRepoTests {
      * variable to catch errors in use. initializing direcotry should only be
      * done once, per session or will end up deleting reports generated earlier
      * in session.
-     * 
+     *
      * @return
      */
     private static boolean      outputDirectoryInitialized;
@@ -152,7 +152,7 @@ public class BuildRepoTests {
 
     /**
      * should be rarely used, just for copying in index, marker files, etc.
-     * 
+     *
      * @return
      */
     protected String getTopReportOutputDirectory() {
@@ -167,7 +167,7 @@ public class BuildRepoTests {
 
     /**
      * This is the main directory where report generators would put their output
-     * 
+     *
      * @return
      */
     protected String getReportOutputDirectory() {
@@ -179,7 +179,7 @@ public class BuildRepoTests {
 
     /**
      * common method of halting if something really odd is encountered.
-     * 
+     *
      * @param messagestring
      */
     protected void handleFatalError(String messagestring) {
@@ -344,7 +344,7 @@ public class BuildRepoTests {
      * hefty for large repos/jars, so usually suggested that the standard Java
      * system property java.io.tmpdir be set to something appropriate. (The
      * property defaults to /tmp which on some systems can be fairly small).
-     * 
+     *
      * @return name of directory to use for temporary files
      */
     protected String getTempWorkingDir() {
@@ -357,7 +357,7 @@ public class BuildRepoTests {
     /**
      * We do allow explicit "setting", but if not set, uses the typical java
      * system property java.io.tmpdir
-     * 
+     *
      * @param tempWorkingDir
      */
     public void setTempWorkingDir(String tempWorkingDir) {

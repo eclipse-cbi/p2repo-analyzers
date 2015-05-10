@@ -4,7 +4,7 @@
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
 export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
-# TODO: make sure build home does not end with 
+# TODO: make sure build home does not end with
 # literal {release}
 echo "BUILD_HOME: $BUILD_HOME"
 fi
@@ -32,7 +32,7 @@ LOG_URL="${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BU
 # ##################################
 # typically the remaining variables not have to be
 # changed on a local, non-production machine,
-# as they just compute variables based on above, 
+# as they just compute variables based on above,
 # or provide relatively machine-independent values.
 
 BUILD_TOOLS=org.eclipse.simrel.tools
@@ -88,12 +88,12 @@ AGGREGATOR_APP_ARGS_VALIDATEONLY="${AGGREGATOR_APP_BASE} --action VALIDATE"
 
 # only one or the other
 # --mavenResult
-# --trustedContributions Eclipse,Equinox 
+# --trustedContributions Eclipse,Equinox
 
 # add this to production aggregtor app args only
-# --production 
+# --production
 
-# NOTE: quotes needed in bash scripts ... NOT in ant properties! 
+# NOTE: quotes needed in bash scripts ... NOT in ant properties!
 # -Declipse.p2.mirrors=false
 BUILDER_VM_ARGS="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp
 #-Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"

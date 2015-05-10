@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [[ $# != 2 ]] 
+if [[ $# != 2 ]]
 then
     printf "\tERROR: this script, "${0##*/}", requires the name of the jar or jar.pack.gz file to verify and the version of Java to use 8,7,6, or 5.\n" >&2
     exit 1
 fi
 
-if [[ -z $VERIFYOUTDIR ]] 
+if [[ -z $VERIFYOUTDIR ]]
 then
     printf "\tERROR: this script, "${0##*/}", requires VERIFYOUTDIR to be defined.\n" >&2
     exit 1
@@ -31,18 +31,18 @@ fi
 
 jarname=$(basename "${filename}")
 
-# Best to have a number of "JAVA_N_HOME" defined, since one argument 
+# Best to have a number of "JAVA_N_HOME" defined, since one argument
 # to this script is "JAVA_VER" which allows the calling script so specify
 # which version to use for verification.
 JAVA_5_HOME=/shared/common/jdk1.5.0-latest
 JAVA_6_HOME=/shared/common/jdk1.6.0-latest
 JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
-# We always set JAVA_HOME explicitly to what we want, since on many systems, 
-# is it set to some JRE that would not suffice. 
+# We always set JAVA_HOME explicitly to what we want, since on many systems,
+# is it set to some JRE that would not suffice.
 
     case $JAVA_VER in
-        5) 
+        5)
         JAVA_HOME=$JAVA_5_HOME
         ;;
         6)
@@ -86,7 +86,7 @@ JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
     mkdir -p ${TMP_DIR}
     PPAT_PACKGZ="(.*).pack.gz$"
     if [[ "$jarname" =~  $PPAT_PACKGZ ]]
-    then 
+    then
         basejarname=${BASH_REMATCH[1]}
         #echo -e "\n basejarname: " $basejarname "\n"
         "${UNPACK200_EXE}" $filename ${TMP_DIR}/$basejarname
@@ -105,7 +105,7 @@ JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
         exitcode=$?
     fi
 
-    # jarsigner sometimes returns one line, sometimes two ... we take 
+    # jarsigner sometimes returns one line, sometimes two ... we take
     # out EOLs to print compactly
     vresultoneline=`echo "${vresult}" | tr '\n' ' '`
 
@@ -113,7 +113,7 @@ JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
     PPAT_VERIFIED="^.*jar\ verified.*"
     # no manifest is not signed for our purposes ... occurs a lot for unsigned feature jars
     PPAT_UNSIGNED_OR_NOMANIFEST="^.*(jar is unsigned)|(no manifest).*"
-    # do not currently use unsigned or no manifest (by themselves) 
+    # do not currently use unsigned or no manifest (by themselves)
     # nor "copy mode" ... copy mode printed to stdout by unpack200
     #PPAT_UNSIGNED="^jar is unsigned.*"
     #PPAT_NOMANIFEST="^no manifest.*"
@@ -121,12 +121,12 @@ JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
 
     if [[ "${vresultoneline}" =~ $PPAT_VERIFIED ]]
     then
-        printf '%-80s \t\t' "   ${jarname}: " >> "${VERIFIED_OUTFILE}" 
+        printf '%-80s \t\t' "   ${jarname}: " >> "${VERIFIED_OUTFILE}"
         printf '%s\n' " ${vresult} " >> "${VERIFIED_OUTFILE}"
     elif [[ "${vresultoneline}" =~ $PPAT_UNSIGNED_OR_NOMANIFEST ]]
     then
 
-        # list "known cases", that can not be signed, 
+        # list "known cases", that can not be signed,
         # in their own "known exception file", else list in "unsigned" file.
 
         # For reasons of addition of org.eclipse.jdt.core.compiler.batch see
@@ -138,26 +138,26 @@ JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
         PPAT_ECLIPSE_UNSIGNED='(org\.eclipse\.jdt\.core\.compiler\.batch.*)|(org\.eclipse\.jdt\.core\.compiler\.batch\.source_.*)'
         PPAT_KNOWN_UNSIGNED="$PPAT_COMMON_UNSIGNED|$PPAT_ORBIT_UNSIGNED|$PPAT_ECLIPSE_UNSIGNED"
         echo "KNOWN UNSIGNED: $PPAT_KNOWN_UNSIGNED" >&2
-        if  [[ ${jarname} =~ $PPAT_KNOWN_UNSIGNED ]]       
+        if  [[ ${jarname} =~ $PPAT_KNOWN_UNSIGNED ]]
         then
             printf '%-100s \t\t' "   ${jarname}: "  >> "${KNOWN_EXCEPTION}"
             printf '%s\n' " ${vresult} "  >> "${KNOWN_EXCEPTION}"
 
         else
             # purposely no line delimiter, so output of jarsigner is on same line
-            printf '%-100s \t\t' "   ${jarname}: "  >> "${UNSIGNED_OUTFILE}" 
+            printf '%-100s \t\t' "   ${jarname}: "  >> "${UNSIGNED_OUTFILE}"
             printf '%s\n' " ${vresult} "  >> "${UNSIGNED_OUTFILE}"
-        fi 
+        fi
 
-    else 
+    else
         # fall through if unexpected result. Will happen if can not unpack200 a file
-        printf '%-100s \t\t' "   ${jarname}: "  >> "${ERROR_EXIT_FILE}" 
-        printf '%s\n' " ${vresult} "  >> "${ERROR_EXIT_FILE}" 
+        printf '%-100s \t\t' "   ${jarname}: "  >> "${ERROR_EXIT_FILE}"
+        printf '%s\n' " ${vresult} "  >> "${ERROR_EXIT_FILE}"
     fi
 
     if [[ $exitcode -gt 0 ]]
     then
 
-        echo -e "\n exitcode: " $exitcode: $(basename $filename)" \n"  >> "${ERROR_EXIT_FILE}"  
+        echo -e "\n exitcode: " $exitcode: $(basename $filename)" \n"  >> "${ERROR_EXIT_FILE}"
     fi
 

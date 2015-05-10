@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# we make the assumption that 'verify.sh' is in same directory as 'verifydir.sh' 
-# so the correct 'verify.sh' file command can be used; the one that "goes with" the verifydir.sh script 
-# we are currently executing. So, we store the path to verifydir.sh in EXECDIR.  
+# we make the assumption that 'verify.sh' is in same directory as 'verifydir.sh'
+# so the correct 'verify.sh' file command can be used; the one that "goes with" the verifydir.sh script
+# we are currently executing. So, we store the path to verifydir.sh in EXECDIR.
 EXECDIR=${0%/*}
 
-function info () 
+function info ()
 {
     echo -e "\n\tverify directory: ${loc}"
     echo -e "\n\tfor file pattern: ${pat}"
     echo -e "\n\tresult list files are in \n${VERIFYOUTDIR}\n"
 }
 
-function pause () 
+function pause ()
 {
     TIMEOUT=$1
-    if [[ -z ${TIMEOUT} ]]  
+    if [[ -z ${TIMEOUT} ]]
     then
         TIMEOUT=10
     fi
@@ -66,11 +66,11 @@ fi
 # make, in case doesn't exist
 mkdir -p "${VERIFYOUTDIR}"
 
-# even though we just created it above, include the following if check 
-# here to gaurd against future changes, since if 'verfiyoutdir' is 
-# not defined, the remove would be for the root directory!! 
+# even though we just created it above, include the following if check
+# here to gaurd against future changes, since if 'verfiyoutdir' is
+# not defined, the remove would be for the root directory!!
 if [[ -n "${VERIFYOUTDIR}" ]]
-then 
+then
     rm -fr "${VERIFYOUTDIR}"/*
 fi
 
@@ -81,7 +81,7 @@ export TMP_DIR=${TMP_DIR:-/tmp}
 info
 
 # Adjust the "list of versions" to check more than one Java version
-#for ver in 8 7 6 
+#for ver in 8 7 6
 for ver in 8
 do
 find "${loc}" -regex "${pat}" -exec ${EXECDIR}/verify.sh '{}' $ver \;
@@ -89,15 +89,15 @@ done
 
 info
 
-# if certain files were not created during signing checks, create a "plain" one at expected location, 
+# if certain files were not created during signing checks, create a "plain" one at expected location,
 # to avoid 404 errors from standard index.html. For example, all jars are signed, there will be no unsigned.txt files.
-# TODO: change HTML to PHP, so we can "check for the existence" of these files ... i.e. easer to flag 
-# an error if exists or not, instead of based on size? 
+# TODO: change HTML to PHP, so we can "check for the existence" of these files ... i.e. easer to flag
+# an error if exists or not, instead of based on size?
 #if [ ! -e "${VERIFYOUTDIR}"/unsigned.txt ]
 #then
 #    echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned.txt
-#fi 
+#fi
 #if [ ! -e "${VERIFYOUTDIR}"/nestedjars.txt ]
 #then
 #    echo  "There were no nested packed jars in the directories checked. " > "${VERIFYOUTDIR}"/nestedjars.txt
-#fi 
+#fi
