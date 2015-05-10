@@ -76,11 +76,11 @@ fi
 
 UNPACK200_EXE=$JAVA_HOME/jre/bin/unpack200
 VERIFY_EXE=$JAVA_HOME/bin/jarsigner
-VERIFY_OPTIONS="-verify -verbose  -certs"
-COMPACT=false
+#VERIFY_OPTIONS="-verify -verbose  -certs"
+#COMPACT=false
 #VERIFY_OPTIONS="-verify -verbose"
-#VERIFY_OPTIONS="-verify"
-#COMPACT=true
+VERIFY_OPTIONS="-verify"
+COMPACT=true
 
 CHECK_SUM_FILE="${VERIFYOUTDIR}/checksums${JAVA_VER}.txt"
 VERIFIED_OUTFILE="${VERIFYOUTDIR}/verified${JAVA_VER}.txt"
