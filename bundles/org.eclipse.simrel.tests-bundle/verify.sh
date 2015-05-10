@@ -189,6 +189,16 @@ else
     printf '%s\n' " ${vresultpneline} "  >> "${ERROR_EXIT_FILE}" 
 fi
 
+# When 'compact' thing sort well, but, not if non-compact output.
+if [[ "true" == "${COMPACT}" ]] 
+then
+
+sort "${VERIFIED_OUTFILE}"
+sort "${KNOWN_EXCEPTION}"
+sort "${UNSIGNED_OUTFILE}"
+
+fi
+
 if [[ $exitcode -gt 0 ]]
 then
     echo -e "\n exitcode: " $exitcode: $(basename $filename)" \n"  >> "${ERROR_EXIT_FILE}"  
