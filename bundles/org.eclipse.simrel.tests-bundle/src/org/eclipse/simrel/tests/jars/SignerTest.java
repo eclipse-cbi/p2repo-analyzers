@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -103,8 +104,9 @@ public class SignerTest extends TestJars {
             reportWriter.writeln("   Errors found: " + errors.size());
 
             if (errors.size() > 0) {
-                Collections.sort(errors);
-                for (String error : errors) {
+                List<String> sortable = new ArrayList<String>(errors);
+                Collections.sort(sortable);
+                for (String error : sortable) {
                     reportWriter.writeln(error);
                 }
             }
@@ -112,8 +114,9 @@ public class SignerTest extends TestJars {
             reportWriter.writeln("   Warnings found: " + warnings.size());
 
             if (warnings.size() > 0) {
-                Collections.sort(warnings);
-                for (String warn : warnings) {
+                List<String> sortable = new ArrayList<String>(errors);
+                Collections.sort(sortable);
+                for (String warn : sortable) {
                     reportWriter.writeln(warn);
                 }
             }
