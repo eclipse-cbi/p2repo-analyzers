@@ -14,6 +14,7 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.simrel.tests.jars.BREETest;
 import org.eclipse.simrel.tests.jars.ESTest;
 import org.eclipse.simrel.tests.jars.Pack200Test;
+import org.eclipse.simrel.tests.jars.SignerTest;
 import org.eclipse.simrel.tests.jars.TestLayoutTest;
 import org.eclipse.simrel.tests.jars.VersionTest;
 import org.eclipse.simrel.tests.repos.FeatureDisplayableDataChecker;
@@ -76,8 +77,8 @@ public class RepositoryTest {
 	}
 
 	@Test
-	public void testVersionUniqness() throws ProvisionException, OperationCanceledException, URISyntaxException,
-			IOException {
+	public void testVersionUniqness()
+			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		VersionChecking checker = new VersionChecking(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			assertTrue("Unique Versions used in repository", !checker.testVersionUniqness());
@@ -94,8 +95,8 @@ public class RepositoryTest {
 	}
 
 	@Test
-	public void testProviderName() throws ProvisionException, OperationCanceledException, URISyntaxException,
-			IOException {
+	public void testProviderName()
+			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		ProviderNameChecker checker = new ProviderNameChecker(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			assertTrue("Correct provider names", !checker.testProviderNames());
@@ -103,8 +104,8 @@ public class RepositoryTest {
 	}
 
 	@Test
-	public void testFeatureDisplayableData() throws ProvisionException, OperationCanceledException, URISyntaxException,
-			IOException {
+	public void testFeatureDisplayableData()
+			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		FeatureDisplayableDataChecker checker = new FeatureDisplayableDataChecker(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			assertTrue("Correct displayable data (checkLicenseConsistency,checkCopyrights,checkDescriptions)",
@@ -113,8 +114,8 @@ public class RepositoryTest {
 	}
 
 	@Test
-	public void testFeatureNameLengths() throws ProvisionException, OperationCanceledException, URISyntaxException,
-			IOException {
+	public void testFeatureNameLengths()
+			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		FeatureNameLengths checker = new FeatureNameLengths(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			assertFalse("FeatureDirectoryLengths is  <=" + FeatureNameLengths.MAX_CRITERIA,
@@ -123,8 +124,8 @@ public class RepositoryTest {
 	}
 
 	@Test
-	public void testIUVersionCheckToReference() throws ProvisionException, OperationCanceledException,
-			URISyntaxException, IOException {
+	public void testIUVersionCheckToReference()
+			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		IUVersionCheckToReference checker = new IUVersionCheckToReference(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			if (refRepoDir != null) {
@@ -155,6 +156,14 @@ public class RepositoryTest {
 		Pack200Test checker = new Pack200Test(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker)) {
 			assertTrue("Correct Pack200", !checker.testBundlePack());
+		}
+	}
+
+	@Test
+	public void testSigning() throws OperationCanceledException, IOException {
+		SignerTest checker = new SignerTest(CONF_FROM_SYSTEM_PROPERTIES);
+		if (configureChecker(checker)) {
+			assertTrue("Correct signature", !checker.verifySignatures());
 		}
 	}
 

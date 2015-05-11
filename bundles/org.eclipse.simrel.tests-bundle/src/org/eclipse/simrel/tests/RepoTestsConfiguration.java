@@ -84,7 +84,13 @@ public final class RepoTestsConfiguration {
 
     public static RepoTestsConfiguration createFromSystemProperties() {
         String repoDir = System.getProperty(REPORT_REPO_DIR_PARAM, null);
+        if (repoDir == null || repoDir.isEmpty()) {
+            repoDir = System.getenv(REPORT_REPO_DIR_PARAM);
+        }
         String outDir = System.getProperty(REPORT_OUTPUT_DIR_PARAM, null);
+        if (outDir == null || outDir.isEmpty()) {
+            outDir = System.getenv(REPORT_OUTPUT_DIR_PARAM);
+        }
         String tmpDir = System.getProperty("java.io.tmpdir");
         String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
         return new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
