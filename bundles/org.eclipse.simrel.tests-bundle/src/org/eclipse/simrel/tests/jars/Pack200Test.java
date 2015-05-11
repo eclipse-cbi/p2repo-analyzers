@@ -3,10 +3,10 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: IBM Corporation - initial API and implementation
- * This file originally came from 'Eclipse Orbit' project then adapted to use 
- * in WTP and improved to use 'Manifest' to read manifest.mf, instead of reading 
+ * This file originally came from 'Eclipse Orbit' project then adapted to use
+ * in WTP and improved to use 'Manifest' to read manifest.mf, instead of reading
  * it as a properties file.
  ******************************************************************************/
 package org.eclipse.simrel.tests.jars;
@@ -123,7 +123,7 @@ public class Pack200Test extends TestJars {
             reportWriter.writeln("   Errors found: " + errors.size());
 
             printInvalidJars(invalidJars, reportWriter);
-            
+
             if (errors.size() > 0) {
                 Collections.sort(errors);
                 for (Iterator iter = errors.iterator(); iter.hasNext();) {
@@ -184,11 +184,10 @@ public class Pack200Test extends TestJars {
             }
         } catch (ZipException e) {
             System.out.println("Failed to open jar file (zip exception): " + jarfile.getAbsolutePath());
-        
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (jar != null) {
                 try {
                     jar.close();
@@ -232,7 +231,7 @@ public class Pack200Test extends TestJars {
                 } catch (IOException e) {
                     // ignore
                 }
-            }            
+            }
         }
         return containsJava;
     }

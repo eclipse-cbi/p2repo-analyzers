@@ -169,7 +169,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             Collections.sort(badLicense, new IUIdComparator());
             for (IInstallableUnit unit : badLicense) {
                 makeHeaderIfNeeded(outfileWriter, unit.getId());
-                println(outfileWriter,  printableIdString(unit));
+                println(outfileWriter, printableIdString(unit));
                 Collection<ILicense> licenses = unit.getLicenses();
                 ILicense featureLicense = licenses.iterator().next();
                 String licenseText = featureLicense.getBody();
@@ -183,17 +183,17 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printHeader(outfileWriter, 3, "Features with old (2010) license");
             Collections.sort(license2010, new IUIdComparator());
             for (IInstallableUnit unit : license2010) {
-                println(outfileWriter,  printableIdString(unit));
+                println(outfileWriter, printableIdString(unit));
             }
             printHeader(outfileWriter, 3, "Features with old (2011) license");
             Collections.sort(license2011, new IUIdComparator());
             for (IInstallableUnit unit : license2011) {
-                println(outfileWriter,  printableIdString(unit));
+                println(outfileWriter, printableIdString(unit));
             }
             printHeader(outfileWriter, 3, "Features with current (2014) license");
             Collections.sort(license2014, new IUIdComparator());
             for (IInstallableUnit unit : license2014) {
-                println(outfileWriter,  printableIdString(unit));
+                println(outfileWriter, printableIdString(unit));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -216,7 +216,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
     private String printableIdString(IInstallableUnit unit) {
         String printIdString = unit.getId();
-        // we want to mark "products" in a special way, since not sure where 
+        // we want to mark "products" in a special way, since not sure where
         // they are displayed.
         String productString = unit.getProperty("org.eclipse.equinox.p2.type.product");
         boolean productValue = "true".equals(productString);

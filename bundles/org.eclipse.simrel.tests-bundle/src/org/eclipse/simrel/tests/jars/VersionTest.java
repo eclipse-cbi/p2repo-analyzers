@@ -3,10 +3,10 @@
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: IBM Corporation - initial API and implementation
- * This file originally came from 'Eclipse Orbit' project then adapted to use 
- * in WTP and improved to use 'Manifest' to read manifest.mf, instead of reading 
+ * This file originally came from 'Eclipse Orbit' project then adapted to use
+ * in WTP and improved to use 'Manifest' to read manifest.mf, instead of reading
  * it as a properties file.
  ******************************************************************************/
 package org.eclipse.simrel.tests.jars;
@@ -34,7 +34,7 @@ public class VersionTest extends TestJars {
         super(configurations);
     }
 
-    private static final String outputFilename = "versionPatternCheck.txt";
+    private static final String outputFilename       = "versionPatternCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
     private static final String EXTENSION_PACEKD_JAR = ".jar.pack.gz";
     private static final String EXTENSION_ZIP        = ".zip";
@@ -44,7 +44,7 @@ public class VersionTest extends TestJars {
     private String              ANY                  = ".*";
     private Pattern             threedots            = Pattern.compile(ANY + LITERAL_PERIOD + ANY + LITERAL_PERIOD + ANY
                                                              + LITERAL_PERIOD + ANY);
-    public ReportWriter        reportWriter;
+    public ReportWriter         reportWriter;
 
     public static void main(String[] args) {
 

@@ -4,7 +4,7 @@
 
 if [[ -z "${release}" ]]
 then
-    echo 
+    echo
     echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
     echo "   release=kepler ./$( basename $0 )"
     echo

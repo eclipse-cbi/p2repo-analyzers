@@ -7,7 +7,7 @@ example
    Java with BREE: 314
    Non Java without BREE:296
 
-   Distribution of BREEs in Java Bundles 
+   Distribution of BREEs in Java Bundles
 
 		    1	CDC-1.0/Foundation-1.0,J2SE-1.2
 		   40	CDC-1.0/Foundation-1.0,J2SE-1.3

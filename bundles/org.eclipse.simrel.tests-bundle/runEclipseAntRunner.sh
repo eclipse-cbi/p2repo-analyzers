@@ -2,7 +2,7 @@
 
 if [[ -z "${release}" ]]
 then
-    echo 
+    echo
     echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
     echo "   release=kepler ./$( basename $0 )"
     echo
@@ -12,17 +12,18 @@ else
     echo "release: ${release}"
     echo
 fi
- 
-source aggr_properties.shsource
 
-# These first few variables commonly need to overridden on test machines, they 
-# are very specific per machine. 
+source aggr_properties.shsource
+source ${PWD}/aggr_properties.shsource
+
+# These first few variables commonly need to overridden on test machines, they
+# are very specific per machine.
 # the top directory of build-related directories
 export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
-export JAVA_HOME=${JAVA_HOME:-/shared/common/jdk1.6.0-latest}
+export JAVA_HOME=${JAVA_HOME:-${JAVA_8_HOME}
 
-# These remaining variable should not need to be overriddent, as they 
-# are relatively constant, or computed from others. 
+# These remaining variable should not need to be overridden, as they
+# are relatively constant, or computed from others.
 export RELENG_TESTS_DIR=${RELENG_TESTS_DIR:-org.eclipse.simrel.tests}
 export JAVA_EXEC_DIR=${JAVA_EXEC_DIR:-${JAVA_HOME}/jre/bin}
 export BUILD_TESTS_DIR=${BUILD_TESTS_DIR:-${BUILD_HOME}/${RELENG_TESTS_DIR}}

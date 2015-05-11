@@ -97,7 +97,7 @@ public class CheckGreedy extends TestRepo {
             String entryName = null;
             do {
                 entryName = zipEntry.getName();
-            } while ((entryName != null) && (!entryName.equals("content.xml")) && null != (zipEntry = zipStream.getNextEntry()) );
+            } while ((entryName != null) && (!entryName.equals("content.xml")) && null != (zipEntry = zipStream.getNextEntry()));
 
             if ((entryName != null) && !entryName.equals("content.xml")) {
                 throw new IllegalArgumentException("zip entry 'content.xml' was not found as expected.");
@@ -121,7 +121,7 @@ public class CheckGreedy extends TestRepo {
                 throw new IllegalArgumentException("Neither content.jar nor content.xml file found at URL: " + getRepoURLToTest());
             }
 
-        } 
+        }
 
         if (inputStream != null) {
             characterStream = new InputStreamReader(inputStream);

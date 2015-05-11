@@ -60,8 +60,7 @@ public class ProviderNameChecker extends TestRepo {
                         }
                         // common errors and misspellings
                         else if (providerName.startsWith("%") || providerName.equals("Eclipse")
-                                || providerName.startsWith("eclipse.org") 
-                                || providerName.equals("unknown")
+                                || providerName.startsWith("eclipse.org") || providerName.equals("unknown")
                                 || providerName.startsWith("Engineering") || providerName.contains("org.eclipse.jwt")
                                 || providerName.contains("www.example.org") || providerName.contains("www.eclipse.org")
                                 || providerName.contains("Provider") || providerName.contains("provider")

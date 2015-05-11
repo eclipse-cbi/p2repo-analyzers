@@ -22,7 +22,6 @@ public class ReportWriter {
         this.outputFilename = outputFilename;
     }
 
-
     public void writeln(String text) throws FileNotFoundException {
         getOutfilewriter().write(text + EOL);
     }

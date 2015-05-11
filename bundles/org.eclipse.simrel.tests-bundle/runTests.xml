@@ -1,105 +1,150 @@
-<project name="SimRel Tests" basedir="." default="runTests">
+<project
+  name="SimRel Tests"
+  basedir="."
+  default="runTests">
 
-	<property environment="env" />
-	<!-- This property file name is itself a property, so it can be overridden 
-		on one machine versus another. We do it this way, instead of just specifying 
-		-propertyFile on command line, so that the property values can be "nested" 
-		in other property values and evaluated lazily. -->
+  <property environment="env" />
+  <!-- This property file name is itself a property, so it can be overridden
+    on one machine versus another. We do it this way, instead of just specifying
+    -propertyFile on command line, so that the property values can be "nested"
+    in other property values and evaluated lazily. -->
 
-	<property name="aggrPropertyFile" value="aggr.properties" />
+  <property
+    name="aggrPropertyFile"
+    value="aggr.properties" />
 
-	<property file="${aggrPropertyFile}" />
+  <loadproperties srcfile="${aggrPropertyFile}" />
 
-	<!-- unless otherwise defined in aggrPropertyFile, assume build home is 
-		basedir -->
-	<property name="env.BUILD_HOME" value="${basedir}" />
+  <!-- We'll put test output files right in "the p2 repository". Though, later
+       we will want to "save old reports", without saving the entire repository.
+       .../reporeports/reports contains the actual reports.
+       .../reporeports contains the index.html file.
+       .../reporeports/reports/verifyoutdir contains the "signing verification" reports.
+  -->
+  <property
+    name="reportOutputDir"
+    value="${testRepoDirectory}/buildInfo/" />
 
-	<!-- By default, we'll put test output files in "reportOutputDir" + reporeports + reports so the index.html 
-		file goes in "reportOutputDir" + reporeports, and verifydiroutput goes in "reportOutputDir" + reporeports + reports + verifyoutdir  -->
-	<property name="reportOutputDir" value="${TEST_RESULTS}" />
+  <!-- buildInfo should already exist, and contain "properties" of build -->
+  <mkdir dir="${reportOutputDir}" />
 
-	<property name="reportRepoDir" value="${stagingDirectory}" />
+  <!--
+  <property
+    name="reportRepoDir"
+    value="${stagingDirectory}" />
+  -->
 
-	<property name="referenceRepo" value="${REPO_ROOT}/releases/luna/201406250900/" />
+  <property
+    name="referenceRepoDir"
+    value="${REPO_ROOT}/releases/luna/201502271000/" />
 
-	<property name="eclipseExecutable" value="${ECLIPSE_TEST_EXE}" />
+  <property
+    name="eclipseTestExecutable"
+    value="${ECLIPSE_TEST_EXE}" />
 
-	<target name="runTests">
-		<echo message="Creating Reports" />
+  <!--
+     Each "type" of build, ends by calling one of these targets.
+     So far, only the "clean build" has any real tests, be eventually others
+     could have some checks/tests.
+  -->
+  <target name="validateOnlyTests">
+    <echo message="No validation-only tests, yet" />
+    <echoproperties />
+  </target>
 
-		<echoproperties />
+  <target name="cachedBuildTests">
+    <echo message="No cached build tests, yet" />
+    <echoproperties />
+  </target>
 
-		<fail unless="stagingsegment" />
-		<echo message="reportOutputDir: ${reportOutputDir}" />
-		<mkdir dir="${reportOutputDir}/reporeports" />
+  <target
+    name="cleanBuildTests"
+    depends="runTests">
+    <echo>
+      Ran standard clean build reports and tests.
+      See report in ${reportOutputDir}.
+    </echo>
+  </target>
 
-		<!-- NOTE: we strongly assume 'reportOutputDir' is dedicated completely 
-			for our use. Do not set to user.home!! normally, on production machine 
-			reportOutputDir = /shared/simrel/${release}/.
-			If not specfified, the application assumes 
-			reportOutputDir = ${user.dir}/temp/simrel -->
-		<delete>
-			<fileset dir="${reportOutputDir}/reporeports">
-			</fileset>
-		</delete>
-		<mkdir dir="${reportOutputDir}/reporeports" />
+  <target name="runTests">
+    <echo message="Creating Reports" />
 
-		<!-- no longer needed, handled by app
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="templateFiles/indexPending.html"
-			overwrite="true" />
-		-->
+    <echoproperties />
 
-		<antcall target="runReports" />
+    <antcall target="runReports" />
 
-		<!-- no longer needed, handled by app
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="templateFiles/indexmainpresign.html"
-			overwrite="true" />
-		-->
+    <antcall target="runSignatureVerification" />
 
-		<antcall target="runSignatureVerification" />
+    <!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
 
-		<!-- <mkdir dir="${reportOutputDir}/output-eclipse"/> <testLayouttask tempWorkingDir="/tmp/tempWorkingLocation" 
-			directoryToCheck="/home/data/httpd/download.eclipse.org/eclipse/updates/3.7milestones/S-3.7RC3-I201105261708/" 
-			outputResultsDirectory="${reportOutputDir}/output-eclipse" failuresoccurred="failuresoccurred"/> -->
+    <!-- currently, we never "fail" ... but, will in future -->
+    <fail if="failuresoccurred" />
+  </target>
 
-		<!-- TODO: use tmp on staging directory to avoid filling up /tmp? -->
-		<delete dir="/tmp/tempWorkingLocation" />
-
-		<!-- currently, we never "fail" ... but, will in future -->
-		<fail if="failuresoccurred" />
-	</target>
-
-	<target name="runReports">
-		<property name="APP_NAME" value="org.eclipse.simrel.tests.repoReport" />
-		<property name="VM_ARGS" value="-vmargs -Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${reportRepoDir} -DreferenceRepo=${referenceRepo}" />
-		<!-- eclipseExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
-		
-		<exec executable="${eclipseExecutable}" dir="${basedir}" failonerror="true">
-			<arg line="-debug -nosplash --launcher.suppressErrors -application ${APP_NAME} -vm ${JAVA_EXEC_DIR} ${VM_ARGS}" />
-		</exec>
-	</target>
+  <target name="runReports">
+    <property
+      name="REPORT_APP_NAME"
+      value="org.eclipse.simrel.tests.repoReport" />
+    <property
+      name="VM_TEST_ARGS"
+      value="-Xmx256m -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${testRepoDirectory} -DreferenceRepo=${referenceRepoDir}" />
+    <!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
+    <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
+    <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
+    <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
+    <echo message="in runReports: VM_TEST_ARGS: ${VM_TEST_ARGS}" />
+    <echo message="in runReports: reportOutputDir: ${reportOutputDir}" />
+    <echo message="in runReports: testRepoDirectory: ${testRepoDirectory}" />
+    <echo message="in runReports: referenceRepoDir: ${referenceRepoDir}" />
+    <echo message="in runReports: basedir: ${basedir}" />
+    <exec
+      executable="${eclipseTestExecutable}"
+      dir="${basedir}"
+      failonerror="true">
+      <arg value="-debug" />
+      <arg value="-nosplash" />
+      <arg value="-debug" />
+      <arg value="--launcher.suppressErrors" />
+      <arg value="-application" />
+      <arg value="${REPORT_APP_NAME}" />
+      <arg value="-vm" />
+      <arg value="${JAVA_EXEC_DIR}" />
+      <arg value="-vmargs" />
+      <arg line="${VM_TEST_ARGS}" />
+    </exec>
+  </target>
 
     <!-- TODO: move this to java app too. May still want to have seperate, since takes so much longer -->
-	<target name="runSignatureVerification">
-		<exec executable="${BUILD_TESTS_DIR}/verifydir.sh">
-			<arg value="${testRepoDirectory}" />
-			<arg value="${reportOutputDir}/reporeports/reports" />
+  <target name="runSignatureVerification">
+    <echo message="basedir: ${basedir}" />
+    <echo message="testRepoDirectory: ${testRepoDirectory}" />
+    <echo message="reportOutputDir: ${reportOutputDir}" />
+    <echo message="BUILD_TESTS_DIR: ${BUILD_TESTS_DIR}" />
+    <exec
+      executable="/bin/bash"
+      dir="${testRepoDirectory}">
+      <env key="TMP_DIR" path="tmp" />
+      <arg value="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/verifydir.sh" />
+      <arg value="${testRepoDirectory}" />
+      <arg value="${reportOutputDir}/reporeports/reports" />
 
-			<!-- we'll check jars only, to save time ... assume pack.gz files would 
-				be correct too. 
-				Changed, when we wanted to also test for nested packed jars.
-			--> 
-			<arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)"/> 
+      <!-- we'll check jars only, to save time ... assume pack.gz files would
+        be correct too.
+        Changed, when we wanted to also test for nested packed jars.
+      -->
+      <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)" />
 
-			<!-- restricting to 'common' just for testing ... so finishes relatively 
-				quickly <arg value=".*common.*\.jar$"/> -->
-			
-			<!-- 
-			    <arg value=".*\.jar$" />
-			-->
-		</exec>
+      <!-- restricting to 'common' just for testing ... so finishes relatively quickly
+        <arg value=".*common.*\.jar$"/> -->
+      <!--
+          <arg value=".*\.jar$" />
+      -->
+    </exec>
 
-		<copy tofile="${reportOutputDir}/reporeports/index.html" file="${BUILD_TESTS_DIR}/src/templateFiles/indexmain.html" overwrite="true" />
-	</target>
+    <copy
+      tofile="${reportOutputDir}/reporeports/index.html"
+      file="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/src/templateFiles/indexmain.html"
+      overwrite="true" />
+  </target>
 
 </project>

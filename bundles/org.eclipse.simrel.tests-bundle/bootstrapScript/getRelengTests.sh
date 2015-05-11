@@ -2,17 +2,17 @@
 
 
 
-# Note: for deployment on production machine, no "custom" properties need to be set in aggr_properties.shsource, 
-# assuming the "hudson build script" has been set up appropriately. 
-# 1. need to set "use custom workspace" so some of the relative directory assumptions are true ... 
-#    such as for Luna, set 
+# Note: for deployment on production machine, no "custom" properties need to be set in aggr_properties.shsource,
+# assuming the "hudson build script" has been set up appropriately.
+# 1. need to set "use custom workspace" so some of the relative directory assumptions are true ...
+#    such as for Luna, set
 #    /shared/simrel/${release}/org.eclipse.simrel.tests
-# 2. copy "by hand" (or scp) this getRelengTests.sh file to /shared/simrel/${release} and run from hudson from there, the parent of 
+# 2. copy "by hand" (or scp) this getRelengTests.sh file to /shared/simrel/${release} and run from hudson from there, the parent of
 #    o.e.i.tests, namely "run shell script" /shared/simrel/${release}/getRelengTests.sh
-# 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and (currently) contains an instance of eclipse SDK (4.3). 
+# 3. We currently assume "testInstance" already exists, as a child of /shared/simrel/${release}, and (currently) contains an instance of eclipse SDK (4.3).
 
-# if freshFlag is set, then "not freshFlag" is false and will skip 
-# the sanity check.   
+# if freshFlag is set, then "not freshFlag" is false and will skip
+# the sanity check.
 if ! $freshFlag && [[ ! -e ${BUILD_TOOLS} ]]
 then
     echo "${BUILD_TOOLS} does not exist as sub directory";
@@ -23,7 +23,7 @@ fi
 
 # remember to leave no slashes on first filename in source command,
 # so that users path is used to find it (first, if it exists)
-# variables that user might want/need to override, should be defined, 
+# variables that user might want/need to override, should be defined,
 # in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
 source aggr_properties.shsource 2>/dev/null
 source ${BUILD_HOME}/org.eclipse.simrel.tests/aggr_properties.shsource
@@ -35,7 +35,7 @@ BRANCH_TESTS=${BRANCH_TESTS:-master}
 TMPDIR_TESTS=${TMPDIR_TESTS:-sbtests}
 CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel}
 
-function usage() 
+function usage()
 {
     printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
     printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
@@ -65,12 +65,12 @@ do
     esac
 done
 
-# This shift is not required in our particular, current case, 
-# But is a common pattern to leave command line args at correct 
-# point, so we leave it in. 
+# This shift is not required in our particular, current case,
+# But is a common pattern to leave command line args at correct
+# point, so we leave it in.
 shift $(($OPTIND - 1))
 
-# 'env' is handy to print all env variables to log, 
+# 'env' is handy to print all env variables to log,
 # if needed for debugging
 if $verboseFlag
 then
@@ -104,8 +104,8 @@ echo "Current Directory: ${PWD}"
 # export is used, instead of checkout, just to avoid the CVS directories and since this code
 # for a local build, there should never be a need to check it back in to CVS.
 
-# if freshFlag is set, then "not freshFlag" is false and will skip 
-# the sanity check.   
+# if freshFlag is set, then "not freshFlag" is false and will skip
+# the sanity check.
 if ! $freshFlag && [[ ! -e ${RELENG_TESTS_DIR} ]]
 then
     echo "${RELENG_TESTS_DIR} does not exist as sub directory";
@@ -114,7 +114,7 @@ then
 fi
 
 
-# make sure RELENG_TESTS has been defined and is no zero length, or 
+# make sure RELENG_TESTS has been defined and is no zero length, or
 # else following will eval to "rm -fr /*" ... potentially catastrophic
 if [ -z "${RELENG_TESTS_DIR}" ]
 then
@@ -130,11 +130,11 @@ mkdir -p "${RELENG_TESTS_DIR}"
 
 # remove if already exists from previous run
 rm ${RELENG_TESTS_REPO////_}.zip* 2>/dev/null
-rm -fr ${TMPDIR_TESTS} 2>/dev/null 
+rm -fr ${TMPDIR_TESTS} 2>/dev/null
 
 wget --no-verbose -O ${RELENG_TESTS_REPO////_}.zip ${CGITURL}/${RELENG_TESTS_REPO}.git/snapshot/${BRANCH_TESTS}.zip 2>&1
 RC=$?
-if [[ $RC != 0 ]] 
+if [[ $RC != 0 ]]
 then
     echo "   ERROR: Failed to get ${RELENG_TESTS_REPO////_}.zip from  ${CGITURL}/${RELENG_TESTS_REPO}/snapshot/${BRANCH_TESTS}.zip"
     echo "   RC: $RC"
@@ -148,9 +148,9 @@ then
     quietZipFlag=
 fi
 
-unzip ${quietZipFlag} -o ${RELENG_TESTS_REPO////_}.zip -d ${TMPDIR_TESTS} 
+unzip ${quietZipFlag} -o ${RELENG_TESTS_REPO////_}.zip -d ${TMPDIR_TESTS}
 RC=$?
-if [[ $RC != 0 ]] 
+if [[ $RC != 0 ]]
 then
     echo "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${RELENG_TESTS_REPO////_}.zip to ${TMPDIR_TESTS}"
     echo "   RC: $RC"
@@ -166,7 +166,7 @@ fi
 
 rsync $rsynchvFlag -r ${TMPDIR_TESTS}/${BRANCH_TESTS}/${RELENG_TESTS_PATH}/ ${RELENG_TESTS_DIR}/
 RC=$?
-if [[ $RC != 0 ]] 
+if [[ $RC != 0 ]]
 then
     echo "ERROR: Failed to copy ${RELENG_TESTS_DIR} from ${TMPDIR_TESTS}/${BRANCH_TESTS}/${RELENG_TESTS_PATH}/"
     echo "   RC: $RC"
@@ -182,10 +182,10 @@ echo "    Done. "
 
 if $cleanFlag
 then
-    # should very rarely need to do this, Like, once release. 
-    # But Eclipse (OSGi?) creates some files with 
-    # only group read access, so to completly remove them, must use 
-    # hudsonbuild ID to get completely clean. 
+    # should very rarely need to do this, Like, once release.
+    # But Eclipse (OSGi?) creates some files with
+    # only group read access, so to completly remove them, must use
+    # hudsonbuild ID to get completely clean.
     echo "    removing all of testInstance directory"
     rm -fr testInstance
 fi
@@ -193,11 +193,11 @@ fi
 #if ! $verboseFlag
 #then
 ## cleanup unless verbose/debugging
-rm ${RELENG_TESTS_REPO////_}.zip* 
-rm -fr ${TMPDIR_TESTS} 
+rm ${RELENG_TESTS_REPO////_}.zip*
+rm -fr ${TMPDIR_TESTS}
 #fi
 
-# TODO ... a bit quirky ... need to install releng tests using this file, but then 
-# also run "installTests" target from releng tools build.xml file. 
+# TODO ... a bit quirky ... need to install releng tests using this file, but then
+# also run "installTests" target from releng tools build.xml file.
 
 exit 0

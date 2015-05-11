@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -32,7 +32,7 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 /**
  * Tests that licenses in the repository are consistent with the platform
  * feature license.
- * 
+ *
  * This was based on test code originally attached to bug 306627
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=306627
  */
@@ -146,7 +146,7 @@ public class TestRepo extends BuildRepoTests {
 
     /**
      * Use for debugging and exploration
-     * 
+     *
      * @param outFileWriter
      * @param iu
      * @throws IOException
@@ -181,20 +181,28 @@ public class TestRepo extends BuildRepoTests {
 
     private IQueryResult<IInstallableUnit> getAllIUscore(String repoURL) throws URISyntaxException, ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
-        URI repoLocation = new URI(repoURL);
-        IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
-        if (repomgr != null) {
-            IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
-            if (repo == null) {
-                handleFatalError("no repository found at " + repoLocation.toString());
-            } else {
-                allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
-                if (allIUs.isEmpty()) {
-                    handleFatalError("no IUs in repository" + repoLocation.toString());
+        URI repoLocation = null;
+        try {
+            repoLocation = new URI(repoURL);
+            IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
+            if (repomgr != null) {
+                IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
+                if (repo == null) {
+                    handleFatalError("no repository found at " + repoLocation.toString());
+                } else {
+                    allIUs = repo.query(QueryUtil.createIUAnyQuery(), null);
+                    if (allIUs.isEmpty()) {
+                        handleFatalError("no IUs in repository" + repoLocation.toString());
+                    }
                 }
+            } else {
+                System.out.println("Could not getMetadataRepositoryManager");
             }
-        } else {
-            System.out.println("Could not getMetadataRepositoryManager");
+        } catch (org.eclipse.equinox.p2.core.ProvisionException e) {
+            // Logging some extra information here, and then rethrow.
+            System.out.println("repoURL: " + repoURL);
+            System.out.println("repoLocation:" + repoLocation);
+            throw e;
         }
         return allIUs;
     }

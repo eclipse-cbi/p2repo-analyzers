@@ -70,4 +70,3 @@ Distribution of line lengths in /home/davidw/temp/junoFeatures.txt
        108    1
        109    1
        112    1
-       

@@ -26,4 +26,3 @@ Distribution of line lengths in /home/davidw/temp/features323.txt
        93     1
        94     2
        105    1
-       
