@@ -10,4 +10,7 @@ import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 public interface IArtifactChecker {
 	void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu, File file);
 
+	default CheckReport createReport(IInstallableUnit iu) {
+		return new CheckReport(this.getClass(), iu);
+	}
 }

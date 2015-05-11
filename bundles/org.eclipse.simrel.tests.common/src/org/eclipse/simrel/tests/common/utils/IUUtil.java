@@ -34,8 +34,8 @@ public class IUUtil {
 		return iu.getArtifacts().stream().anyMatch(art -> "org.eclipse.update.feature".equals(art.getClassifier()));
 	}
 
-	public static P2RepositoryDescription createRepositoryDescription(final URI p2RepoURL) throws ProvisionException,
-	OperationCanceledException {
+	public static P2RepositoryDescription createRepositoryDescription(final URI p2RepoURL)
+			throws ProvisionException, OperationCanceledException {
 		P2RepositoryDescription description = new P2RepositoryDescription();
 		description.setRepoURL(p2RepoURL);
 		IMetadataRepository repo = Activator.getMetadataRepositoryManager().loadRepository(p2RepoURL, null);
@@ -125,6 +125,26 @@ public class IUUtil {
 					// ignore
 				}
 			}
+			if (jar != null) {
+				try {
+					jar.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+	}
+
+	public static JarEntry getJarEntry(final File file, final String entryName) {
+		JarFile jar = null;
+		try {
+			jar = new JarFile(file, false, ZipFile.OPEN_READ);
+			JarEntry entry = jar.getJarEntry(entryName);
+			return entry;
+		} catch (IOException e) {
+			handleFatalError(e.getMessage());
+			return null;
+		} finally {
 			if (jar != null) {
 				try {
 					jar.close();

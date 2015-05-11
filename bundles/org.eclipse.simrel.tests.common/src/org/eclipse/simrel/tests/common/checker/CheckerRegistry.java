@@ -25,6 +25,7 @@ public class CheckerRegistry {
 		this.checkers.add(new ProviderNameChecker());
 		this.checkers = Collections.unmodifiableSet(this.checkers);
 		this.artifactCheckers.add(new BREEChecker());
+		this.artifactCheckers.add(new SignatureChecker());
 		this.artifactCheckers = Collections.unmodifiableSet(this.artifactCheckers);
 	}
 
