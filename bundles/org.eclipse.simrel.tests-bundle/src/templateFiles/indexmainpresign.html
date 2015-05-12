@@ -54,6 +54,18 @@
             <dt>Nested packed jars</dt>
             <dd>(pending)</dd>
             <dt>
+                <a href="reports/versionChecksFeatures.html">Feature versions compared to reference repository</a>
+            </dt>
+            <dd>This report goes through the repo, looking for "groups" (features) and tabulates the comparison to reference repository. 
+            The comparisons to pay most attention to are those that "decrease" from last release, to the current release.</dd>
+            <dt>
+                <a href="reports/versionChecks.html">Bundle versions compared to reference repository</a>
+            </dt>
+            <dd>Similar to the "Feature versions" report, this report scans the repo, looking for "non-groups" (bundles) and tabulates the comparison to reference repository. 
+            The comparisons to pay most attention to are those that "decrease" from last release, to the current release. Note: this report does not correctly handle cases where 
+            there are more than one version of a bundle in the repo. Sometimes those are not valid to have anyway, but sometimes it is valid, and this report does not 
+            have enough logic to know what to do with those that occur with same ID, but multiple versions. You can usually just ignore those cmparisons in this report.</dd>
+            <dt>
                 <a href="reports/versionPatternCheck.txt">Bundles and Features not using 4 part versions</a>
             </dt>
             <dd>To have p2 update correctly and OSGi to resolve bundles as expected, it is essential that bundles and features
