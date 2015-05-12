@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><jardesc>
-    <jar path="org.eclipse.simrel.tests/bundles/org.eclipse.simrel.tests-bundle/simreltests.jar"/>
+    <jar path="org.eclipse.simrel.tests-bundle/simreltests.jar"/>
     <options buildIfNeeded="true" compress="false" descriptionLocation="/org.eclipse.simrel.tests-bundle/simreltests.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -14,18 +14,18 @@
         <folder path="/org.eclipse.simrel.tests-bundle/OSGI-INF"/>
         <folder path="/org.eclipse.simrel.tests-bundle/data"/>
         <folder path="/org.eclipse.simrel.tests-bundle/documentation"/>
-        <file path="/org.eclipse.simrel.tests-bundle/verifydir.sh"/>
         <file path="/org.eclipse.simrel.tests-bundle/runTests.xml"/>
+        <file path="/org.eclipse.simrel.tests-bundle/verifydir.sh"/>
         <file path="/org.eclipse.simrel.tests-bundle/build.properties"/>
         <file path="/org.eclipse.simrel.tests-bundle/cleanupBuildResults.sh"/>
-        <file path="/org.eclipse.simrel.tests-bundle/invokeAntRunner.xml"/>
-        <file path="/org.eclipse.simrel.tests-bundle/aggr.properties"/>
-        <file path="/org.eclipse.simrel.tests-bundle/breedata.txt"/>
-        <file path="/org.eclipse.simrel.tests-bundle/about.html"/>
-        <file path="/org.eclipse.simrel.tests-bundle/ant.sh"/>
-        <javaElement handleIdentifier="=org.eclipse.simrel.tests-bundle/src"/>
         <file path="/org.eclipse.simrel.tests-bundle/runEclipseAntRunner.sh"/>
+        <file path="/org.eclipse.simrel.tests-bundle/aggr.properties"/>
         <file path="/org.eclipse.simrel.tests-bundle/plugin.xml"/>
+        <file path="/org.eclipse.simrel.tests-bundle/ant.sh"/>
+        <file path="/org.eclipse.simrel.tests-bundle/about.html"/>
+        <javaElement handleIdentifier="=org.eclipse.simrel.tests-bundle/src"/>
+        <file path="/org.eclipse.simrel.tests-bundle/invokeAntRunner.xml"/>
+        <file path="/org.eclipse.simrel.tests-bundle/breedata.txt"/>
         <file path="/org.eclipse.simrel.tests-bundle/aggr_properties.shsource"/>
         <file path="/org.eclipse.simrel.tests-bundle/repoReportsTests.launch"/>
         <folder path="/org.eclipse.simrel.tests-bundle/bootstrapScript"/>
