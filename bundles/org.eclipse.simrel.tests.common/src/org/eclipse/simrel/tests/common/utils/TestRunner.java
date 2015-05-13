@@ -26,9 +26,9 @@ import org.junit.Test;
 
 public class TestRunner {
 
-//	private static final int FEATURES_IN_REPO = 76;
-	 static final String XTEXT = "file:///Users/dhuebner/Downloads/tmf-xtext-Update-2.8.3M7-2";
-	 static final String LUNA = "file:///Users/dhuebner/git/org.eclipse.xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
+	// private static final int FEATURES_IN_REPO = 76;
+	static final String XTEXT = "file:///Users/dhuebner/Downloads/tmf-xtext-Update-2.8.3M7-2";
+	static final String LUNA = "file:///Users/dhuebner/git/org.eclipse.xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
 	private static CheckReportsManager reporter = null;
 
 	@BeforeClass
@@ -37,13 +37,13 @@ public class TestRunner {
 			long start = System.currentTimeMillis();
 			long time = start;
 
-			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(XTEXT));
+			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(LUNA));
 			System.out.println("create repo descr " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
 
 			CheckerRegistry registry = new CheckerRegistry();
 			dumpCheckerRegistry(registry);
-			
+
 			P2RepositoryAnalyser analyser = new P2RepositoryAnalyser();
 			reporter = new CheckReportsManager();
 			analyser.analyse(p2Repo, registry, reporter);
@@ -59,10 +59,10 @@ public class TestRunner {
 	private static void dumpCheckerRegistry(CheckerRegistry registry) {
 		System.out.println("IU Checker:");
 		registry.getCheckers().forEach(
-				(final IInstalationUnitChecker element) -> System.out.println(element.getClass().getSimpleName()));
+				(final IInstalationUnitChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
 		System.out.println("Artifact Checker:");
-		registry.getArtifactCheckers().forEach(
-				(final IArtifactChecker element) -> System.out.println(element.getClass().getSimpleName()));
+		registry.getArtifactCheckers()
+				.forEach((final IArtifactChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
 	}
 
 	@Test
@@ -75,21 +75,22 @@ public class TestRunner {
 	@Test
 	public void testProviderNames() {
 		Stream<CheckReport> reports = reportsByCheckerId(ProviderNameChecker.class.getName());
-		assertEquals("Wrong Provider name", 1, reports.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN)
-				.count());
+		assertEquals("Wrong Provider name", 1,
+				reports.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
 	}
 
 	@Test
 	public void testLicense() {
-		Stream<CheckReport> filter = reportsByCheckerId(LicenseConsistencyChecker.class.getName()).filter(
-				report -> report.getType() == ReportType.BAD_GUY);
+		Stream<CheckReport> filter = reportsByCheckerId(LicenseConsistencyChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.BAD_GUY);
 		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
 		assertEquals("Old License", 1, collect.size());
 	}
+
 	@Test
 	public void testSigning() {
-		Stream<CheckReport> filter = reportsByCheckerId(SignatureChecker.class.getName()).filter(
-				report -> report.getType() == ReportType.NOT_IN_TRAIN);
+		Stream<CheckReport> filter = reportsByCheckerId(SignatureChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN);
 		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
 		assertEquals("Not signed", 3, collect.size());
 	}

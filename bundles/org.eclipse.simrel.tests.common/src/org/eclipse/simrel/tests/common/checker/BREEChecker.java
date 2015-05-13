@@ -11,6 +11,7 @@ package org.eclipse.simrel.tests.common.checker;
 import java.io.File;
 import java.util.function.Consumer;
 
+import org.eclipse.equinox.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
@@ -24,7 +25,7 @@ public class BREEChecker implements IArtifactChecker {
 
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
-			final IInstallableUnit iu, final File child) {
+			final IInstallableUnit iu, IArtifactKey artKey, final File child) {
 		CheckReport report = new CheckReport(BREEChecker.class, iu);
 		try {
 			@SuppressWarnings("deprecation")

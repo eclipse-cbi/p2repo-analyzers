@@ -33,8 +33,6 @@ public class SignerTest extends TestJars {
         super(configurations);
     }
 
-    // private static final String outputFilename = "signing.txt";
-
     public boolean verifySignatures() throws IOException {
         final List<String> errors = new CopyOnWriteArrayList<String>();
         final List<String> warnings = new CopyOnWriteArrayList();

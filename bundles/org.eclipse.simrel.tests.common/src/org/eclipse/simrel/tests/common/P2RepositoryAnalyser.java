@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.simrel.tests.common;
 
+import java.io.File;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -39,14 +40,15 @@ public class P2RepositoryAnalyser {
 			parallelStream = set.parallelStream();
 		}
 		parallelStream.forEach(iu -> {
+			// run content unit tests
 			registry.getCheckers().stream().forEach(checker -> checker.check(consumer, repoDescr, iu));
-			iu.getArtifacts()
-			.parallelStream()
-			.map(key -> repoDescr.getArtifactRepository().getArtifactFile(key))
-			.forEach(
-					artifact -> registry.getArtifactCheckers().stream()
-					.forEach(artChecker -> artChecker.check(consumer, repoDescr, iu, artifact)));
-		});
+			// run artifacts tests for each artifact which belongs to IU
+			iu.getArtifacts().parallelStream()
+					.forEach(artifactKey -> registry.getArtifactCheckers().stream().forEach(artChecker -> {
+				File artifactFile = repoDescr.getArtifactRepository().getArtifactFile(artifactKey);
+				artChecker.check(consumer, repoDescr, iu, artifactKey, artifactFile);
+			} ));
+		} );
 	}
 
 	protected IQueryResult<IInstallableUnit> collectInstalableUnits(final P2RepositoryDescription descr) {

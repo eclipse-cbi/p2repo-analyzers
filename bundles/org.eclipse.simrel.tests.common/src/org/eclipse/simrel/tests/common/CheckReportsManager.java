@@ -10,6 +10,9 @@ package org.eclipse.simrel.tests.common;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
@@ -31,7 +34,11 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 	}
 
 	public void dumpReports() {
-		getReports().forEach(report -> new ConsoleReporter().dumpReport(report));
+		List<CheckReport> sorted = new ArrayList<CheckReport>(getReports());
+		Collections.sort(sorted, (CheckReport r1, CheckReport r2) -> {
+			return r2.getType().compareTo(r1.getType());
+		} );
+		sorted.forEach(report -> new ConsoleReporter().dumpReport(report));
 	}
 
 	@Override
