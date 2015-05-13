@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -29,6 +30,7 @@ import java.util.zip.ZipFile;
 import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
+import org.eclipse.simrel.tests.utils.BundleJarUtils;
 import org.eclipse.simrel.tests.utils.PackGzFileNameFilter;
 import org.eclipse.simrel.tests.utils.ReportWriter;
 
@@ -139,7 +141,7 @@ public class Pack200Test extends TestJars {
         ArrayList results = new ArrayList();
         for (int i = 0; i < jarchildren.length; i++) {
             File file = jarchildren[i];
-            if (!contains(packedchildren, file)) {
+            if (!pack200Disabled(file) && !contains(packedchildren, file)) {
                 results.add(file);
             }
         }
@@ -151,10 +153,22 @@ public class Pack200Test extends TestJars {
         return fileArray;
     }
 
+   
+
+    private boolean pack200Disabled(File file) {
+        Properties eclipseInf = BundleJarUtils.getEclipseInf(file);
+        // jarprocessor.exclude.pack=true
+        if (Boolean.valueOf(eclipseInf.getProperty("jarprocessor.exclude.pack", Boolean.FALSE.toString()))) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean contains(File[] packedchildren, File file) {
         boolean result = false;
         for (int i = 0; i < packedchildren.length; i++) {
-            if (getBasicName(packedchildren[i].getName(), EXTENSION_PACEKD_JAR).equals(getBasicName(file.getName(), EXTENSION_JAR))) {
+            if (getBasicName(packedchildren[i].getName(), EXTENSION_PACEKD_JAR)
+                    .equals(getBasicName(file.getName(), EXTENSION_JAR))) {
                 result = true;
                 break;
             }
