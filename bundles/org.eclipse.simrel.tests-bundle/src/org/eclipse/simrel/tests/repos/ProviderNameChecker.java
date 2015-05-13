@@ -3,28 +3,26 @@ package org.eclipse.simrel.tests.repos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.simrel.tests.repos.TestRepo;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class ProviderNameChecker extends TestRepo {
-    private static final String OLD_PROVIDER_NAME       = "Eclipse.org";
-    private String[]            EXPECTED_PROVIDER_NAMES = { "Eclipse Equinox Project", "Eclipse PTP", "Eclipse Orbit",
-            "Eclipse Web Tools Platform", "Eclipse CDT", "Eclipse Agent Modeling Platform", "Eclipse BIRT Project",
-            "Eclipse Data Tools Platform", "Eclipse Modeling Project", "Eclipse Mylyn", "Eclipse Memory Analyzer",
-            "Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit", "Eclipse JGit",
-            "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project", "Eclipse Sequoyah",
-            "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools", "Eclipse Code Recommenders",
-            "Eclipse RTP", "Eclipse Stardust", "Eclipse JWT", "Eclipse Xtend", "Eclipse GEF" };
+    private static final String OLD_PROVIDER_NAME           = "Eclipse.org";
+    private static final String KNOWN_PROVIDERS_RESOURCE    = "knownProviders.properties";
+    private static final String EXPECTED_PROVIDER_NAMES_KEY = "expectedProviderNames";
+    private ArrayList<String>   EXPECTED_PROVIDER_NAMES     = null;
 
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
@@ -107,8 +105,8 @@ public class ProviderNameChecker extends TestRepo {
             outfileWriter.write("<h2>Probably using correctly branding provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, correctProviderName);
             outfileWriter.write("<h2>List of known branding provider names</h2>" + EOL);
-            for (int i = 0; i < EXPECTED_PROVIDER_NAMES.length; i++) {
-                println(outfileWriter, EXPECTED_PROVIDER_NAMES[i] + EOL);
+            for (int i = 0; i < EXPECTED_PROVIDER_NAMES.size(); i++) {
+                println(outfileWriter, EXPECTED_PROVIDER_NAMES.get(i) + EOL);
             }
 
             // if (incorrectProviderName.size() > 0) {
@@ -135,8 +133,8 @@ public class ProviderNameChecker extends TestRepo {
 
     private boolean inListOfExpectedName(String providerName) {
         boolean result = false;
-        for (int i = 0; i < EXPECTED_PROVIDER_NAMES.length; i++) {
-            if (EXPECTED_PROVIDER_NAMES[i].equals(providerName)) {
+        for (int i = 0; i < EXPECTED_PROVIDER_NAMES.size(); i++) {
+            if (EXPECTED_PROVIDER_NAMES.get(i).equals(providerName)) {
                 result = true;
                 break;
             }
@@ -157,5 +155,37 @@ public class ProviderNameChecker extends TestRepo {
             printLineListItem(out, iu, IInstallableUnit.PROP_PROVIDER);
         }
         out.write("</ol>" + EOL);
+    }
+
+    public ArrayList<String> getKnownProviderNames() throws Exception {
+        if (EXPECTED_PROVIDER_NAMES == null) {
+            ArrayList<String> namesAsList = new ArrayList<String>();
+            // first try system properties, to allow override.
+            String expectedProviders = System.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
+            if (expectedProviders == null) {
+                // if no system property found, use out built-in list
+                Properties names = new Properties();
+                InputStream inStream = null;
+                try {
+                    inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE);
+                    names.load(inStream);
+                    expectedProviders = names.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
+                    if (expectedProviders == null) {
+                        throw new Exception("PROGRAM ERROR: Could not read internal property file");
+                    }
+                    StringTokenizer tokenizer = new StringTokenizer(expectedProviders, ",", false);
+                    while (tokenizer.hasMoreTokens()) {
+                        String name = tokenizer.nextToken();
+                        namesAsList.add(name);
+                    }
+                } finally {
+                    if (inStream != null) {
+                        inStream.close();
+                    }
+                }
+                EXPECTED_PROVIDER_NAMES = namesAsList;
+            }
+        }
+        return EXPECTED_PROVIDER_NAMES;
     }
 }
