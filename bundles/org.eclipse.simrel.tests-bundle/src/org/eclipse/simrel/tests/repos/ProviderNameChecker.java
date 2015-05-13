@@ -22,7 +22,7 @@ public class ProviderNameChecker extends TestRepo {
     private static final String OLD_PROVIDER_NAME           = "Eclipse.org";
     private static final String KNOWN_PROVIDERS_RESOURCE    = "knownProviders.properties";
     private static final String EXPECTED_PROVIDER_NAMES_KEY = "expectedProviderNames";
-    private ArrayList<String>   EXPECTED_PROVIDER_NAMES     = null;
+    private ArrayList<String>   expectedProvidersName       = null;
 
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
@@ -105,8 +105,9 @@ public class ProviderNameChecker extends TestRepo {
             outfileWriter.write("<h2>Probably using correctly branding provider name</h2>" + EOL);
             printLinesProvider(outfileWriter, correctProviderName);
             outfileWriter.write("<h2>List of known branding provider names</h2>" + EOL);
-            for (int i = 0; i < EXPECTED_PROVIDER_NAMES.size(); i++) {
-                println(outfileWriter, EXPECTED_PROVIDER_NAMES.get(i) + EOL);
+            ArrayList<String> expectedProvidersNameLocal = getKnownProviderNames();
+            for (int i = 0; i < expectedProvidersNameLocal.size(); i++) {
+                println(outfileWriter, expectedProvidersNameLocal.get(i) + EOL);
             }
 
             // if (incorrectProviderName.size() > 0) {
@@ -132,11 +133,14 @@ public class ProviderNameChecker extends TestRepo {
     }
 
     private boolean inListOfExpectedName(String providerName) {
+        ArrayList<String> expectedProvidersNameLocal = getKnownProviderNames();
         boolean result = false;
-        for (int i = 0; i < EXPECTED_PROVIDER_NAMES.size(); i++) {
-            if (EXPECTED_PROVIDER_NAMES.get(i).equals(providerName)) {
-                result = true;
-                break;
+        if (expectedProvidersNameLocal != null) {
+            for (int i = 0; i < expectedProvidersNameLocal.size(); i++) {
+                if (expectedProvidersNameLocal.get(i).equals(providerName)) {
+                    result = true;
+                    break;
+                }
             }
         }
         return result;
@@ -157,8 +161,8 @@ public class ProviderNameChecker extends TestRepo {
         out.write("</ol>" + EOL);
     }
 
-    public ArrayList<String> getKnownProviderNames() throws Exception {
-        if (EXPECTED_PROVIDER_NAMES == null) {
+    protected ArrayList<String> getKnownProviderNames() {
+        if (expectedProvidersName == null) {
             ArrayList<String> namesAsList = new ArrayList<String>();
             // first try system properties, to allow override.
             String expectedProviders = System.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
@@ -168,10 +172,14 @@ public class ProviderNameChecker extends TestRepo {
                 InputStream inStream = null;
                 try {
                     inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE);
-                    names.load(inStream);
+                    try {
+                        names.load(inStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     expectedProviders = names.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
                     if (expectedProviders == null) {
-                        throw new Exception("PROGRAM ERROR: Could not read internal property file");
+                        throw new Error("PROGRAM ERROR: Could not read internal property file");
                     }
                     StringTokenizer tokenizer = new StringTokenizer(expectedProviders, ",", false);
                     while (tokenizer.hasMoreTokens()) {
@@ -180,12 +188,16 @@ public class ProviderNameChecker extends TestRepo {
                     }
                 } finally {
                     if (inStream != null) {
-                        inStream.close();
+                        try {
+                            inStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-                EXPECTED_PROVIDER_NAMES = namesAsList;
+                expectedProvidersName = namesAsList;
             }
         }
-        return EXPECTED_PROVIDER_NAMES;
+        return expectedProvidersName;
     }
 }
