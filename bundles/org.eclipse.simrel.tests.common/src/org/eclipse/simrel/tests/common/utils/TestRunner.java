@@ -27,6 +27,7 @@ import org.junit.Test;
 public class TestRunner {
 
 	// private static final int FEATURES_IN_REPO = 76;
+	static final String EMF = "file:///Users/dhuebner/Downloads/emf-xsd-Update-N201505120526";
 	static final String XTEXT = "file:///Users/dhuebner/Downloads/tmf-xtext-Update-2.8.3M7-2";
 	static final String LUNA = "file:///Users/dhuebner/git/org.eclipse.xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
 	private static CheckReportsManager reporter = null;
@@ -37,7 +38,7 @@ public class TestRunner {
 			long start = System.currentTimeMillis();
 			long time = start;
 
-			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(LUNA));
+			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(EMF));
 			System.out.println("create repo descr " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
 

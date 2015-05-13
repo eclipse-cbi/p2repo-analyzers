@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+import java.util.Properties;
+import java.util.function.BiFunction;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
@@ -71,80 +73,47 @@ public class IUUtil {
 	}
 
 	/*
-	 * Return the bundle id from the manifest pointed to by the given input
-	 * stream.
-	 */
-	public static String getBundleManifestEntry(final InputStream input, final String key) {
-		String bree = null;
-		try {
-			Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
-			bree = attributes.get(key);
-		} catch (BundleException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-
-		return bree;
-	}
-
-	/*
 	 * The given file points to a bundle contained in an archive. Look into the
 	 * bundle manifest file to find the bundle identifier.
 	 */
-	public static String getBundleManifestEntry(final File file, final String key) {
-		InputStream input = null;
-		JarFile jar = null;
-		try {
-			jar = new JarFile(file, false, ZipFile.OPEN_READ);
-			JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
-			if (entry == null) {
-				// addError("Bundle does not contain a MANIFEST.MF file: " +
-				// file.getAbsolutePath());
-				return null;
-			}
-			input = jar.getInputStream(entry);
-			return getBundleManifestEntry(input, key);
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			// addError(e.getMessage());
-			return null;
-		} finally {
-			if (input != null) {
+	public static String getBundleManifestEntry(final File jarfile, final String key) {
+		return workWithJarEntry(jarfile, JarFile.MANIFEST_NAME, (jarEntry, stream) -> {
+			String result = null;
+			if (jarEntry != null) {
 				try {
-					input.close();
-				} catch (IOException e) {
-					// ignore
+					Map<String, String> attributes = ManifestElement.parseBundleManifest(stream, null);
+					result = attributes.get(key);
+				} catch (BundleException | IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
-			if (jar != null) {
-				try {
-					jar.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
+			return result;
+		} );
+
 	}
 
-	public static JarEntry getJarEntry(final File file, final String entryName) {
+	public static <T> T workWithJarEntry(final File file, final String entryName,
+			BiFunction<JarEntry, InputStream, T> function) {
 		JarFile jar = null;
+		InputStream entryStream = null;
+		T result = null;
 		try {
 			jar = new JarFile(file, false, ZipFile.OPEN_READ);
-			JarEntry entry = jar.getJarEntry(entryName);
-			return entry;
+			JarEntry jarEntry = jar.getJarEntry(entryName);
+			if (jarEntry != null) {
+				entryStream = jar.getInputStream(jarEntry);
+			}
+			result = function.apply(jarEntry, entryStream);
 		} catch (IOException e) {
 			handleFatalError(e.getMessage());
-			return null;
 		} finally {
+			if (entryStream != null) {
+				try {
+					entryStream.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
 			if (jar != null) {
 				try {
 					jar.close();
@@ -153,5 +122,31 @@ public class IUUtil {
 				}
 			}
 		}
+		return result;
+	}
+
+	public static Properties getEclipseInf(File jarfile) {
+		return workWithJarEntry(jarfile, "META-INF/eclipse.inf", (jarEntry, entryStream) -> {
+			Properties properties = new Properties();
+			if (jarEntry != null) {
+				try {
+					properties.load(entryStream);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return properties;
+		} );
+	}
+
+	/**
+	 * @param file
+	 *            jarFile
+	 * @param entryName
+	 *            Jar entry name
+	 * @return {@link JarEntry} or <code>null</code> if not exists
+	 */
+	public static JarEntry getJarEntry(File file, String entryName) {
+		return workWithJarEntry(file, entryName, (jarEntry, entryStream) -> jarEntry);
 	}
 }

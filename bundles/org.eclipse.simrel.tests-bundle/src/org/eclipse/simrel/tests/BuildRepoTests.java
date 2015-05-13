@@ -12,6 +12,7 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.simrel.tests.jars.BREETest;
 import org.eclipse.simrel.tests.jars.ESTest;
 import org.eclipse.simrel.tests.jars.Pack200Test;
+import org.eclipse.simrel.tests.jars.SignerTest;
 import org.eclipse.simrel.tests.jars.TestLayoutTest;
 import org.eclipse.simrel.tests.jars.VersionTest;
 //import org.eclipse.simrel.tests.repos.CheckGreedy;
@@ -36,11 +37,11 @@ public class BuildRepoTests {
      * the top directory is where high level files go, such as "index.html"
      * which would then relatively point to "reports" directory.
      */
-    private static final String          TOP_OUTPUT_DIR        = "reporeports";
+    private static final String TOP_OUTPUT_DIR        = "reporeports";
     /**
      * The sub directory is there most actual reports should go.
      */
-    private static final String          REPORT_SUB_OUTPUT_DIR = "reports";
+    private static final String REPORT_SUB_OUTPUT_DIR = "reports";
     /*
      * under the main output directory, we create (and delete if exists)
      * 'reporeports and 'reporeports/reports'. we assume the reporeports
@@ -50,9 +51,9 @@ public class BuildRepoTests {
      * message to specify another, or manually remove it if simply left over
      * from previous failed run.
      */
-    private String                       mainoutputDirectory;
-    private String                       topreportdir;
-    private String                       reportOutputDirectoryName;
+    private String              mainoutputDirectory;
+    private String              topreportdir;
+    private String              reportOutputDirectoryName;
 
     /**
      * variable to catch errors in use. initializing direcotry should only be
@@ -65,7 +66,7 @@ public class BuildRepoTests {
     private String                       directoryToCheck;
     private String                       referenceDirectoryToCheck;
     private String                       tempWorkingDir;
-    private boolean                      failuresOccurred      = false;
+    private boolean                      failuresOccurred = false;
     private ReportWriter                 reportWriter;
     private final RepoTestsConfiguration configurations;
 
@@ -81,8 +82,8 @@ public class BuildRepoTests {
         // remembering this "site" might be removed in future runs
         if (mainoutputDirectory == null) {
             mainoutputDirectory = System.getProperty("user.home") + "/temp/simrel";
-            System.out.println("WARNING: no output direcotry explicitly set, so assumed to be based off user.home: "
-                    + mainoutputDirectory);
+            System.out.println(
+                    "WARNING: no output direcotry explicitly set, so assumed to be based off user.home: " + mainoutputDirectory);
         }
 
         return mainoutputDirectory;
@@ -243,6 +244,13 @@ public class BuildRepoTests {
         packTest.setDirectoryToCheck(getDirectoryToCheck());
         boolean packFailures = packTest.testBundlePack();
         if (packFailures) {
+            setFailuresOccurred(true);
+        }
+
+        SignerTest signerTest = new SignerTest(getConfigurations());
+        signerTest.setDirectoryToCheck(getDirectoryToCheck());
+        boolean signFailures = signerTest.verifySignatures();
+        if (signFailures) {
             setFailuresOccurred(true);
         }
 
