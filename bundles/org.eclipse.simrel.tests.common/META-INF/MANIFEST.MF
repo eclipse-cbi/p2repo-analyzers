@@ -10,5 +10,9 @@ Require-Bundle: org.eclipse.equinox.p2.metadata,
  org.eclipse.equinox.p2.core,
  org.eclipse.core.runtime;bundle-version="3.10.0",
  org.junit
-Bundle-Activator: org.eclipse.simrel.tests.common.Activator
+Bundle-Activator: org.eclipse.simrel.tests.common.internal.Activator
 Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.simrel.tests.common,
+ org.eclipse.simrel.tests.common.checker,
+ org.eclipse.simrel.tests.common.reporter,
+ org.eclipse.simrel.tests.common.utils

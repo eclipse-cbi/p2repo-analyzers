@@ -9,7 +9,6 @@
 package org.eclipse.simrel.tests.common;
 
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
-import org.eclipse.simrel.tests.common.checker.ReportType;
 
 /**
  * @author dhuebner - Initial contribution and API

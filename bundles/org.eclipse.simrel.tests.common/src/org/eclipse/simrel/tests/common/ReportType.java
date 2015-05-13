@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.simrel.tests.common.checker;
+package org.eclipse.simrel.tests.common;
 
 /**
  * @author dhuebner - Initial contribution and API

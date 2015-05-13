@@ -24,8 +24,8 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactRepository;
 import org.eclipse.equinox.p2.repository.artifact.IFileArtifactRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
 import org.eclipse.osgi.util.ManifestElement;
-import org.eclipse.simrel.tests.common.Activator;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
+import org.eclipse.simrel.tests.common.internal.Activator;
 import org.osgi.framework.BundleException;
 
 public class IUUtil {

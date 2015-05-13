@@ -5,7 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.simrel.tests.common;
+package org.eclipse.simrel.tests.common.reporter;
+
+import org.eclipse.simrel.tests.common.CheckReport;
 
 /**
  * @author dhuebner - Initial contribution and API

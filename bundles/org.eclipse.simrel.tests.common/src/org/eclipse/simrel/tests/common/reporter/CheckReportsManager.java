@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.simrel.tests.common;
+package org.eclipse.simrel.tests.common.reporter;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-import org.eclipse.simrel.tests.common.checker.ReportType;
+import org.eclipse.simrel.tests.common.CheckReport;
+import org.eclipse.simrel.tests.common.ReportType;
 
 /**
  * @author dhuebner - Initial contribution and API
