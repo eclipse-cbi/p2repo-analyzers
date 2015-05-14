@@ -96,6 +96,8 @@ public class ESTest extends TestJars {
         boolean failuresOccured = false;
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
+        int nSourceBundles = 0;
+        int nInExceptionList = 0;
         int checked = 0;
         int nProjectTags = 0;
         for (int i = 0; i < totalsize; i++) {
@@ -103,38 +105,46 @@ public class ESTest extends TestJars {
             String name = child.getName();
 
             String bundleName = getBundleName(name);
-            if ((bundleName != null) && !esExceptions.contains(bundleName)) {
-                checked++;
-                try {
-                    String es = getESFromJAR(child);
-                    if ((es != null) && es.contains("project=")) {
-                        nProjectTags++;
+            if (bundleName != null) {
+                if (bundleName.endsWith(".source")) {
+                    nSourceBundles++;
+                } else if (esExceptions.contains(bundleName)) {
+                    nInExceptionList++;
+                } else {
+                    checked++;
+                    try {
+                        String es = getESFromJAR(child);
+                        if ((es != null) && es.contains("project=")) {
+                            nProjectTags++;
+                        }
+                        if ((es != null) && (es.length() > 0)) {
+                            // has ES
+                            incrementCounts(withEs, es);
+                        } else {
+                            // no ES
+                            trackOmissions(withoutEs, child);
+                        }
+                    } catch (SecurityException e) {
+                        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=378764
+                        invalidJars.add(name);
                     }
-                    if ((es != null) && (es.length() > 0)) {
-                        // has ES
-                        incrementCounts(withEs, es);
-                    } else {
-                        // no ES
-                        trackOmissions(withoutEs, child);
-                    }
-                } catch (SecurityException e) {
-                    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=378764
-                    invalidJars.add(name);
                 }
             }
         }
-        printreport(invalidJars, withEs, withoutEs, totalsize, checked, nProjectTags);
+        printreport(invalidJars, withEs, withoutEs, totalsize, checked, nProjectTags, nSourceBundles, nInExceptionList);
 
         return failuresOccured;
     }
 
-    private void printreport(List invalidJars, Map withEs, List withoutESs, int totalsize, int checked, int nProjectTags)
-            throws FileNotFoundException {
+    private void printreport(List invalidJars, Map withEs, List withoutESs, int totalsize, int checked, int nProjectTags,
+            int nSourceBundles, int nInExceptionList) throws FileNotFoundException {
 
         ReportWriter reportWriter = getReportWriter();
         try {
             reportWriter.writeln();
             reportWriter.writeln("   Directory checked: " + getBundleDirectory());
+            reportWriter.writeln("   Number of source bundles (not checked): " + nSourceBundles);
+            reportWriter.writeln("   Number in exception list (not checked)" + nInExceptionList);
             reportWriter.writeln("   Checked " + checked + " of " + totalsize + " jars.");
             reportWriter.writeln();
             reportWriter.writeln();
