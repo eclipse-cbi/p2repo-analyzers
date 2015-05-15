@@ -144,7 +144,7 @@ public class ESTest extends TestJars {
             reportWriter.writeln();
             reportWriter.writeln("   Directory checked: " + getBundleDirectory());
             reportWriter.writeln("   Number of source bundles (not checked): " + nSourceBundles);
-            reportWriter.writeln("   Number in exception list (not checked)" + nInExceptionList);
+            reportWriter.writeln("   Number in exception list (not checked): " + nInExceptionList);
             reportWriter.writeln("   Checked " + checked + " of " + totalsize + " jars.");
             reportWriter.writeln();
             reportWriter.writeln();
