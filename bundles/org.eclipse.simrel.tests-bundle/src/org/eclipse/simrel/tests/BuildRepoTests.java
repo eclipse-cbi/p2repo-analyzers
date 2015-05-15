@@ -12,6 +12,7 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.simrel.tests.jars.BREETest;
 import org.eclipse.simrel.tests.jars.ESTest;
 import org.eclipse.simrel.tests.jars.Pack200Test;
+import org.eclipse.simrel.tests.jars.SignerTest;
 import org.eclipse.simrel.tests.jars.TestLayoutTest;
 import org.eclipse.simrel.tests.jars.VersionTest;
 //import org.eclipse.simrel.tests.repos.CheckGreedy;
@@ -33,20 +34,14 @@ import org.eclipse.simrel.tests.utils.ReportWriter;
 public class BuildRepoTests {
 
     /**
-     * this is property where users can specify main directory where output goes
-     */
-    private static final String REPORT_OUTPUT_DIR_PARAM = "reportOutputDir";
-    private static final String REPORT_REPO_DIR_PARAM   = "reportRepoDir";
-    private static final String REFERENCE_REPO_PARAM    = "referenceRepo";
-    /**
      * the top directory is where high level files go, such as "index.html"
      * which would then relatively point to "reports" directory.
      */
-    private static final String TOP_OUTPUT_DIR          = "reporeports";
+    private static final String TOP_OUTPUT_DIR        = "reporeports";
     /**
      * The sub directory is there most actual reports should go.
      */
-    private static final String REPORT_SUB_OUTPUT_DIR   = "reports";
+    private static final String REPORT_SUB_OUTPUT_DIR = "reports";
     /*
      * under the main output directory, we create (and delete if exists)
      * 'reporeports and 'reporeports/reports'. we assume the reporeports
@@ -67,23 +62,28 @@ public class BuildRepoTests {
      *
      * @return
      */
-    private static boolean      outputDirectoryInitialized;
-    private String              directoryToCheck;
-    private String              referenceDirectoryToCheck;
-    private String              tempWorkingDir;
-    private boolean             failuresOccurred        = false;
-    private ReportWriter        reportWriter;
+    private static boolean               outputDirectoryInitialized;
+    private String                       directoryToCheck;
+    private String                       referenceDirectoryToCheck;
+    private String                       tempWorkingDir;
+    private boolean                      failuresOccurred = false;
+    private ReportWriter                 reportWriter;
+    private final RepoTestsConfiguration configurations;
+
+    public BuildRepoTests(final RepoTestsConfiguration configurations) {
+        this.configurations = configurations;
+    }
 
     private String getMainOutputDirectory() {
         if (mainoutputDirectory == null) {
-            mainoutputDirectory = System.getProperty(REPORT_OUTPUT_DIR_PARAM, null);
+            mainoutputDirectory = configurations.getReportOutputDir();
         }
         // if still null or empty, fall back to reasonable "test" location
         // remembering this "site" might be removed in future runs
         if (mainoutputDirectory == null) {
             mainoutputDirectory = System.getProperty("user.home") + "/temp/simrel";
-            System.out.println("WARNING: no output direcotry explicitly set, so assumed to be based off user.home: "
-                    + mainoutputDirectory);
+            System.out.println(
+                    "WARNING: no output direcotry explicitly set, so assumed to be based off user.home: " + mainoutputDirectory);
         }
 
         return mainoutputDirectory;
@@ -170,7 +170,7 @@ public class BuildRepoTests {
      *
      * @return
      */
-    protected String getReportOutputDirectory() {
+    public String getReportOutputDirectory() {
         if (reportOutputDirectoryName == null) {
             reportOutputDirectoryName = getTopReportOutputDirectory() + "/" + REPORT_SUB_OUTPUT_DIR;
         }
@@ -220,7 +220,7 @@ public class BuildRepoTests {
     }
 
     private void doDirectoryTests() throws IOException {
-        ESTest esTest = new ESTest();
+        ESTest esTest = new ESTest(getConfigurations());
         esTest.setDirectoryToCheck(getDirectoryToCheck());
         esTest.setTempWorkingDir(getTempWorkingDir());
 
@@ -230,7 +230,7 @@ public class BuildRepoTests {
             setFailuresOccurred(true);
         }
 
-        BREETest breeTest = new BREETest();
+        BREETest breeTest = new BREETest(getConfigurations());
         breeTest.setDirectoryToCheck(getDirectoryToCheck());
         breeTest.setTempWorkingDir(getTempWorkingDir());
 
@@ -240,21 +240,28 @@ public class BuildRepoTests {
             setFailuresOccurred(true);
         }
 
-        Pack200Test packTest = new Pack200Test();
+        Pack200Test packTest = new Pack200Test(getConfigurations());
         packTest.setDirectoryToCheck(getDirectoryToCheck());
         boolean packFailures = packTest.testBundlePack();
         if (packFailures) {
             setFailuresOccurred(true);
         }
 
-        VersionTest versionTest = new VersionTest();
+        SignerTest signerTest = new SignerTest(getConfigurations());
+        signerTest.setDirectoryToCheck(getDirectoryToCheck());
+        boolean signFailures = signerTest.verifySignatures();
+        if (signFailures) {
+            setFailuresOccurred(true);
+        }
+
+        VersionTest versionTest = new VersionTest(getConfigurations());
         versionTest.setDirectoryToCheck(getDirectoryToCheck());
         boolean versionCheck = versionTest.testVersionsPatterns();
         if (versionCheck) {
             setFailuresOccurred(true);
         }
 
-        TestLayoutTest test = new TestLayoutTest();
+        TestLayoutTest test = new TestLayoutTest(getConfigurations());
         test.setDirectoryToCheck(getDirectoryToCheck());
         test.setTempWorkingDir(getTempWorkingDir());
         boolean layoutFailures = test.testLayout();
@@ -283,14 +290,14 @@ public class BuildRepoTests {
         boolean licenseConsistencyFailure = false;
         boolean greedyCheck = false;
 
-        VersionChecking uniquenessChecker = new VersionChecking();
+        VersionChecking uniquenessChecker = new VersionChecking(getConfigurations());
         uniquenessChecker.setRepoURLToTest(repoToTest);
         uniquenessCheck = uniquenessChecker.testVersionUniqness();
         if (uniquenessCheck) {
             setFailuresOccurred(true);
         }
 
-        IUNameChecker iuNames = new IUNameChecker();
+        IUNameChecker iuNames = new IUNameChecker(getConfigurations());
         iuNames.setRepoURLToTest(repoToTest);
         featureNameFailures = iuNames.testFeatureNames();
         bundleNameFailures = iuNames.testBundleNames();
@@ -301,19 +308,19 @@ public class BuildRepoTests {
         // checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
         // greedyCheck = checkGreedy.testGreedyOptionals();
 
-        ProviderNameChecker providerNameChecker = new ProviderNameChecker();
+        ProviderNameChecker providerNameChecker = new ProviderNameChecker(getConfigurations());
         providerNameChecker.setRepoURLToTest(repoToTest);
         providerNamesFailure = providerNameChecker.testProviderNames();
 
-        FeatureDisplayableDataChecker licenseChecker = new FeatureDisplayableDataChecker();
+        FeatureDisplayableDataChecker licenseChecker = new FeatureDisplayableDataChecker(getConfigurations());
         licenseChecker.setRepoURLToTest(repoToTest);
         licenseConsistencyFailure = licenseChecker.testDisplayableData();
 
-        FeatureNameLengths featureNameLengths = new FeatureNameLengths();
+        FeatureNameLengths featureNameLengths = new FeatureNameLengths(getConfigurations());
         featureNameLengths.setRepoURLToTest(repoToTest);
         featureNameLengths.testFeatureDirectoryLength();
 
-        IUVersionCheckToReference iuVersioncheck = new IUVersionCheckToReference();
+        IUVersionCheckToReference iuVersioncheck = new IUVersionCheckToReference(getConfigurations());
 
         iuVersioncheck.setRepoURLToTest(repoToTest);
         iuVersioncheck.setRepoURLForReference(referenceRepoToTest);
@@ -330,7 +337,7 @@ public class BuildRepoTests {
 
     public String getDirectoryToCheck() {
         if (directoryToCheck == null) {
-            directoryToCheck = System.getProperty(REPORT_REPO_DIR_PARAM, null);
+            directoryToCheck = configurations.getReportRepoDir();
         }
         return directoryToCheck;
     }
@@ -349,7 +356,7 @@ public class BuildRepoTests {
      */
     protected String getTempWorkingDir() {
         if (tempWorkingDir == null) {
-            tempWorkingDir = System.getProperty("java.io.tmpdir");
+            tempWorkingDir = configurations.getTempWorkingDir();
         }
         return tempWorkingDir;
     }
@@ -375,7 +382,7 @@ public class BuildRepoTests {
 
     public String getDirectoryToCheckForReference() {
         if (referenceDirectoryToCheck == null) {
-            referenceDirectoryToCheck = System.getProperty(REFERENCE_REPO_PARAM, null);
+            referenceDirectoryToCheck = configurations.getReferenceRepoDir();
         }
         return referenceDirectoryToCheck;
     }
@@ -434,4 +441,12 @@ public class BuildRepoTests {
         }
         return reportWriter;
     }
+
+    /**
+     * @return the configurations
+     */
+    public RepoTestsConfiguration getConfigurations() {
+        return configurations;
+    }
+
 }

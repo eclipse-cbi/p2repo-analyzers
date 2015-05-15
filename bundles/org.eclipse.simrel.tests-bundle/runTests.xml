@@ -115,7 +115,7 @@
   </target>
 
     <!-- TODO: move this to java app too. May still want to have seperate, since takes so much longer -->
-  <target name="runSignatureVerification">
+  <target name="runSignatureVerification" unless="skipSignaturVerification">
     <echo message="basedir: ${basedir}" />
     <echo message="testRepoDirectory: ${testRepoDirectory}" />
     <echo message="reportOutputDir: ${reportOutputDir}" />

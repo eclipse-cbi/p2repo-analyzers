@@ -16,9 +16,14 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class ProviderNameChecker extends TestRepo {
+    public ProviderNameChecker(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static final String OLD_PROVIDER_NAME           = "Eclipse.org";
     private static final String KNOWN_PROVIDERS_RESOURCE    = "knownProviders.properties";
     private static final String EXPECTED_PROVIDER_NAMES_KEY = "expectedProviderNames";

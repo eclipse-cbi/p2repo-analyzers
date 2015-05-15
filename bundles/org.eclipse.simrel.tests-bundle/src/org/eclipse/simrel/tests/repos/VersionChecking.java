@@ -17,8 +17,13 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 
 public class VersionChecking extends TestRepo {
+
+    public VersionChecking(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private static final String EQUALS                 = "equals";
     private static final String STARTS_WITH            = "startsWith";
@@ -26,6 +31,9 @@ public class VersionChecking extends TestRepo {
 
     public boolean testVersionUniqness() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllIUs();
+        if (allIUs == null) {
+            return true;
+        }
         analyzeVersionPatterns(allIUs);
         return analyzeNonUniqueVersions(allIUs);
     }

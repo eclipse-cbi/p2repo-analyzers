@@ -30,17 +30,21 @@ import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.eclipse.osgi.util.ManifestElement;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
+import org.eclipse.simrel.tests.utils.BundleJarUtils;
 import org.eclipse.simrel.tests.utils.ReportWriter;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 
 /**
  * @since 3.3
  */
 public class BREETest extends TestJars {
+
+    public BREETest(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     static class BREEFileData implements Comparable {
         String filename;
@@ -67,7 +71,7 @@ public class BREETest extends TestJars {
 
     public static void main(String[] args) {
 
-        BREETest testlayout = new BREETest();
+        BREETest testlayout = new BREETest(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("/home/files/testSDKRepo");
         try {
             testlayout.testBREESettingRule();
@@ -140,7 +144,7 @@ public class BREETest extends TestJars {
             if ((bundleName != null) && !breeExceptions.contains(bundleName)) {
                 checked++;
                 try {
-                    String bree = getJarManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+                    String bree = BundleJarUtils.getJarManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
                     boolean needsBree = needsBree(child);
                     if ((bree != null) && (bree.length() > 0)) {
                         // has BREE, confirm is java file
@@ -176,7 +180,7 @@ public class BREETest extends TestJars {
     }
 
     private boolean exportsPackages(File child) {
-        String entry = getJarManifestEntry(child, Constants.EXPORT_PACKAGE);
+        String entry = BundleJarUtils.getJarManifestEntry(child, Constants.EXPORT_PACKAGE);
         if (entry != null && !entry.isEmpty()) {
             return true;
         }
@@ -295,7 +299,8 @@ public class BREETest extends TestJars {
                 if (entry.getName().endsWith(".class")) {
                     containsJava = true;
                     break;
-                } else if (entry.getName().endsWith(".jar")) {
+                } else if (entry.getName().endsWith(".jar") && isInBundleClasspath(jarfile, entry.getName())) {
+                    // jar must be a part of bundle classpath
                     InputStream input = jar.getInputStream(entry);
                     if (containsJava(input)) {
                         containsJava = true;
@@ -316,6 +321,16 @@ public class BREETest extends TestJars {
             }
         }
         return containsJava;
+    }
+
+    private boolean isInBundleClasspath(File jarfile, String name) {
+        String entry = BundleJarUtils.getJarManifestEntry(jarfile, Constants.BUNDLE_CLASSPATH);
+        // not very accurate but enough. Normally we should split entry with','
+        // and compare with equals()
+        if (entry != null && entry.contains(name)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean containsJava(InputStream input) {
@@ -356,68 +371,4 @@ public class BREETest extends TestJars {
         return containsJava;
     }
 
-    /*
-     * Return the bundle id from the manifest pointed to by the given input
-     * stream.
-     */
-    private String getJarManifestEntry(InputStream input, String key) {
-        String bree = null;
-        try {
-            Map attributes = ManifestElement.parseBundleManifest(input, null);
-            bree = (String) attributes.get(key);
-        } catch (BundleException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        }
-
-        return bree;
-    }
-
-    /*
-     * The given file points to a bundle contained in an archive. Look into the
-     * bundle manifest file to find the bundle identifier.
-     */
-    private String getJarManifestEntry(File file, String key) {
-        InputStream input = null;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(file, false, ZipFile.OPEN_READ);
-            JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
-            if (entry == null) {
-                // addError("Bundle does not contain a MANIFEST.MF file: " +
-                // file.getAbsolutePath());
-                return null;
-            }
-            input = jar.getInputStream(entry);
-            return getJarManifestEntry(input, key);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            // addError(e.getMessage());
-            return null;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        }
-    }
 }

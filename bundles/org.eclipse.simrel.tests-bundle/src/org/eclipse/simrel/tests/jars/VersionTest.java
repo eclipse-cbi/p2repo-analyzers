@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.FullJarNameParser;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.eclipse.simrel.tests.utils.ReportWriter;
@@ -28,6 +29,10 @@ import org.eclipse.simrel.tests.utils.ReportWriter;
  * @since 3.3
  */
 public class VersionTest extends TestJars {
+
+    public VersionTest(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private static final String outputFilename       = "versionPatternCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
@@ -43,7 +48,7 @@ public class VersionTest extends TestJars {
 
     public static void main(String[] args) {
 
-        VersionTest testlayout = new VersionTest();
+        VersionTest testlayout = new VersionTest(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("D:\\temp\\staging\\");
         try {
             testlayout.testFeatureVersions();

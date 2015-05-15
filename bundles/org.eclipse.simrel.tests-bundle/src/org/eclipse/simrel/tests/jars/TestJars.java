@@ -7,9 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.simrel.tests.BuildRepoTests;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.ReportWriter;
 
 public abstract class TestJars extends BuildRepoTests {
+
+    public TestJars(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private String bundleDirectory;
     private String featureDirectory;

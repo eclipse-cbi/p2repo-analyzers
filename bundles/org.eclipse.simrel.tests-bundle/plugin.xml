@@ -15,5 +15,17 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="org_eclipse_simrel_reports"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.simrel.tests.repoReport"
+            name="SimRel Reports Headless Launcher">
+         <property
+               name="appName"
+               value="SimRel Reports Headless Launcher">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

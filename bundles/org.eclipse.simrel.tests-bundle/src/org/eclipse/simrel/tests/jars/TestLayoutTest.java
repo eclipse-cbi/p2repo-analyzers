@@ -41,6 +41,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.internal.provisional.equinox.p2.jarprocessor.JarProcessor;
 import org.eclipse.osgi.util.ManifestElement;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.JARFileNameFilter;
 import org.osgi.framework.BundleException;
 import org.w3c.dom.Document;
@@ -56,6 +57,10 @@ import org.xml.sax.SAXException;
  */
 public class TestLayoutTest extends TestJars {
 
+    public TestLayoutTest(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
+
     private static final String outputFilename       = "layoutCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
     private static final String EXTENSION_PACEKD_JAR = ".pack.gz";
@@ -70,7 +75,7 @@ public class TestLayoutTest extends TestJars {
 
     public static void main(String[] args) {
 
-        TestLayoutTest testlayout = new TestLayoutTest();
+        TestLayoutTest testlayout = new TestLayoutTest(RepoTestsConfiguration.createFromSystemProperties());
         testlayout.setDirectoryToCheck("D:\\temptest");
         testlayout.setTempWorkingDir("D:/temp");
         try {

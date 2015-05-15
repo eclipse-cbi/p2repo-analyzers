@@ -13,10 +13,15 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.repos.TestRepo;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class IUNameChecker extends TestRepo {
+
+    public IUNameChecker(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     public boolean testBundleNames() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllIUs();

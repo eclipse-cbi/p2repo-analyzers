@@ -16,9 +16,14 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.query.IQueryResult;
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.utils.IUIdComparator;
 
 public class IUVersionCheckToReference extends TestRepo {
+
+    public IUVersionCheckToReference(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     public boolean checkIUVersionsToReference() throws IOException, ProvisionException, URISyntaxException {
         FileWriter outfileWriter = null;

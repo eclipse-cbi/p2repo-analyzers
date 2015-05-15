@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -37,6 +38,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class CheckGreedy extends TestRepo {
+
+    public CheckGreedy(RepoTestsConfiguration configurations) {
+        super(configurations);
+    }
 
     private InputStream inputStream;
 
@@ -130,7 +135,7 @@ public class CheckGreedy extends TestRepo {
         // positioned read to read the raw data, and we keep
         // reading until read returns 0 or less.
         byte[] buffer = new byte[8192];
-        String outpath = System.getProperty("java.io.tmpdir") + "/" + zipEntry.getName();
+        String outpath = getConfigurations().getTempWorkingDir() + "/" + zipEntry.getName();
         FileOutputStream output = null;
         try {
             output = new FileOutputStream(outpath);
