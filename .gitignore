@@ -1,2 +1,11 @@
-target
+target/
 .DS_Store
+bin/
+/.project
+*~
+*.rej
+*.bak
+javacore.*
+heapdump.*
+core.*
+Snap.*
