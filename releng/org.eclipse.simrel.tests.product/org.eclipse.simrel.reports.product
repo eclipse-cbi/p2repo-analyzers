@@ -24,6 +24,7 @@
    </vm>
 
    <plugins>
+      <plugin id="org.eclipse.core.runtime" />
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
