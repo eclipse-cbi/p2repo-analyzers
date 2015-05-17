@@ -42,6 +42,12 @@ public class SignerTest extends TestJars {
         final List<String> warnings = new CopyOnWriteArrayList();
         File inputdir = new File(getBundleDirectory());
         File[] jarchildren = inputdir.listFiles(CompositeFileFilter.create(new JARFileNameFilter(), new PackGzFileNameFilter()));
+        int nFiles = jarchildren.length;
+        // TODO: may have to tweak timePerFile, or the simple multiplication formula 
+        // based on experience. But, primarily we just need a good safe "MAXIMUM" in 
+        // case things go wrong. If thing go right, it will not blindly wait the MAXIMUM time.
+        int TIME_PER_FILE = 2;
+        int TOTAL_WAIT_SECONDS = nFiles * TIME_PER_FILE;
         if (VerifyStep.canVerify()) {
             ExecutorService threadPool = Executors.newFixedThreadPool(64);
             for (final File file : jarchildren) {
@@ -49,12 +55,24 @@ public class SignerTest extends TestJars {
             }
             threadPool.shutdown();
             try {
-                if (!threadPool.awaitTermination(5, TimeUnit.MINUTES)) {
+                // initial "wait until done" is a funtion of how many files 
+                // there are to verify. We'll allow about 2 seconds per file, 
+                // which for 1500 files is about 50 minutes. That is a little less
+                // than how long it would take if executing on one thread, so executing 
+                // on a large number (e.g. 64) would be faster (if the hardward is up for 
+                // it). 
+                // TODO: consider a "submit" and then loop/wait checking for Futures.isDone.
+                // it _might_ be a better idiom for this case? That is, allow more control? 
+                // or "assessment" of what's taking a long time? But even then, would need some large, 
+                // "we've waited long enough" time to be specified. 
+                if (!threadPool.awaitTermination(TOTAL_WAIT_SECONDS, TimeUnit.SECONDS)) {
                     threadPool.shutdownNow(); // Cancel currently executing
                                               // tasks
                     // Wait a while for tasks to respond to being cancelled
+                    // Here is reasonable to have "short time" to wait, since 
+                    // something is incomplete anyway, if get to here.
                     if (!threadPool.awaitTermination(5, TimeUnit.MINUTES))
-                        System.err.println("ThreadPool did not terminate");
+                        System.err.println("ThreadPool did not terminate within time limits.");
                 }
             } catch (InterruptedException ie) {
                 // (Re-)Cancel if current thread also interrupted
