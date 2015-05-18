@@ -20,7 +20,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.simrel.tests.repoReport"
-            name="SimRel Reports Headless Launcher">
+            name="%product.name.0">
          <property
                name="appName"
                value="SimRel Reports Headless Launcher">
