@@ -201,7 +201,10 @@ public class BuildRepoTests {
 
             doDirectoryTests();
 
-            copyTemplateForIndexFile("/templateFiles/indexmainpresign.html");
+            // since signing test is relatively quick, now, we no longer
+            // use the "pre-sign" indexmain file. The "pending" index file
+            // is copied into place when output directory is first created.
+            copyTemplateForIndexFile("/templateFiles/indexmain.html");
 
         } catch (ProvisionException e) {
             e.printStackTrace();

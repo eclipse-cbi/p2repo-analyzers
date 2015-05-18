@@ -24,20 +24,8 @@ public class RepoReportApplication implements IApplication {
         boolean testfailures = false;
 
         BuildRepoTests runAllReports = new BuildRepoTests(configurations);
-        // runAllReports.setMainOutputDirectory("/home/davidw/temp");
-        // runAllReports.copyTemplateForIndexFile("/indexPending.html");
-
-        // runAllReports.setDirectoryToCheck("/home/www/html/downloads/releases/juno/201202030900");
-        // runAllReports.setDirectoryToCheckForReference("/home/www/html/downloads/releases/juno/201112160900");
-        // runAllReports.setDirectoryToCheck("/home/davidw/temp/gtest");
-        // runAllReports.setDirectoryToCheckForReference("/home/davidw/temp/gtest");
-
-        // runAllReports.setDirectoryToCheck("/home/files/buildzips/orbit/S20120123151124/repository");
-        // runAllReports.setDirectoryToCheckForReference("/home/files/buildzips/orbit/R20110523182458/repository");
 
         testfailures = runAllReports.execute();
-
-        // runAllReports.copyTemplateForIndexFile("/indexmainpresign.html");
 
         if (testfailures) {
             appresult = new Integer(-1);
