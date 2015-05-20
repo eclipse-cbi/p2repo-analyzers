@@ -9,3 +9,5 @@ javacore.*
 heapdump.*
 core.*
 Snap.*
+*.xtendbin
+*.java._trace

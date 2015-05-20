@@ -53,8 +53,10 @@ public class VerifyStep {
 
                 Process resultProc = procBuilder.start();
                 int result = resultProc.waitFor();
-                if (result != 0)
+                if (result != 0) {
                     errors.append("Error: " + result + " was returned from command: " + Utils.concat(cmd)); //$NON-NLS-1$ //$NON-NLS-2$
+                    return false;
+                }
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(resultProc.getInputStream()));
                 StringBuilder out = new StringBuilder();

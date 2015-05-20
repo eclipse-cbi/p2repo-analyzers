@@ -15,6 +15,7 @@ public final class RepoTestsConfiguration {
     public static final String REFERENCE_REPO_PARAM     = "referenceRepo";
     public static final String REPO_URL_PARAM           = "repoURLToTest";
     public static final String REFERENCE_REPO_URL_PARAM = "repoURLForReference";
+    public static final String USE_NEW_IMPL = "useNewImpl";
 
     private String             referenceRepoDir;
     private String             reportOutputDir;
@@ -22,6 +23,7 @@ public final class RepoTestsConfiguration {
     private String             tempWorkingDir;
     private String             repoURLToTest;
     private String             repoURLForReference;
+    private Boolean            useNewImpl;
 
     /**
      * @param reportRepoDir
@@ -91,8 +93,28 @@ public final class RepoTestsConfiguration {
         if (outDir == null || outDir.isEmpty()) {
             outDir = System.getenv(REPORT_OUTPUT_DIR_PARAM);
         }
+        String usenew = System.getProperty(USE_NEW_IMPL, null);
+        if (usenew == null || outDir.isEmpty()) {
+            usenew = System.getenv(USE_NEW_IMPL);
+        }
         String tmpDir = System.getProperty("java.io.tmpdir");
         String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
-        return new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
+        RepoTestsConfiguration configuration = new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
+        configuration.setUseNewImpl(Boolean.valueOf(usenew));
+        return configuration;
+    }
+
+    /**
+     * @return <code>true</code> if new common impl should be used
+     */
+    public Boolean getUseNewImpl() {
+        return useNewImpl;
+    }
+
+    /**
+     * @param useNewImpl use new common impl 
+     */
+    public void setUseNewImpl(Boolean useNewImpl) {
+        this.useNewImpl = useNewImpl;
     }
 }

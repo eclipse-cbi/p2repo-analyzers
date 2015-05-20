@@ -48,6 +48,7 @@
       <plugin id="org.eclipse.osgi.compatibility.state" fragment="true"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.simrel.tests"/>
+      <plugin id="org.eclipse.simrel.tests.common"/>
       <plugin id="org.eclipse.simrel.tests.junit"/>
       <plugin id="org.junit"/>
    </plugins>
