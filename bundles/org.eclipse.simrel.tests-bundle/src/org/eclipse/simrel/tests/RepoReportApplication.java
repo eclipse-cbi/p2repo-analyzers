@@ -24,11 +24,12 @@ public class RepoReportApplication implements IApplication {
         // but for now, all "tests" return "not failed"
         Stopwatch stopwatch = Stopwatch.createStarted();
         boolean testfailures = false;
-        if (!configurations.getUseNewApi()) {
-            testfailures = new BuildRepoTests(configurations).execute();
-        } else {
+        testfailures = new BuildRepoTests(configurations).execute();
+        if (configurations.getUseNewApi()) {
+            Stopwatch additionalReports = Stopwatch.createStarted();
             System.out.println("Using new API.");
-            testfailures = new P2RepositoryCheck().runChecks(configurations);
+            new P2RepositoryCheck().runChecks(configurations);
+            System.out.println("Additional reports. Took: " + additionalReports);
         }
         stopwatch.stop();
         if (testfailures) {
