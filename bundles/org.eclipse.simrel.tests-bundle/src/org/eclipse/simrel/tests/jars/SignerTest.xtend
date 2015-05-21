@@ -102,10 +102,20 @@ class SignerTest extends TestJars {
 		var ReportWriter warn = createNewReportWriter(KNOWN_UNSIGNED)
 		var ReportWriter error = createNewReportWriter(UNSIGNED_FILENAME)
 		try {
+			val featuresCount = reports.filter[iuType.equals('feature')].size
+			info.writeln(
+			'''
+				Jars checked: «reports.size». «featuresCount» features and «reports.size-featuresCount» plugins.
+				Valid signatures: «reports.filter[type==ReportType.INFO].size».
+				Explicitly excluded from signing: «reports.filter[type==ReportType.BAD_GUY].size». See «KNOWN_UNSIGNED» for more details.
+				Invalid or missing signature: «reports.filter[type==ReportType.NOT_IN_TRAIN].size». See «UNSIGNED_FILENAME» for more details.
+			''')
+
 			val longestFileName = reports.sortBy[fileName.length].last.fileName.length
 			for (report : reports.sortBy[fileName]) {
 				val indent = Strings.repeat(" ", longestFileName - report.fileName.length)
-				val line = '''«report.fileName»«indent» «report.iuType»		«report.checkResult»'''
+				val trailing = Strings.repeat(' ', 10 - report.iuType.length)
+				val line = ''' «report.fileName»«indent»	«report.iuType»«trailing»	«report.checkResult»'''
 				switch (report.type) {
 					case INFO: info.writeln(line)
 					case NOT_IN_TRAIN: error.writeln(line)
