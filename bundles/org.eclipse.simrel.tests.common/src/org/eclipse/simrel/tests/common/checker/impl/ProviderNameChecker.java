@@ -51,17 +51,18 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 			CheckReport checkReport = new CheckReport(ProviderNameChecker.class, iu);
 
 			String providerName = iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
+			checkReport.setCheckResult(providerName);
+
 			if (providerName == null) {
-				incorrectProviderName(checkReport);
-			}
-			// common errors and misspellings
-			else if (providerName.startsWith("%") || providerName.equals("Eclipse")
+				missingProviderName(checkReport);
+			} else if (providerName.startsWith("%") || providerName.equals("Eclipse")
 					|| providerName.startsWith("eclipse.org") || providerName.equals("unknown")
 					|| providerName.startsWith("Engineering") || providerName.contains("org.eclipse.jwt")
 					|| providerName.contains("www.example.org") || providerName.contains("www.eclipse.org")
 					|| providerName.contains("Provider") || providerName.contains("provider")
 					|| providerName.startsWith("Bundle-") || providerName.startsWith("bund")
 					|| providerName.startsWith("Eclispe")) {
+				// common errors and misspellings
 				incorrectProviderName(checkReport);
 			} else if (providerName.startsWith("Eclipse.org - ")) {
 				correctProviderName(checkReport);
@@ -69,11 +70,10 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 				correctProviderName(checkReport);
 			} else if (OLD_PROVIDER_NAME.equals(providerName)) {
 				oldProviderName(checkReport);
-			}
-			// order is important, starts with Eclipse, but not one
-			// of the above e.g. "Eclipse Orbit" or "Eclipse.org"?
-			// TODO: eventually put in with "incorrect?"
-			else if (providerName.startsWith("Eclipse")) {
+			} else if (providerName.startsWith("Eclipse")) {
+				// order is important, starts with Eclipse, but not one
+				// of the above e.g. "Eclipse Orbit" or "Eclipse.org"?
+				// TODO: eventually put in with "incorrect?"
 				unknownProviderName(checkReport);
 			} else {
 				if (iu.getId().startsWith("org.eclipse")) {
@@ -86,6 +86,14 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 			consumer.accept(checkReport);
 		}
 
+	}
+
+	/**
+	 * @param checkReport
+	 */
+	private void missingProviderName(CheckReport checkReport) {
+		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Provider name is missing.");
 	}
 
 	public Set<String> getKnownProviderNames() {
@@ -101,21 +109,26 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	private void suspectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Suspect provider name.");
 	}
 
 	private void incorrectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Incorrect provider name.");
 	}
 
 	private void unknownProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.BAD_GUY);
+		checkReport.setAdditionalData("Unknown provider name.");
 	}
 
 	private void oldProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.BAD_GUY);
+		checkReport.setAdditionalData("Old provider name.");
 	}
 
 	private void correctProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.INFO);
+		checkReport.setAdditionalData("Correct provider name.");
 	}
 }

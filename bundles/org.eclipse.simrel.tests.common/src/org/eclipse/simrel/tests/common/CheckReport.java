@@ -19,6 +19,7 @@ public class CheckReport {
 	private IInstallableUnit iu;
 	private String checkerId;
 	private String checkResult;
+	private String additionalData;
 
 	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu) {
 		super();
@@ -70,5 +71,16 @@ public class CheckReport {
 		builder.append(type).append(": ").append(checkResult).append(' ').append(iu.getId()).append(" <- ")
 				.append(checkerId).append(" " + timeMs);
 		return builder.toString();
+	}
+
+	/**
+	 * @return the additionalData provided by a checker
+	 */
+	public String getAdditionalData() {
+		return additionalData;
+	}
+
+	public void setAdditionalData(String additionalData) {
+		this.additionalData = additionalData;
 	}
 }

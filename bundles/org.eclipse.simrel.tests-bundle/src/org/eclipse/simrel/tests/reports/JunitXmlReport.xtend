@@ -23,23 +23,22 @@ class JunitXmlReport implements ICheckReporter {
 		val dataDir = new File(configs.reportOutputDir, "data");
 		dataDir.mkdirs
 		val writer = new PrintWriter('''«dataDir»/junit-report.xml''')
-		val groupedByIU = manager.reports.
-			groupBy[IU]
+		val groupedByCheck = manager.reports.
+			groupBy[checkerId]
 		val xmlContent = '''
 			<?xml version="1.0" encoding="UTF-8"?>
 			<testrun name="Simrel report" project="org.eclipse.simrel.tests-bundle" tests="«manager.reports.size»" started="«manager.reports.size»" failures="0" errors="0" ignored="0">
-				«FOR iu : groupedByIU.keySet»
-					<testsuite name="«iu.id»" time="0.001">
-						«val groupByChecker = groupedByIU.get(iu).groupBy[checkerId]»
-						«FOR checker : groupByChecker.keySet»
-							<testcase name="check«checker.split('\\.').last»" classname="«checker»" time="0.0">
-							«IF groupByChecker.get(checker).filter[type==ReportType.NOT_IN_TRAIN].size > 0»
-								<failure>
-								«FOR error: groupByChecker.get(checker).filter[type==ReportType.NOT_IN_TRAIN]»
-									«error.checkResult» reported by: «error.checkerId»
-								«ENDFOR»
-								</failure>
-							«ENDIF»
+				«FOR check : groupedByCheck.keySet»
+					<testsuite name="«check.split('\\.').last»" time="0.001">
+						«val checkedIUsById = groupedByCheck.get(check).groupBy[IU]»
+						«FOR iu : checkedIUsById.keySet»
+							<testcase name="check_«iu.id»" classname="«check»" time="0.0">
+							««« Iterate over all reports for current IU »»
+							«FOR report: checkedIUsById.get(iu)»
+								<«report.type.asTag»>
+									«report.checkResult» «report.additionalData»
+								</«report.type.asTag»>
+							«ENDFOR»
 							</testcase>
 						«ENDFOR»
 					</testsuite>
@@ -49,4 +48,13 @@ class JunitXmlReport implements ICheckReporter {
 		writer.append(xmlContent);
 		writer.close
 	}
+
+	def asTag(ReportType type) {
+		if (type == ReportType.NOT_IN_TRAIN) {
+			return "failure"
+		} else {
+			return "system-out"
+		}
+	}
+
 }

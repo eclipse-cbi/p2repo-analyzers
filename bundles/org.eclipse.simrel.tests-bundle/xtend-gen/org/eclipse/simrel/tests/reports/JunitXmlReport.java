@@ -42,10 +42,10 @@ public class JunitXmlReport implements ICheckReporter {
       _builder.append("/junit-report.xml");
       final PrintWriter writer = new PrintWriter(_builder.toString());
       ConcurrentLinkedQueue<CheckReport> _reports = manager.getReports();
-      final Function1<CheckReport, IInstallableUnit> _function = (CheckReport it) -> {
-        return it.getIU();
+      final Function1<CheckReport, String> _function = (CheckReport it) -> {
+        return it.getCheckerId();
       };
-      final Map<IInstallableUnit, List<CheckReport>> groupedByIU = IterableExtensions.<IInstallableUnit, CheckReport>groupBy(_reports, _function);
+      final Map<String, List<CheckReport>> groupedByCheck = IterableExtensions.<String, CheckReport>groupBy(_reports, _function);
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
       _builder_1.newLine();
@@ -60,71 +60,63 @@ public class JunitXmlReport implements ICheckReporter {
       _builder_1.append("\" failures=\"0\" errors=\"0\" ignored=\"0\">");
       _builder_1.newLineIfNotEmpty();
       {
-        Set<IInstallableUnit> _keySet = groupedByIU.keySet();
-        for(final IInstallableUnit iu : _keySet) {
+        Set<String> _keySet = groupedByCheck.keySet();
+        for(final String check : _keySet) {
           _builder_1.append("\t");
           _builder_1.append("<testsuite name=\"");
-          String _id = iu.getId();
-          _builder_1.append(_id, "\t");
+          String[] _split = check.split("\\.");
+          String _last = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(_split)));
+          _builder_1.append(_last, "\t");
           _builder_1.append("\" time=\"0.001\">");
           _builder_1.newLineIfNotEmpty();
           _builder_1.append("\t");
           _builder_1.append("\t");
-          List<CheckReport> _get = groupedByIU.get(iu);
-          final Function1<CheckReport, String> _function_1 = (CheckReport it) -> {
-            return it.getCheckerId();
+          List<CheckReport> _get = groupedByCheck.get(check);
+          final Function1<CheckReport, IInstallableUnit> _function_1 = (CheckReport it) -> {
+            return it.getIU();
           };
-          final Map<String, List<CheckReport>> groupByChecker = IterableExtensions.<String, CheckReport>groupBy(_get, _function_1);
+          final Map<IInstallableUnit, List<CheckReport>> checkedIUsById = IterableExtensions.<IInstallableUnit, CheckReport>groupBy(_get, _function_1);
           _builder_1.newLineIfNotEmpty();
           {
-            Set<String> _keySet_1 = groupByChecker.keySet();
-            for(final String checker : _keySet_1) {
+            Set<IInstallableUnit> _keySet_1 = checkedIUsById.keySet();
+            for(final IInstallableUnit iu : _keySet_1) {
               _builder_1.append("\t");
               _builder_1.append("\t");
-              _builder_1.append("<testcase name=\"check");
-              String[] _split = checker.split("\\.");
-              String _last = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(_split)));
-              _builder_1.append(_last, "\t\t");
+              _builder_1.append("<testcase name=\"check_");
+              String _id = iu.getId();
+              _builder_1.append(_id, "\t\t");
               _builder_1.append("\" classname=\"");
-              _builder_1.append(checker, "\t\t");
+              _builder_1.append(check, "\t\t");
               _builder_1.append("\" time=\"0.0\">");
               _builder_1.newLineIfNotEmpty();
               {
-                List<CheckReport> _get_1 = groupByChecker.get(checker);
-                final Function1<CheckReport, Boolean> _function_2 = (CheckReport it) -> {
-                  ReportType _type = it.getType();
-                  return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
-                };
-                Iterable<CheckReport> _filter = IterableExtensions.<CheckReport>filter(_get_1, _function_2);
-                int _size_2 = IterableExtensions.size(_filter);
-                boolean _greaterThan = (_size_2 > 0);
-                if (_greaterThan) {
+                List<CheckReport> _get_1 = checkedIUsById.get(iu);
+                for(final CheckReport report : _get_1) {
                   _builder_1.append("\t");
                   _builder_1.append("\t");
-                  _builder_1.append("<failure>");
-                  _builder_1.newLine();
-                  {
-                    List<CheckReport> _get_2 = groupByChecker.get(checker);
-                    final Function1<CheckReport, Boolean> _function_3 = (CheckReport it) -> {
-                      ReportType _type = it.getType();
-                      return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
-                    };
-                    Iterable<CheckReport> _filter_1 = IterableExtensions.<CheckReport>filter(_get_2, _function_3);
-                    for(final CheckReport error : _filter_1) {
-                      _builder_1.append("\t");
-                      _builder_1.append("\t");
-                      String _checkResult = error.getCheckResult();
-                      _builder_1.append(_checkResult, "\t\t");
-                      _builder_1.append(" reported by: ");
-                      String _checkerId = error.getCheckerId();
-                      _builder_1.append(_checkerId, "\t\t");
-                      _builder_1.newLineIfNotEmpty();
-                    }
-                  }
+                  _builder_1.append("<");
+                  ReportType _type = report.getType();
+                  String _asTag = this.asTag(_type);
+                  _builder_1.append(_asTag, "\t\t");
+                  _builder_1.append(">");
+                  _builder_1.newLineIfNotEmpty();
                   _builder_1.append("\t");
                   _builder_1.append("\t");
-                  _builder_1.append("</failure>");
-                  _builder_1.newLine();
+                  _builder_1.append("\t");
+                  String _checkResult = report.getCheckResult();
+                  _builder_1.append(_checkResult, "\t\t\t");
+                  _builder_1.append(" ");
+                  String _additionalData = report.getAdditionalData();
+                  _builder_1.append(_additionalData, "\t\t\t");
+                  _builder_1.newLineIfNotEmpty();
+                  _builder_1.append("\t");
+                  _builder_1.append("\t");
+                  _builder_1.append("</");
+                  ReportType _type_1 = report.getType();
+                  String _asTag_1 = this.asTag(_type_1);
+                  _builder_1.append(_asTag_1, "\t\t");
+                  _builder_1.append(">");
+                  _builder_1.newLineIfNotEmpty();
                 }
               }
               _builder_1.append("\t");
@@ -145,6 +137,15 @@ public class JunitXmlReport implements ICheckReporter {
       writer.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public String asTag(final ReportType type) {
+    boolean _equals = Objects.equal(type, ReportType.NOT_IN_TRAIN);
+    if (_equals) {
+      return "failure";
+    } else {
+      return "system-out";
     }
   }
 }
