@@ -58,4 +58,17 @@ public class CheckReport {
 	public void setTimeMs(final long timeMs) {
 		this.timeMs = timeMs;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(type).append(": ").append(checkResult).append(' ').append(iu.getId()).append(" <- ")
+				.append(checkerId).append(" " + timeMs);
+		return builder.toString();
+	}
 }

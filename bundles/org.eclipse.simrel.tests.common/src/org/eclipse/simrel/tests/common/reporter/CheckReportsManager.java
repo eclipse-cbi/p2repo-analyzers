@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.ReportType;
@@ -47,7 +48,13 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 		this.queue.add(report);
 	}
 
-	class ConsoleReporter implements ICheckReporter {
+	public Stream<CheckReport> reportsByCheckerId(final String checkerId) {
+		Stream<CheckReport> stream = getReports().parallelStream();
+		Stream<CheckReport> featureReports = stream.filter(report -> report.getCheckerId().equals(checkerId));
+		return featureReports;
+	}
+
+	class ConsoleReporter implements ICheckReportDumper {
 
 		private boolean dumpTime = false;
 

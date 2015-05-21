@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.simrel.tests.common.checker;
+package org.eclipse.simrel.tests.common.checker.impl;
 
 import java.util.function.Consumer;
 
@@ -14,6 +14,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
+import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**

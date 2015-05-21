@@ -141,12 +141,9 @@ public class SignerTest extends TestJars {
       File _file_1 = new File(_bundleDirectory);
       this.checkJars(_file_1, "plugin", checkReports);
     }
-    final Function1<PlainCheckReport, Boolean> _function = new Function1<PlainCheckReport, Boolean>() {
-      @Override
-      public Boolean apply(final PlainCheckReport it) {
-        ReportType _type = it.getType();
-        return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
-      }
+    final Function1<PlainCheckReport, Boolean> _function = (PlainCheckReport it) -> {
+      ReportType _type = it.getType();
+      return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
     };
     final boolean containsErrors = IterableExtensions.<PlainCheckReport>exists(checkReports, _function);
     this.printSummary(checkReports);
@@ -195,12 +192,9 @@ public class SignerTest extends TestJars {
     ReportWriter warn = this.createNewReportWriter(SignerTest.KNOWN_UNSIGNED);
     ReportWriter error = this.createNewReportWriter(SignerTest.UNSIGNED_FILENAME);
     try {
-      final Function1<PlainCheckReport, Boolean> _function = new Function1<PlainCheckReport, Boolean>() {
-        @Override
-        public Boolean apply(final PlainCheckReport it) {
-          String _iuType = it.getIuType();
-          return Boolean.valueOf(_iuType.equals("feature"));
-        }
+      final Function1<PlainCheckReport, Boolean> _function = (PlainCheckReport it) -> {
+        String _iuType = it.getIuType();
+        return Boolean.valueOf(_iuType.equals("feature"));
       };
       Iterable<PlainCheckReport> _filter = IterableExtensions.<PlainCheckReport>filter(reports, _function);
       final int featuresCount = IterableExtensions.size(_filter);
@@ -217,12 +211,9 @@ public class SignerTest extends TestJars {
       _builder.append(" plugins.");
       _builder.newLineIfNotEmpty();
       _builder.append("Valid signatures: ");
-      final Function1<PlainCheckReport, Boolean> _function_1 = new Function1<PlainCheckReport, Boolean>() {
-        @Override
-        public Boolean apply(final PlainCheckReport it) {
-          ReportType _type = it.getType();
-          return Boolean.valueOf(Objects.equal(_type, ReportType.INFO));
-        }
+      final Function1<PlainCheckReport, Boolean> _function_1 = (PlainCheckReport it) -> {
+        ReportType _type = it.getType();
+        return Boolean.valueOf(Objects.equal(_type, ReportType.INFO));
       };
       Iterable<PlainCheckReport> _filter_1 = IterableExtensions.<PlainCheckReport>filter(reports, _function_1);
       int _size_2 = IterableExtensions.size(_filter_1);
@@ -230,12 +221,9 @@ public class SignerTest extends TestJars {
       _builder.append(".");
       _builder.newLineIfNotEmpty();
       _builder.append("Explicitly excluded from signing: ");
-      final Function1<PlainCheckReport, Boolean> _function_2 = new Function1<PlainCheckReport, Boolean>() {
-        @Override
-        public Boolean apply(final PlainCheckReport it) {
-          ReportType _type = it.getType();
-          return Boolean.valueOf(Objects.equal(_type, ReportType.BAD_GUY));
-        }
+      final Function1<PlainCheckReport, Boolean> _function_2 = (PlainCheckReport it) -> {
+        ReportType _type = it.getType();
+        return Boolean.valueOf(Objects.equal(_type, ReportType.BAD_GUY));
       };
       Iterable<PlainCheckReport> _filter_2 = IterableExtensions.<PlainCheckReport>filter(reports, _function_2);
       int _size_3 = IterableExtensions.size(_filter_2);
@@ -245,12 +233,9 @@ public class SignerTest extends TestJars {
       _builder.append(" for more details.");
       _builder.newLineIfNotEmpty();
       _builder.append("Invalid or missing signature: ");
-      final Function1<PlainCheckReport, Boolean> _function_3 = new Function1<PlainCheckReport, Boolean>() {
-        @Override
-        public Boolean apply(final PlainCheckReport it) {
-          ReportType _type = it.getType();
-          return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
-        }
+      final Function1<PlainCheckReport, Boolean> _function_3 = (PlainCheckReport it) -> {
+        ReportType _type = it.getType();
+        return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
       };
       Iterable<PlainCheckReport> _filter_3 = IterableExtensions.<PlainCheckReport>filter(reports, _function_3);
       int _size_4 = IterableExtensions.size(_filter_3);
@@ -260,22 +245,16 @@ public class SignerTest extends TestJars {
       _builder.append(" for more details.");
       _builder.newLineIfNotEmpty();
       info.writeln(_builder);
-      final Function1<PlainCheckReport, Integer> _function_4 = new Function1<PlainCheckReport, Integer>() {
-        @Override
-        public Integer apply(final PlainCheckReport it) {
-          String _fileName = it.getFileName();
-          return Integer.valueOf(_fileName.length());
-        }
+      final Function1<PlainCheckReport, Integer> _function_4 = (PlainCheckReport it) -> {
+        String _fileName = it.getFileName();
+        return Integer.valueOf(_fileName.length());
       };
       List<PlainCheckReport> _sortBy = IterableExtensions.<PlainCheckReport, Integer>sortBy(reports, _function_4);
       PlainCheckReport _last = IterableExtensions.<PlainCheckReport>last(_sortBy);
       String _fileName = _last.getFileName();
       final int longestFileName = _fileName.length();
-      final Function1<PlainCheckReport, String> _function_5 = new Function1<PlainCheckReport, String>() {
-        @Override
-        public String apply(final PlainCheckReport it) {
-          return it.getFileName();
-        }
+      final Function1<PlainCheckReport, String> _function_5 = (PlainCheckReport it) -> {
+        return it.getFileName();
       };
       List<PlainCheckReport> _sortBy_1 = IterableExtensions.<PlainCheckReport, String>sortBy(reports, _function_5);
       for (final PlainCheckReport report : _sortBy_1) {

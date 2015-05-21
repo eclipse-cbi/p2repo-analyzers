@@ -7,9 +7,23 @@
  *******************************************************************************/
 package org.eclipse.simrel.tests.common.reporter;
 
+import java.net.URI;
+
 /**
  * @author dhuebner - Initial contribution and API
  */
-public interface ICheckReporter {
-	void createReport(CheckReportsManager manager, IP2RepositoryAnalyserConfiguration configs);
+public interface IP2RepositoryAnalyserConfiguration {
+
+	/**
+	 * @return path to the output directory
+	 */
+	public abstract String getReportOutputDir();
+
+	/**
+	 * @return p2 repository location as {@link URI}
+	 */
+	public abstract URI getReportRepoURI();
+
+	public abstract String getDataOutputDir();
+
 }

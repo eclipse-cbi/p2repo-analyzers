@@ -3,10 +3,15 @@
  */
 package org.eclipse.simrel.tests;
 
+import java.io.File;
+import java.net.URI;
+
+import org.eclipse.simrel.tests.common.reporter.IP2RepositoryAnalyserConfiguration;
+
 /**
  * @author dhuebner
  */
-public final class RepoTestsConfiguration {
+public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfiguration {
     /**
      * this is property where users can specify main directory where output goes
      */
@@ -15,15 +20,15 @@ public final class RepoTestsConfiguration {
     public static final String REFERENCE_REPO_PARAM     = "referenceRepo";
     public static final String REPO_URL_PARAM           = "repoURLToTest";
     public static final String REFERENCE_REPO_URL_PARAM = "repoURLForReference";
-    public static final String USE_NEW_IMPL = "useNewImpl";
+    public static final String USE_NEW_API              = "useNewApi";
 
-    private String             referenceRepoDir;
-    private String             reportOutputDir;
-    private String             reportRepoDir;
-    private String             tempWorkingDir;
-    private String             repoURLToTest;
-    private String             repoURLForReference;
-    private Boolean            useNewImpl;
+    private String  referenceRepoDir;
+    private String  reportOutputDir;
+    private String  reportRepoDir;
+    private String  tempWorkingDir;
+    private String  repoURLToTest;
+    private String  repoURLForReference;
+    private Boolean useNewApi;
 
     /**
      * @param reportRepoDir
@@ -80,6 +85,15 @@ public final class RepoTestsConfiguration {
         return this.reportRepoDir;
     }
 
+    @Override
+    public URI getReportRepoURI() {
+        URI repoURL = URI.create(getReportRepoDir());
+        if (repoURL.getScheme() == null) {
+            repoURL = URI.create("file://" + getReportRepoDir());
+        }
+        return repoURL;
+    }
+
     public String getTempWorkingDir() {
         return this.tempWorkingDir;
     }
@@ -93,9 +107,9 @@ public final class RepoTestsConfiguration {
         if (outDir == null || outDir.isEmpty()) {
             outDir = System.getenv(REPORT_OUTPUT_DIR_PARAM);
         }
-        String usenew = System.getProperty(USE_NEW_IMPL, null);
+        String usenew = System.getProperty(USE_NEW_API, null);
         if (usenew == null || outDir.isEmpty()) {
-            usenew = System.getenv(USE_NEW_IMPL);
+            usenew = System.getenv(USE_NEW_API);
         }
         String tmpDir = System.getProperty("java.io.tmpdir");
         String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
@@ -107,14 +121,22 @@ public final class RepoTestsConfiguration {
     /**
      * @return <code>true</code> if new common impl should be used
      */
-    public Boolean getUseNewImpl() {
-        return useNewImpl;
+    public Boolean getUseNewApi() {
+        return useNewApi;
     }
 
     /**
-     * @param useNewImpl use new common impl 
+     * @param useNewImpl
+     *            use new common impl
      */
     public void setUseNewImpl(Boolean useNewImpl) {
-        this.useNewImpl = useNewImpl;
+        this.useNewApi = useNewImpl;
+    }
+
+    @Override
+    public String getDataOutputDir() {
+        File dataDir = new File(reportOutputDir, "data");
+        dataDir.mkdirs();
+        return dataDir.getAbsolutePath();
     }
 }
