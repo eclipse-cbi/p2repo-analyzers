@@ -13,6 +13,7 @@ import org.eclipse.simrel.tests.common.reporter.CheckReportsManager
 import org.eclipse.simrel.tests.common.reporter.ICheckReporter
 import org.eclipse.simrel.tests.common.reporter.IP2RepositoryAnalyserConfiguration
 import java.io.File
+import static com.google.common.xml.XmlEscapers.*
 
 /** 
  * @author dhuebner - Initial contribution and API
@@ -36,7 +37,7 @@ class JunitXmlReport implements ICheckReporter {
 							««« Iterate over all reports for current IU »»
 							«FOR report: checkedIUsById.get(iu)»
 								<«report.type.asTag»>
-									«report.checkResult» «report.additionalData»
+									«xmlContentEscaper.escape(report.checkResult)» - «xmlContentEscaper.escape(report.additionalData)»
 								</«report.type.asTag»>
 							«ENDFOR»
 							</testcase>
