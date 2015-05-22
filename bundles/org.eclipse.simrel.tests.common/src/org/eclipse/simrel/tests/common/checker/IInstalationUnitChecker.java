@@ -6,7 +6,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 
-public interface IInstalationUnitChecker {
+public interface IInstalationUnitChecker extends IChecker {
 
 	void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu);
 

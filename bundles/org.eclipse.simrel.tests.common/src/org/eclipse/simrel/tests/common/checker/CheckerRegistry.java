@@ -15,9 +15,11 @@ import java.util.Set;
 import org.eclipse.simrel.tests.common.checker.impl.BREEChecker;
 import org.eclipse.simrel.tests.common.checker.impl.EclipseSourceChecker;
 import org.eclipse.simrel.tests.common.checker.impl.FeatureNameChecker;
+import org.eclipse.simrel.tests.common.checker.impl.IUNameChecker;
 import org.eclipse.simrel.tests.common.checker.impl.LicenseConsistencyChecker;
 import org.eclipse.simrel.tests.common.checker.impl.ProviderNameChecker;
 import org.eclipse.simrel.tests.common.checker.impl.SignatureChecker;
+import org.eclipse.simrel.tests.common.checker.impl.VersionChecker;
 
 /**
  * @author dhuebner - Initial contribution and API
@@ -30,6 +32,8 @@ public class CheckerRegistry {
 		this.checkers.add(new FeatureNameChecker());
 		this.checkers.add(new LicenseConsistencyChecker());
 		this.checkers.add(new ProviderNameChecker());
+		this.checkers.add(new VersionChecker());
+		this.checkers.add(new IUNameChecker());
 		this.checkers = Collections.unmodifiableSet(this.checkers);
 		this.artifactCheckers.add(new BREEChecker());
 		this.artifactCheckers.add(new SignatureChecker());

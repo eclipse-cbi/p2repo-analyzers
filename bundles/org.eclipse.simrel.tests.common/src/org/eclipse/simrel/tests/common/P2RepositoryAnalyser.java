@@ -8,6 +8,10 @@
 package org.eclipse.simrel.tests.common;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -46,6 +50,18 @@ public class P2RepositoryAnalyser {
 			iu.getArtifacts().parallelStream()
 					.forEach(artifactKey -> registry.getArtifactCheckers().stream().forEach(artChecker -> {
 				File artifactFile = repoDescr.getArtifactRepository().getArtifactFile(artifactKey);
+				if (artifactFile == null) {
+					try {
+						URL artifactUrl = repoDescr.getArtifactRepository().getLocation().toURL();
+						System.out.println("Downloading " + artifactKey.getId() + " from " + artifactUrl);
+						artifactFile = File.createTempFile("p2RepoAnanylse", artifactKey.getId());
+						InputStream inStr = artifactUrl.openStream();
+						Files.copy(inStr, artifactFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+						inStr.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 				artChecker.check(consumer, repoDescr, iu, artifactKey, artifactFile);
 			} ));
 		} );

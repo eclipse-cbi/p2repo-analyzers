@@ -27,6 +27,7 @@ import org.junit.Test;
 public class TestRunner {
 
 	// private static final int FEATURES_IN_REPO = 76;
+	static final String JENKINS_XTEXT = "https://xtext-builds.itemis.de/jenkins/job/xtext-master/ws/xtext.p2.repository/";
 	static final String EMF = "file:///Users/dhuebner/Downloads/emf-xsd-Update-N201505120526";
 	static final String XTEXT = "file:///Users/dhuebner/Downloads/tmf-xtext-Update-2.8.3M7-2";
 	static final String LUNA = "file:///Users/dhuebner/git/org.eclipse.xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
@@ -38,7 +39,7 @@ public class TestRunner {
 			long start = System.currentTimeMillis();
 			long time = start;
 
-			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(EMF));
+			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(LUNA));
 			System.out.println("create repo descr " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
 
@@ -100,7 +101,7 @@ public class TestRunner {
 	public void testAllError() {
 		assertEquals("Error Reports created", 4,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
-		assertEquals("Warning Reports created", 8,
+		assertEquals("Warning Reports created", 187,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.BAD_GUY).count());
 	}
 

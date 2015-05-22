@@ -28,7 +28,7 @@ public class OverviewReport implements ICheckReporter {
       String _plus = (_dataOutputDir + "/overview.csv");
       final PrintWriter writer = new PrintWriter(_plus);
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("IU id;ReportType;Checker Class;Checker output;Checker additional data;Report creation Time");
+      _builder.append("IU id;IU version;ReportType;Checker Class;Checker output;Checker additional data;Report creation Time");
       writer.println(_builder);
       ConcurrentLinkedQueue<CheckReport> _reports = manager.getReports();
       final Function1<CheckReport, String> _function = (CheckReport it) -> {
@@ -49,6 +49,9 @@ public class OverviewReport implements ICheckReporter {
         IInstallableUnit _iU = it.getIU();
         String _id = _iU.getId();
         _builder_1.append(_id, "");
+        _builder_1.append(";");
+        String _iuVersion = it.getIuVersion();
+        _builder_1.append(_iuVersion, "");
         _builder_1.append(";");
         ReportType _type = it.getType();
         _builder_1.append(_type, "");

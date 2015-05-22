@@ -20,11 +20,14 @@ public class CheckReport {
 	private String checkerId;
 	private String checkResult;
 	private String additionalData;
+	private String iuVersion;
 
 	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu) {
 		super();
 		this.iu = iu;
 		this.checkerId = checkerId.getName();
+		if (iu != null)
+			this.iuVersion = iu.getVersion().getOriginal();
 		this.setTimeMs(System.currentTimeMillis());
 	}
 
@@ -68,8 +71,8 @@ public class CheckReport {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(type).append(": ").append(checkResult).append(' ').append(iu.getId()).append(" <- ")
-				.append(checkerId).append(" " + timeMs);
+		builder.append(type).append(": ").append(checkResult).append(' ').append(iu.getId() + ":" + iuVersion)
+				.append(" <- ").append(checkerId).append(" " + timeMs);
 		return builder.toString();
 	}
 
@@ -82,5 +85,12 @@ public class CheckReport {
 
 	public void setAdditionalData(String additionalData) {
 		this.additionalData = additionalData;
+	}
+
+	/**
+	 * @return the iuVersion
+	 */
+	public String getIuVersion() {
+		return iuVersion;
 	}
 }

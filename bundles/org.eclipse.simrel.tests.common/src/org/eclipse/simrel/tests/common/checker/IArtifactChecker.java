@@ -8,10 +8,6 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 
-public interface IArtifactChecker {
+public interface IArtifactChecker extends IChecker {
 	void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu, IArtifactKey artifact, File file);
-
-	default CheckReport createReport(IInstallableUnit iu) {
-		return new CheckReport(this.getClass(), iu);
-	}
 }
