@@ -94,35 +94,47 @@ public class JunitXmlReport implements ICheckReporter {
               {
                 List<CheckReport> _get_1 = checkedIUsById.get(iu);
                 for(final CheckReport report : _get_1) {
-                  _builder_1.append("\t");
-                  _builder_1.append("\t");
-                  _builder_1.append("<");
-                  ReportType _type = report.getType();
-                  String _asTag = this.asTag(_type);
-                  _builder_1.append(_asTag, "\t\t");
-                  _builder_1.append(">");
-                  _builder_1.newLineIfNotEmpty();
-                  _builder_1.append("\t");
-                  _builder_1.append("\t");
-                  _builder_1.append("\t");
-                  Escaper _xmlAttributeEscaper = XmlEscapers.xmlAttributeEscaper();
-                  String _checkResult = report.getCheckResult();
-                  String _escape = _xmlAttributeEscaper.escape(_checkResult);
-                  _builder_1.append(_escape, "\t\t\t");
-                  _builder_1.append(" - ");
-                  Escaper _xmlAttributeEscaper_1 = XmlEscapers.xmlAttributeEscaper();
-                  String _additionalData = report.getAdditionalData();
-                  String _escape_1 = _xmlAttributeEscaper_1.escape(_additionalData);
-                  _builder_1.append(_escape_1, "\t\t\t");
-                  _builder_1.newLineIfNotEmpty();
-                  _builder_1.append("\t");
-                  _builder_1.append("\t");
-                  _builder_1.append("</");
-                  ReportType _type_1 = report.getType();
-                  String _asTag_1 = this.asTag(_type_1);
-                  _builder_1.append(_asTag_1, "\t\t");
-                  _builder_1.append(">");
-                  _builder_1.newLineIfNotEmpty();
+                  {
+                    String _checkResult = report.getCheckResult();
+                    boolean _notEquals = (!Objects.equal(_checkResult, null));
+                    if (_notEquals) {
+                      _builder_1.append("\t");
+                      _builder_1.append("\t");
+                      _builder_1.append("<");
+                      ReportType _type = report.getType();
+                      String _asTag = this.asTag(_type);
+                      _builder_1.append(_asTag, "\t\t");
+                      _builder_1.append(">");
+                      _builder_1.newLineIfNotEmpty();
+                      _builder_1.append("\t");
+                      _builder_1.append("\t");
+                      _builder_1.append("\t");
+                      Escaper _xmlAttributeEscaper = XmlEscapers.xmlAttributeEscaper();
+                      String _checkResult_1 = report.getCheckResult();
+                      String _escape = _xmlAttributeEscaper.escape(_checkResult_1);
+                      _builder_1.append(_escape, "\t\t\t");
+                      {
+                        String _additionalData = report.getAdditionalData();
+                        boolean _notEquals_1 = (!Objects.equal(_additionalData, null));
+                        if (_notEquals_1) {
+                          _builder_1.append(" - ");
+                          Escaper _xmlAttributeEscaper_1 = XmlEscapers.xmlAttributeEscaper();
+                          String _additionalData_1 = report.getAdditionalData();
+                          String _escape_1 = _xmlAttributeEscaper_1.escape(_additionalData_1);
+                          _builder_1.append(_escape_1, "\t\t\t");
+                        }
+                      }
+                      _builder_1.newLineIfNotEmpty();
+                      _builder_1.append("\t");
+                      _builder_1.append("\t");
+                      _builder_1.append("</");
+                      ReportType _type_1 = report.getType();
+                      String _asTag_1 = this.asTag(_type_1);
+                      _builder_1.append(_asTag_1, "\t\t");
+                      _builder_1.append(">");
+                      _builder_1.newLineIfNotEmpty();
+                    }
+                  }
                 }
               }
               _builder_1.append("\t");

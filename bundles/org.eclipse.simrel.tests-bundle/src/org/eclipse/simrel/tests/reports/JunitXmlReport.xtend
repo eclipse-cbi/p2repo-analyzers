@@ -36,9 +36,11 @@ class JunitXmlReport implements ICheckReporter {
 							<testcase name="check_«iu.id»" classname="«check»" time="0.0">
 							««« Iterate over all reports for current IU »»
 							«FOR report: checkedIUsById.get(iu)»
+								«IF report.checkResult!=null»
 								<«report.type.asTag»>
-									«xmlAttributeEscaper.escape(report.checkResult)» - «xmlAttributeEscaper.escape(report.additionalData)»
+									«xmlAttributeEscaper.escape(report.checkResult)»«IF report.additionalData!=null» - «xmlAttributeEscaper.escape(report.additionalData)»«ENDIF»
 								</«report.type.asTag»>
+								«ENDIF»
 							«ENDFOR»
 							</testcase>
 						«ENDFOR»
