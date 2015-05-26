@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import org.eclipse.simrel.tests.RepoTestsConfiguration;
 import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.jars.TestJars;
@@ -33,32 +32,30 @@ import org.eclipse.simrel.tests.utils.PlainCheckReport;
 import org.eclipse.simrel.tests.utils.ReportWriter;
 import org.eclipse.simrel.tests.utils.VerifyStep;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 @SuppressWarnings("all")
 public class SignerTest extends TestJars {
-  public static final class SignerRunnable implements Runnable {
+  public static final class SignerCheck implements Consumer<File> {
     private final Collection<PlainCheckReport> reports;
-    
-    private final File file;
     
     private final String iuTypeName;
     
-    SignerRunnable(final Collection<PlainCheckReport> reports, final File file, final String iuTypeName) {
+    SignerCheck(final Collection<PlainCheckReport> reports, final String iuTypeName) {
       this.reports = reports;
-      this.file = file;
       this.iuTypeName = iuTypeName;
     }
     
     @Override
-    public void run() {
+    public void accept(final File file) {
       final PlainCheckReport checkReport = new PlainCheckReport();
-      String _name = this.file.getName();
+      String _name = file.getName();
       checkReport.setFileName(_name);
       checkReport.setIuType(this.iuTypeName);
-      File fileToCheck = this.file;
+      File fileToCheck = file;
       String _name_1 = fileToCheck.getName();
       boolean _endsWith = _name_1.endsWith(PackGzFileNameFilter.EXTENSION_PACEKD_JAR);
       if (_endsWith) {
@@ -71,7 +68,7 @@ public class SignerTest extends TestJars {
             checkReport.setType(ReportType.NOT_IN_TRAIN);
             StringConcatenation _builder = new StringConcatenation();
             _builder.append("Unable to unpack ");
-            String _absolutePath = this.file.getAbsolutePath();
+            String _absolutePath = file.getAbsolutePath();
             _builder.append(_absolutePath, "");
             _builder.append(". Can not check signature. ");
             String _message = e.getMessage();
@@ -155,36 +152,9 @@ public class SignerTest extends TestJars {
     PackGzFileNameFilter _packGzFileNameFilter = new PackGzFileNameFilter();
     CompositeFileFilter _create = CompositeFileFilter.create(_jARFileNameFilter, _packGzFileNameFilter);
     final File[] jars = dirToCheck.listFiles(_create);
-    int nFiles = jars.length;
-    int TIME_PER_FILE = 2;
-    int TOTAL_WAIT_SECONDS = (nFiles * TIME_PER_FILE);
-    ExecutorService threadPool = Executors.newFixedThreadPool(64);
-    for (final File file : jars) {
-      SignerTest.SignerRunnable _signerRunnable = new SignerTest.SignerRunnable(reports, file, iuType);
-      threadPool.execute(_signerRunnable);
-    }
-    threadPool.shutdown();
-    try {
-      boolean _awaitTermination = threadPool.awaitTermination(TOTAL_WAIT_SECONDS, TimeUnit.SECONDS);
-      boolean _not = (!_awaitTermination);
-      if (_not) {
-        threadPool.shutdownNow();
-        boolean _awaitTermination_1 = threadPool.awaitTermination(5, TimeUnit.MINUTES);
-        boolean _not_1 = (!_awaitTermination_1);
-        if (_not_1) {
-          System.err.println("ThreadPool did not terminate within time limits.");
-        }
-      }
-    } catch (final Throwable _t) {
-      if (_t instanceof InterruptedException) {
-        final InterruptedException ie = (InterruptedException)_t;
-        threadPool.shutdownNow();
-        Thread _currentThread = Thread.currentThread();
-        _currentThread.interrupt();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
+    Stream<File> _parallelStream = ((List<File>)Conversions.doWrapArray(jars)).parallelStream();
+    SignerTest.SignerCheck _signerCheck = new SignerTest.SignerCheck(reports, iuType);
+    _parallelStream.forEach(_signerCheck);
   }
   
   private void printSummary(final Set<PlainCheckReport> reports) throws IOException {

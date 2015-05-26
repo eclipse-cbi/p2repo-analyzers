@@ -10,15 +10,14 @@
  */
 package org.eclipse.simrel.tests.jars
 
+import com.google.common.base.Strings
 import java.io.File
 import java.io.IOException
 import java.util.Collection
 import java.util.Properties
 import java.util.Set
 import java.util.concurrent.CopyOnWriteArraySet
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import java.util.function.Consumer
 import org.eclipse.simrel.tests.RepoTestsConfiguration
 import org.eclipse.simrel.tests.common.ReportType
 import org.eclipse.simrel.tests.utils.BundleJarUtils
@@ -28,7 +27,6 @@ import org.eclipse.simrel.tests.utils.PackGzFileNameFilter
 import org.eclipse.simrel.tests.utils.PlainCheckReport
 import org.eclipse.simrel.tests.utils.ReportWriter
 import org.eclipse.simrel.tests.utils.VerifyStep
-import com.google.common.base.Strings
 
 class SignerTest extends TestJars {
 	static final String UNSIGNED_FILENAME = "unsigned8.txt"
@@ -58,43 +56,7 @@ class SignerTest extends TestJars {
 
 	def checkJars(File dirToCheck, String iuType, CopyOnWriteArraySet<PlainCheckReport> reports) {
 		val jars = dirToCheck.listFiles(CompositeFileFilter.create(new JARFileNameFilter, new PackGzFileNameFilter))
-		var int nFiles = jars.length
-		// TODO: may have to tweak timePerFile, or the simple multiplication formula 
-		// based on experience. But, primarily we just need a good safe "MAXIMUM" in 
-		// case things go wrong. If thing go right, it will not blindly wait the MAXIMUM time.
-		var int TIME_PER_FILE = 2
-		var int TOTAL_WAIT_SECONDS = nFiles * TIME_PER_FILE
-		var ExecutorService threadPool = Executors.newFixedThreadPool(64)
-		for (File file : jars) {
-			threadPool.execute(new SignerRunnable(reports, file, iuType))
-		}
-		threadPool.shutdown()
-		try {
-			// initial "wait until done" is a funtion of how many files 
-			// there are to verify. We'll allow about 2 seconds per file, 
-			// which for 1500 files is about 50 minutes. That is a little less
-			// than how long it would take if executing on one thread, so executing 
-			// on a large number (e.g. 64) would be faster (if the hardward is up for 
-			// it). 
-			// TODO: consider a "submit" and then loop/wait checking for Futures.isDone.
-			// it _might_ be a better idiom for this case? That is, allow more control? 
-			// or "assessment" of what's taking a long time? But even then, would need some large, 
-			// "we've waited long enough" time to be specified. 
-			if (!threadPool.awaitTermination(TOTAL_WAIT_SECONDS, TimeUnit.SECONDS)) {
-				threadPool.shutdownNow() // Cancel currently executing
-				// tasks
-				// Wait a while for tasks to respond to being cancelled
-				// Here is reasonable to have "short time" to wait, since 
-				// something is incomplete anyway, if get to here.
-				if (!threadPool.awaitTermination(5, TimeUnit.MINUTES))
-					System.err.println("ThreadPool did not terminate within time limits.")
-			}
-
-		} catch (InterruptedException ie) {
-			// (Re-)Cancel if current thread also interrupted
-			threadPool.shutdownNow() // Preserve interrupt status
-			Thread.currentThread().interrupt()
-		}
+		jars.parallelStream.forEach(new SignerCheck(reports, iuType))
 	}
 
 	def private void printSummary(Set<PlainCheckReport> reports) throws IOException {
@@ -103,13 +65,14 @@ class SignerTest extends TestJars {
 		var ReportWriter error = createNewReportWriter(UNSIGNED_FILENAME)
 		try {
 			val featuresCount = reports.filter[iuType.equals('feature')].size
-			info.writeln(
+			info.
+				writeln(
 			'''
-				Jars checked: «reports.size». «featuresCount» features and «reports.size-featuresCount» plugins.
-				Valid signatures: «reports.filter[type==ReportType.INFO].size».
-				Explicitly excluded from signing: «reports.filter[type==ReportType.BAD_GUY].size». See «KNOWN_UNSIGNED» for more details.
-				Invalid or missing signature: «reports.filter[type==ReportType.NOT_IN_TRAIN].size». See «UNSIGNED_FILENAME» for more details.
-			''')
+					Jars checked: «reports.size». «featuresCount» features and «reports.size-featuresCount» plugins.
+					Valid signatures: «reports.filter[type==ReportType.INFO].size».
+					Explicitly excluded from signing: «reports.filter[type==ReportType.BAD_GUY].size». See «KNOWN_UNSIGNED» for more details.
+					Invalid or missing signature: «reports.filter[type==ReportType.NOT_IN_TRAIN].size». See «UNSIGNED_FILENAME» for more details.
+				''')
 
 			val longestFileName = reports.sortBy[fileName.length].last.fileName.length
 			for (report : reports.sortBy[fileName]) {
@@ -133,18 +96,16 @@ class SignerTest extends TestJars {
 		return new ReportWriter('''«getReportOutputDirectory()»/«filename»''')
 	}
 
-	final static class SignerRunnable implements Runnable {
+	final static class SignerCheck implements Consumer<File> {
 		final Collection<PlainCheckReport> reports
-		final File file
 		final String iuTypeName
 
-		package new(Collection<PlainCheckReport> reports, File file, String iuTypeName) {
+		package new(Collection<PlainCheckReport> reports, String iuTypeName) {
 			this.reports = reports
-			this.file = file
 			this.iuTypeName = iuTypeName
 		}
 
-		override void run() {
+		override accept(File file) {
 			val checkReport = new PlainCheckReport
 			checkReport.fileName = file.name
 			checkReport.iuType = iuTypeName
@@ -185,6 +146,7 @@ class SignerTest extends TestJars {
 			}
 			reports.add(checkReport)
 		}
+
 	}
 }
 		

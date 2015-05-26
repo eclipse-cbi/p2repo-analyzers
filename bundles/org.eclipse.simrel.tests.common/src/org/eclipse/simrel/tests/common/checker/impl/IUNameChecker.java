@@ -48,9 +48,8 @@ public class IUNameChecker implements IInstalationUnitChecker {
 					|| bundleName.startsWith("bundle"))) {
 				report.setCheckResult("Missing or (probably) incorrect name");
 				report.setType(ReportType.NOT_IN_TRAIN);
-			} else {
-				report.setAdditionalData(bundleName);
 			}
+			report.setAdditionalData(bundleName);
 		}
 		consumer.accept(report);
 	}
