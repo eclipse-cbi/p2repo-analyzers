@@ -19,7 +19,7 @@ import static com.google.common.xml.XmlEscapers.*
  * @author dhuebner - Initial contribution and API
  */
 class JunitXmlReport implements ICheckReporter {
-
+	
 	override void createReport(CheckReportsManager manager, IP2RepositoryAnalyserConfiguration configs) {
 		val dataDir = new File(configs.reportOutputDir, "data");
 		dataDir.mkdirs
@@ -37,7 +37,7 @@ class JunitXmlReport implements ICheckReporter {
 							««« Iterate over all reports for current IU »»
 							«FOR report: checkedIUsById.get(iu)»
 								<«report.type.asTag»>
-									«xmlContentEscaper.escape(report.checkResult)» - «xmlContentEscaper.escape(report.additionalData)»
+									«xmlAttributeEscaper.escape(report.checkResult)» - «xmlAttributeEscaper.escape(report.additionalData)»
 								</«report.type.asTag»>
 							«ENDFOR»
 							</testcase>

@@ -8,6 +8,8 @@
 package org.eclipse.simrel.tests.reports;
 
 import com.google.common.base.Objects;
+import com.google.common.escape.Escaper;
+import com.google.common.xml.XmlEscapers;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
@@ -103,11 +105,15 @@ public class JunitXmlReport implements ICheckReporter {
                   _builder_1.append("\t");
                   _builder_1.append("\t");
                   _builder_1.append("\t");
+                  Escaper _xmlAttributeEscaper = XmlEscapers.xmlAttributeEscaper();
                   String _checkResult = report.getCheckResult();
-                  _builder_1.append(_checkResult, "\t\t\t");
-                  _builder_1.append(" ");
+                  String _escape = _xmlAttributeEscaper.escape(_checkResult);
+                  _builder_1.append(_escape, "\t\t\t");
+                  _builder_1.append(" - ");
+                  Escaper _xmlAttributeEscaper_1 = XmlEscapers.xmlAttributeEscaper();
                   String _additionalData = report.getAdditionalData();
-                  _builder_1.append(_additionalData, "\t\t\t");
+                  String _escape_1 = _xmlAttributeEscaper_1.escape(_additionalData);
+                  _builder_1.append(_escape_1, "\t\t\t");
                   _builder_1.newLineIfNotEmpty();
                   _builder_1.append("\t");
                   _builder_1.append("\t");
