@@ -13,6 +13,7 @@ import org.eclipse.simrel.tests.common.checker.CheckerRegistry;
 import org.eclipse.simrel.tests.common.reporter.CheckReportsManager;
 import org.eclipse.simrel.tests.common.reporter.ICheckReporter;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
+import org.eclipse.simrel.tests.reports.HtmlReport;
 import org.eclipse.simrel.tests.reports.JunitXmlReport;
 import org.eclipse.simrel.tests.reports.OverviewReport;
 
@@ -24,7 +25,7 @@ import com.google.common.collect.Lists;
  *
  */
 public class P2RepositoryCheck {
-    private List<ICheckReporter> reporter = Lists.newArrayList(new JunitXmlReport(), new OverviewReport());
+    private List<ICheckReporter> reporter = Lists.newArrayList(new JunitXmlReport(), new OverviewReport(), new HtmlReport());
 
     public boolean runChecks(RepoTestsConfiguration configuration) {
         Stopwatch stopwatch = Stopwatch.createStarted();
