@@ -31,7 +31,7 @@ public class EclipseSourceChecker implements IArtifactChecker {
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit iu, IArtifactKey artKey, final File child) {
-		CheckReport report = createReport(iu);
+		CheckReport report = createReport(iu, artKey);
 		String es = IUUtil.getBundleManifestEntry(child, PROPERTY_ECLIPSE_SOURCEREFERENCES);
 		String esExceptions = exceptions();
 		if (!iu.getId().endsWith(".source")) {

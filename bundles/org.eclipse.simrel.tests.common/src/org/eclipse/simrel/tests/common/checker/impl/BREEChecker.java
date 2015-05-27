@@ -28,7 +28,7 @@ public class BREEChecker implements IArtifactChecker {
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit iu, IArtifactKey artKey, final File child) {
-		CheckReport report = new CheckReport(BREEChecker.class, iu);
+		CheckReport report = new CheckReport(BREEChecker.class, iu, artKey);
 		try {
 			@SuppressWarnings("deprecation")
 			String bree = IUUtil.getBundleManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);

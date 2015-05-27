@@ -88,7 +88,7 @@ public class IUUtil {
 				}
 			}
 			return result;
-		} );
+		});
 
 	}
 
@@ -136,7 +136,7 @@ public class IUUtil {
 				}
 			}
 			return properties;
-		} );
+		});
 	}
 
 	/**
@@ -148,5 +148,9 @@ public class IUUtil {
 	 */
 	public static JarEntry getJarEntry(File file, String entryName) {
 		return workWithJarEntry(file, entryName, (jarEntry, entryStream) -> jarEntry);
+	}
+
+	public static String versionedId(final IInstallableUnit iu) {
+		return iu.getId() + (iu.getVersion() != null ? "_" + iu.getVersion().getOriginal() : "");
 	}
 }

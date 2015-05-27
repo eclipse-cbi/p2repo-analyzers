@@ -8,6 +8,7 @@
 
 package org.eclipse.simrel.tests.common;
 
+import org.eclipse.equinox.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
 /**
@@ -21,6 +22,7 @@ public class CheckReport {
 	private String checkResult;
 	private String additionalData;
 	private String iuVersion;
+	private String artifactKey;
 
 	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu) {
 		super();
@@ -29,6 +31,11 @@ public class CheckReport {
 		if (iu != null)
 			this.iuVersion = iu.getVersion().getOriginal();
 		this.setTimeMs(System.currentTimeMillis());
+	}
+
+	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu, final IArtifactKey artifactKey) {
+		this(checkerId, iu);
+		this.artifactKey = artifactKey.toExternalForm();
 	}
 
 	public void setType(final ReportType type) {
@@ -71,9 +78,20 @@ public class CheckReport {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(type).append(": ").append(checkResult).append(' ').append(iu.getId() + ":" + iuVersion)
-				.append(" <- ").append(checkerId).append(" " + timeMs);
+		builder.append(type).append(": ").append(getVersionedId());
+		if (artifactKey != null) {
+			builder.append(" (").append(artifactKey).append(")");
+		}
+		builder.append(" <- ").append(checkerId).append(": ").append(checkResult).append(' ').append(additionalData)
+				.append(" " + timeMs);
 		return builder.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getVersionedId() {
+		return iu.getId() + (iuVersion != null ? "_" + iuVersion : "");
 	}
 
 	/**
@@ -92,5 +110,12 @@ public class CheckReport {
 	 */
 	public String getIuVersion() {
 		return iuVersion;
+	}
+
+	/**
+	 * @return the artifactKey
+	 */
+	public String getArtifactKey() {
+		return artifactKey;
 	}
 }

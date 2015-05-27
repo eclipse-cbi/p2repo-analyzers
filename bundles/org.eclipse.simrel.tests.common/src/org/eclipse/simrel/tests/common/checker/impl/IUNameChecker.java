@@ -38,18 +38,18 @@ public class IUNameChecker implements IInstalationUnitChecker {
 		// TODO: should we exclude fragments?
 		boolean isFragment = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
 
+		String iuName = iu.getProperty(IInstallableUnit.PROP_NAME, null);
+		report.setCheckResult("Probably correct name");
+		report.setAdditionalData(iuName);
 		if (!isCategory && !IUUtil.isSpecial(iu) && !isFragment) {
-			String bundleName = iu.getProperty(IInstallableUnit.PROP_NAME, null);
 			// not sure if can ever be null ... but, just in case
-			if (bundleName == null || (bundleName.startsWith("%") || bundleName.startsWith("Feature-")
-					|| bundleName.startsWith("Bundle-") || bundleName.startsWith("feature")
-					|| bundleName.startsWith("plugin") || bundleName.startsWith("Plugin.name")
-					|| bundleName.startsWith("fragment.") || bundleName.startsWith("Eclipse.org")
-					|| bundleName.startsWith("bundle"))) {
+			if (iuName == null || (iuName.startsWith("%") || iuName.startsWith("Feature-")
+					|| iuName.startsWith("Bundle-") || iuName.startsWith("feature") || iuName.startsWith("plugin")
+					|| iuName.startsWith("Plugin.name") || iuName.startsWith("fragment.")
+					|| iuName.startsWith("Eclipse.org") || iuName.startsWith("bundle"))) {
 				report.setCheckResult("Missing or (probably) incorrect name");
 				report.setType(ReportType.NOT_IN_TRAIN);
 			}
-			report.setAdditionalData(bundleName);
 		}
 		consumer.accept(report);
 	}

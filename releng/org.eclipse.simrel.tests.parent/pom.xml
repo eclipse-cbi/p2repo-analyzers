@@ -13,6 +13,7 @@
 		<module>../../bundles/org.eclipse.simrel.tests-bundle</module>
 		<module>../../bundles/org.eclipse.simrel.tests.common</module>
 		<module>../../bundles/org.eclipse.simrel.tests.junit</module>
+		<module>../../tests/org.eclipse.simrel.tests.tests</module>
 		<module>../../features/org.eclipse.simrel.tests.feature</module>
 		<module>../org.eclipse.simrel.tests.target</module>
 		<module>../org.eclipse.simrel.tests.repository</module>

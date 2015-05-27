@@ -34,7 +34,7 @@ public class SignatureChecker implements IArtifactChecker {
 	@Override
 	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu,
 			IArtifactKey artifactKey, File file) {
-		CheckReport report = createReport(iu);
+		CheckReport report = createReport(iu, artifactKey);
 		Properties eclipseInf = IUUtil.getEclipseInf(file);
 		if (Boolean.valueOf(eclipseInf.getProperty(JARPROCESSOR_EXCLUDE_SIGN, "false"))) {
 			report.setCheckResult("Signing was disabled using the eclipse.inf file.");
