@@ -17,7 +17,6 @@ import java.util.Collection
 import java.util.Properties
 import java.util.Set
 import java.util.concurrent.CopyOnWriteArraySet
-import java.util.concurrent.ForkJoinPool
 import java.util.function.Consumer
 import org.eclipse.simrel.tests.RepoTestsConfiguration
 import org.eclipse.simrel.tests.common.ReportType
@@ -57,10 +56,7 @@ class SignerTest extends TestJars {
 
 	def checkJars(File dirToCheck, String iuType, CopyOnWriteArraySet<PlainCheckReport> reports) {
 		val jars = dirToCheck.listFiles(CompositeFileFilter.create(new JARFileNameFilter, new PackGzFileNameFilter))
-		val forkJoinPool = new ForkJoinPool(64);
-		forkJoinPool.submit [
-			jars.parallelStream.forEach(new SignerCheck(reports, iuType))
-		].get()
+		jars.parallelStream.forEach(new SignerCheck(reports, iuType))
 
 	}
 
@@ -86,6 +82,7 @@ class SignerTest extends TestJars {
 				val line = ''' «report.fileName»«indent»	«report.iuType»«trailing»	«report.checkResult»'''
 				switch (report.type) {
 					case INFO: info.writeln(line)
+					case WARNING: info.writeln(line)
 					case NOT_IN_TRAIN: error.writeln(line)
 					case BAD_GUY: warn.writeln(line)
 				}

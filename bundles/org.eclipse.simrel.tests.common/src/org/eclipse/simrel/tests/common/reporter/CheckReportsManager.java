@@ -58,8 +58,8 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 		public void dumpReport(final CheckReport report) {
 			if (report == null) {
 				System.out.println("ERROR: Null report");
-			}
-			if (report.getType() != ReportType.INFO) {
+
+			} else if (report.getType() != ReportType.INFO) {
 				System.out.println(report.toString());
 			}
 		}

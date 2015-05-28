@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.eclipse.simrel.tests.RepoTestsConfiguration;
@@ -149,27 +147,14 @@ public class SignerTest extends TestJars {
     return containsErrors;
   }
   
-  public Object checkJars(final File dirToCheck, final String iuType, final CopyOnWriteArraySet<PlainCheckReport> reports) {
-    try {
-      Object _xblockexpression = null;
-      {
-        JARFileNameFilter _jARFileNameFilter = new JARFileNameFilter();
-        PackGzFileNameFilter _packGzFileNameFilter = new PackGzFileNameFilter();
-        CompositeFileFilter _create = CompositeFileFilter.create(_jARFileNameFilter, _packGzFileNameFilter);
-        final File[] jars = dirToCheck.listFiles(_create);
-        final ForkJoinPool forkJoinPool = new ForkJoinPool(64);
-        final Runnable _function = () -> {
-          Stream<File> _parallelStream = ((List<File>)Conversions.doWrapArray(jars)).parallelStream();
-          SignerTest.SignerCheck _signerCheck = new SignerTest.SignerCheck(reports, iuType);
-          _parallelStream.forEach(_signerCheck);
-        };
-        ForkJoinTask<?> _submit = forkJoinPool.submit(_function);
-        _xblockexpression = _submit.get();
-      }
-      return _xblockexpression;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+  public void checkJars(final File dirToCheck, final String iuType, final CopyOnWriteArraySet<PlainCheckReport> reports) {
+    JARFileNameFilter _jARFileNameFilter = new JARFileNameFilter();
+    PackGzFileNameFilter _packGzFileNameFilter = new PackGzFileNameFilter();
+    CompositeFileFilter _create = CompositeFileFilter.create(_jARFileNameFilter, _packGzFileNameFilter);
+    final File[] jars = dirToCheck.listFiles(_create);
+    Stream<File> _parallelStream = ((List<File>)Conversions.doWrapArray(jars)).parallelStream();
+    SignerTest.SignerCheck _signerCheck = new SignerTest.SignerCheck(reports, iuType);
+    _parallelStream.forEach(_signerCheck);
   }
   
   private void printSummary(final Set<PlainCheckReport> reports) throws IOException {
@@ -269,6 +254,9 @@ public class SignerTest extends TestJars {
           if (_type != null) {
             switch (_type) {
               case INFO:
+                info.writeln(line);
+                break;
+              case WARNING:
                 info.writeln(line);
                 break;
               case NOT_IN_TRAIN:
