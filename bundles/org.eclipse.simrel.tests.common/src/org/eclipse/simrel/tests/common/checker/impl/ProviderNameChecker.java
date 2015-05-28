@@ -35,7 +35,8 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 			"Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit",
 			"Eclipse JGit", "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project",
 			"Eclipse Sequoyah", "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools",
-			"Eclipse Code Recommenders", "Eclipse RTP", "Eclipse Stardust", "Eclipse JWT", "Eclipse Xtend" };
+			"Eclipse Code Recommenders", "Eclipse RTP", "Eclipse Stardust", "Eclipse JWT", "Eclipse Xtend",
+			"Eclipse GEF" };
 	private Set<String> knownProviderNames = null;
 
 	@Override

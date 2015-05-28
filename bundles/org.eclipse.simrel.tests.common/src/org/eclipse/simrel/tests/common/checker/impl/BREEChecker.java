@@ -39,7 +39,7 @@ public class BREEChecker implements IArtifactChecker {
 					report.setType(ReportType.INFO);
 					report.setCheckResult(bree);
 				} else {
-					report.setType(ReportType.BAD_GUY);
+					report.setType(ReportType.WARNING);
 					report.setCheckResult("None Java with BREE: " + bree);
 				}
 			} else {

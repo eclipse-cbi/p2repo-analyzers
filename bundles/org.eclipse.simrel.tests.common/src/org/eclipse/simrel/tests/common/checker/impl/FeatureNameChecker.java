@@ -35,6 +35,7 @@ public class FeatureNameChecker implements IInstalationUnitChecker {
 			if (line.length() > MAX_CRITERIA) {
 				checkReport.setCheckResult(line);
 				checkReport.setType(ReportType.BAD_GUY);
+				checkReport.setAdditionalData("Feature name is to long (max=" + MAX_CRITERIA + ")");
 			}
 			checkReport.setTimeMs(System.currentTimeMillis());
 			consumer.accept(checkReport);

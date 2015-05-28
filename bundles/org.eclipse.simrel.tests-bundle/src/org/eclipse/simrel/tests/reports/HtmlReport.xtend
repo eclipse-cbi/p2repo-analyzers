@@ -18,35 +18,88 @@ import org.eclipse.simrel.tests.common.reporter.IP2RepositoryAnalyserConfigurati
  * @author dhuebner - Initial contribution and API
  */
 class HtmlReport implements ICheckReporter {
+	val cssFileName = "html-report.css"
+	val jsFileName = "html-report.js"
 
 	override void createReport(CheckReportsManager manager, IP2RepositoryAnalyserConfiguration configs) {
-		val writer = new PrintWriter('''«configs.reportOutputDir»/errors-and-warnings.html''')
+		val writer = new PrintWriter('''«configs.reportOutputDir»/errors-and-moderate_warnings.html''')
 		val allreports = manager.reports
 		val xmlContent = '''
 			<html>
 			<head>
-			<link rel="stylesheet" href="./data/errors-and-warnings.css"/>
+			<link rel="stylesheet" href="./data/«cssFileName»"/>
 			<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-			<script src="./data/errors-and-warnings.js"></script>
+			<script src="./data/«jsFileName»"></script>
 			</head>
 			<body>
-				<h3 class="«ReportType.NOT_IN_TRAIN.asCssClass»">Errors</h3>
 				«htmlTable(ReportType.NOT_IN_TRAIN,allreports)»
 				<br>
-				<br>
-				<h3 class="«ReportType.BAD_GUY.asCssClass»">Warnings</h3>
 				«htmlTable( ReportType.BAD_GUY,allreports)»
 			</body>
 			</html>
 		'''
-		writer.append(xmlContent);
-		writer.close
+		writer.append(xmlContent).close
+
+		val warnWriter = new PrintWriter('''«configs.reportOutputDir»/warnings.html''')
+		val warnContent = '''
+			<html>
+			<head>
+			<link rel="stylesheet" href="./data/«cssFileName»"/>
+			<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+			<script src="./data/«jsFileName»"></script>
+			</head>
+			<body>
+				«htmlTable(ReportType.WARNING,allreports)»
+			</body>
+			</html>
+		'''
+		warnWriter.append(warnContent).close
+
+		// other
 		addCssFile(configs)
 		addJsFile(configs)
 	}
 
+	def htmlTable(ReportType reportType, Iterable<CheckReport> allreports) {
+		val reports = allreports.filter[type == reportType]
+		val groupbyIU = reports.groupBy[IU]
+		val checkerIds = allreports.map[checkerId].toSet.sort
+		val html = '''
+			<h3 class="«reportType.asCssClass»">Installation units with «reportType.asHeaderTitle»s («reports.size»)</h3>
+			
+			<table id="table_«reportType.asCssClass»">
+				<thead>
+					<tr>
+						<td>Id</td>
+						<td>Version</td>
+						«FOR checker : checkerIds»
+							<td title="«checker»">
+							«checker.abbreviation»&nbsp;
+							<input type="checkbox" name="checker" class="«reportType.asCssClass»_toggler" checker="«checker.abbreviation»" checked="true">
+							</td>	
+						«ENDFOR»
+					</tr>
+				</thead>
+				<tbody>
+				«FOR iu : groupbyIU.keySet.sortBy[id]»
+					«val iuReports = allreports.filter[IU==iu]»
+					<tr class="«iu.id»_«iu.version.original»">
+						<td>«iu.id»</td>
+						<td>«iu.version.original»</td>
+						«FOR checker:checkerIds»
+							«val report = iuReports.filter[checkerId==checker].head»
+							<td title="«report.asDescription»" class="«report.asCssClass»" data-result="«reportType.asCssClass»_«report.asCssClass»_«checker.abbreviation»" data-checker="«checker.abbreviation»">«report.asStatus»</td>	
+						«ENDFOR»
+					</tr>
+				«ENDFOR»
+				</tbody>
+			</table>
+		'''
+		return html
+	}
+
 	def addJsFile(IP2RepositoryAnalyserConfiguration configs) {
-		val writer = new PrintWriter('''«configs.dataOutputDir»/errors-and-warnings.js''')
+		val writer = new PrintWriter('''«configs.dataOutputDir»/«jsFileName»''')
 		val types = ReportType.values
 		for (type : types) {
 			writer.append(
@@ -67,7 +120,7 @@ class HtmlReport implements ICheckReporter {
 	}
 
 	def addCssFile(IP2RepositoryAnalyserConfiguration configs) {
-		val writer = new PrintWriter('''«configs.dataOutputDir»/errors-and-warnings.css''')
+		val writer = new PrintWriter('''«configs.dataOutputDir»/«cssFileName»''')
 		writer.append('''
 			table {
 				min-width: 79%;
@@ -110,42 +163,6 @@ class HtmlReport implements ICheckReporter {
 		}
 	}
 
-	def htmlTable(ReportType reportType, Iterable<CheckReport> allreports) {
-		val reports = allreports.filter[type == reportType]
-		val groupbyIU = reports.groupBy[IU]
-		val checkerIds = allreports.map[checkerId].toSet.sort
-		val html = '''
-			<table id="table_«reportType.asCssClass»">
-				<thead>
-					<tr>
-						<td>Id</td>
-						<td>Version</td>
-						«FOR checker : checkerIds»
-							<td title="«checker»">
-							«checker.abbreviation»&nbsp;
-							<input type="checkbox" name="checker" class="«reportType.asCssClass»_toggler" checker="«checker.abbreviation»" checked="true">
-							</td>	
-						«ENDFOR»
-					</tr>
-				</thead>
-				<tbody>
-				«FOR iu : groupbyIU.keySet.sortBy[id]»
-					«val iuReports = allreports.filter[IU==iu]»
-					<tr class="«iu.id»_«iu.version.original»">
-						<td>«iu.id»</td>
-						<td>«iu.version.original»</td>
-						«FOR checker:checkerIds»
-							«val report = iuReports.filter[checkerId==checker].head»
-							<td title="«report.asDescription»" class="«report.asCssClass»" data-result="«reportType.asCssClass»_«report.asCssClass»_«checker.abbreviation»" data-checker="«checker.abbreviation»">«report.asStatus»</td>	
-						«ENDFOR»
-					</tr>
-				«ENDFOR»
-				</tbody>
-			</table>
-		'''
-		return html
-	}
-
 	def asCssClass(CheckReport report) {
 		if (report == null)
 			return 'skipped_check'
@@ -165,6 +182,23 @@ class HtmlReport implements ICheckReporter {
 			}
 			case INFO: {
 				'info_result'
+			}
+		}
+	}
+
+	def asHeaderTitle(ReportType type) {
+		switch (type) {
+			case NOT_IN_TRAIN: {
+				'Error'
+			}
+			case BAD_GUY: {
+				'Moderate Warning'
+			}
+			case WARNING: {
+				'Warning'
+			}
+			case INFO: {
+				'Info'
 			}
 		}
 	}

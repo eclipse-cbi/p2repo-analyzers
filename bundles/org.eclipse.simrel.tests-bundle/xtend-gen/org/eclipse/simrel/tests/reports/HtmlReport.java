@@ -31,13 +31,17 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
  */
 @SuppressWarnings("all")
 public class HtmlReport implements ICheckReporter {
+  private final String cssFileName = "html-report.css";
+  
+  private final String jsFileName = "html-report.js";
+  
   @Override
   public void createReport(final CheckReportsManager manager, final IP2RepositoryAnalyserConfiguration configs) {
     try {
       StringConcatenation _builder = new StringConcatenation();
       String _reportOutputDir = configs.getReportOutputDir();
       _builder.append(_reportOutputDir, "");
-      _builder.append("/errors-and-warnings.html");
+      _builder.append("/errors-and-moderate_warnings.html");
       final PrintWriter writer = new PrintWriter(_builder.toString());
       final ConcurrentLinkedQueue<CheckReport> allreports = manager.getReports();
       StringConcatenation _builder_1 = new StringConcatenation();
@@ -45,22 +49,20 @@ public class HtmlReport implements ICheckReporter {
       _builder_1.newLine();
       _builder_1.append("<head>");
       _builder_1.newLine();
-      _builder_1.append("<link rel=\"stylesheet\" href=\"./data/errors-and-warnings.css\"/>");
-      _builder_1.newLine();
+      _builder_1.append("<link rel=\"stylesheet\" href=\"./data/");
+      _builder_1.append(this.cssFileName, "");
+      _builder_1.append("\"/>");
+      _builder_1.newLineIfNotEmpty();
       _builder_1.append("<script src=\"http://code.jquery.com/jquery-1.11.3.min.js\"></script>");
       _builder_1.newLine();
-      _builder_1.append("<script src=\"./data/errors-and-warnings.js\"></script>");
-      _builder_1.newLine();
+      _builder_1.append("<script src=\"./data/");
+      _builder_1.append(this.jsFileName, "");
+      _builder_1.append("\"></script>");
+      _builder_1.newLineIfNotEmpty();
       _builder_1.append("</head>");
       _builder_1.newLine();
       _builder_1.append("<body>");
       _builder_1.newLine();
-      _builder_1.append("\t");
-      _builder_1.append("<h3 class=\"");
-      String _asCssClass = this.asCssClass(ReportType.NOT_IN_TRAIN);
-      _builder_1.append(_asCssClass, "\t");
-      _builder_1.append("\">Errors</h3>");
-      _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
       String _htmlTable = this.htmlTable(ReportType.NOT_IN_TRAIN, allreports);
       _builder_1.append(_htmlTable, "\t");
@@ -68,15 +70,6 @@ public class HtmlReport implements ICheckReporter {
       _builder_1.append("\t");
       _builder_1.append("<br>");
       _builder_1.newLine();
-      _builder_1.append("\t");
-      _builder_1.append("<br>");
-      _builder_1.newLine();
-      _builder_1.append("\t");
-      _builder_1.append("<h3 class=\"");
-      String _asCssClass_1 = this.asCssClass(ReportType.BAD_GUY);
-      _builder_1.append(_asCssClass_1, "\t");
-      _builder_1.append("\">Warnings</h3>");
-      _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
       String _htmlTable_1 = this.htmlTable(ReportType.BAD_GUY, allreports);
       _builder_1.append(_htmlTable_1, "\t");
@@ -86,8 +79,43 @@ public class HtmlReport implements ICheckReporter {
       _builder_1.append("</html>");
       _builder_1.newLine();
       final String xmlContent = _builder_1.toString();
-      writer.append(xmlContent);
-      writer.close();
+      PrintWriter _append = writer.append(xmlContent);
+      _append.close();
+      StringConcatenation _builder_2 = new StringConcatenation();
+      String _reportOutputDir_1 = configs.getReportOutputDir();
+      _builder_2.append(_reportOutputDir_1, "");
+      _builder_2.append("/warnings.html");
+      final PrintWriter warnWriter = new PrintWriter(_builder_2.toString());
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("<html>");
+      _builder_3.newLine();
+      _builder_3.append("<head>");
+      _builder_3.newLine();
+      _builder_3.append("<link rel=\"stylesheet\" href=\"./data/");
+      _builder_3.append(this.cssFileName, "");
+      _builder_3.append("\"/>");
+      _builder_3.newLineIfNotEmpty();
+      _builder_3.append("<script src=\"http://code.jquery.com/jquery-1.11.3.min.js\"></script>");
+      _builder_3.newLine();
+      _builder_3.append("<script src=\"./data/");
+      _builder_3.append(this.jsFileName, "");
+      _builder_3.append("\"></script>");
+      _builder_3.newLineIfNotEmpty();
+      _builder_3.append("</head>");
+      _builder_3.newLine();
+      _builder_3.append("<body>");
+      _builder_3.newLine();
+      _builder_3.append("\t");
+      String _htmlTable_2 = this.htmlTable(ReportType.WARNING, allreports);
+      _builder_3.append(_htmlTable_2, "\t");
+      _builder_3.newLineIfNotEmpty();
+      _builder_3.append("</body>");
+      _builder_3.newLine();
+      _builder_3.append("</html>");
+      _builder_3.newLine();
+      final String warnContent = _builder_3.toString();
+      PrintWriter _append_1 = warnWriter.append(warnContent);
+      _append_1.close();
       this.addCssFile(configs);
       this.addJsFile(configs);
     } catch (Throwable _e) {
@@ -95,12 +123,185 @@ public class HtmlReport implements ICheckReporter {
     }
   }
   
+  public String htmlTable(final ReportType reportType, final Iterable<CheckReport> allreports) {
+    final Function1<CheckReport, Boolean> _function = (CheckReport it) -> {
+      ReportType _type = it.getType();
+      return Boolean.valueOf(Objects.equal(_type, reportType));
+    };
+    final Iterable<CheckReport> reports = IterableExtensions.<CheckReport>filter(allreports, _function);
+    final Function1<CheckReport, IInstallableUnit> _function_1 = (CheckReport it) -> {
+      return it.getIU();
+    };
+    final Map<IInstallableUnit, List<CheckReport>> groupbyIU = IterableExtensions.<IInstallableUnit, CheckReport>groupBy(reports, _function_1);
+    final Function1<CheckReport, String> _function_2 = (CheckReport it) -> {
+      return it.getCheckerId();
+    };
+    Iterable<String> _map = IterableExtensions.<CheckReport, String>map(allreports, _function_2);
+    Set<String> _set = IterableExtensions.<String>toSet(_map);
+    final List<String> checkerIds = IterableExtensions.<String>sort(_set);
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("<h3 class=\"");
+    String _asCssClass = this.asCssClass(reportType);
+    _builder.append(_asCssClass, "");
+    _builder.append("\">Installation units with ");
+    String _asHeaderTitle = this.asHeaderTitle(reportType);
+    _builder.append(_asHeaderTitle, "");
+    _builder.append("s (");
+    int _size = IterableExtensions.size(reports);
+    _builder.append(_size, "");
+    _builder.append(")</h3>");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("<table id=\"table_");
+    String _asCssClass_1 = this.asCssClass(reportType);
+    _builder.append(_asCssClass_1, "");
+    _builder.append("\">");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t");
+    _builder.append("<thead>");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("<tr>");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("<td>Id</td>");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.append("<td>Version</td>");
+    _builder.newLine();
+    {
+      for(final String checker : checkerIds) {
+        _builder.append("\t\t\t");
+        _builder.append("<td title=\"");
+        _builder.append(checker, "\t\t\t");
+        _builder.append("\">");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t\t");
+        String _abbreviation = this.abbreviation(checker);
+        _builder.append(_abbreviation, "\t\t\t");
+        _builder.append("&nbsp;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t\t");
+        _builder.append("<input type=\"checkbox\" name=\"checker\" class=\"");
+        String _asCssClass_2 = this.asCssClass(reportType);
+        _builder.append(_asCssClass_2, "\t\t\t");
+        _builder.append("_toggler\" checker=\"");
+        String _abbreviation_1 = this.abbreviation(checker);
+        _builder.append(_abbreviation_1, "\t\t\t");
+        _builder.append("\" checked=\"true\">");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t\t");
+        _builder.append("</td>\t");
+        _builder.newLine();
+      }
+    }
+    _builder.append("\t\t");
+    _builder.append("</tr>");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("</thead>");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("<tbody>");
+    _builder.newLine();
+    {
+      Set<IInstallableUnit> _keySet = groupbyIU.keySet();
+      final Function1<IInstallableUnit, String> _function_3 = (IInstallableUnit it) -> {
+        return it.getId();
+      };
+      List<IInstallableUnit> _sortBy = IterableExtensions.<IInstallableUnit, String>sortBy(_keySet, _function_3);
+      for(final IInstallableUnit iu : _sortBy) {
+        _builder.append("\t");
+        final Function1<CheckReport, Boolean> _function_4 = (CheckReport it) -> {
+          IInstallableUnit _iU = it.getIU();
+          return Boolean.valueOf(Objects.equal(_iU, iu));
+        };
+        final Iterable<CheckReport> iuReports = IterableExtensions.<CheckReport>filter(allreports, _function_4);
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("<tr class=\"");
+        String _id = iu.getId();
+        _builder.append(_id, "\t");
+        _builder.append("_");
+        Version _version = iu.getVersion();
+        String _original = _version.getOriginal();
+        _builder.append(_original, "\t");
+        _builder.append("\">");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("\t");
+        _builder.append("<td>");
+        String _id_1 = iu.getId();
+        _builder.append(_id_1, "\t\t");
+        _builder.append("</td>");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("\t");
+        _builder.append("<td>");
+        Version _version_1 = iu.getVersion();
+        String _original_1 = _version_1.getOriginal();
+        _builder.append(_original_1, "\t\t");
+        _builder.append("</td>");
+        _builder.newLineIfNotEmpty();
+        {
+          for(final String checker_1 : checkerIds) {
+            _builder.append("\t");
+            _builder.append("\t");
+            final Function1<CheckReport, Boolean> _function_5 = (CheckReport it) -> {
+              String _checkerId = it.getCheckerId();
+              return Boolean.valueOf(Objects.equal(_checkerId, checker_1));
+            };
+            Iterable<CheckReport> _filter = IterableExtensions.<CheckReport>filter(iuReports, _function_5);
+            final CheckReport report = IterableExtensions.<CheckReport>head(_filter);
+            _builder.newLineIfNotEmpty();
+            _builder.append("\t");
+            _builder.append("\t");
+            _builder.append("<td title=\"");
+            String _asDescription = this.asDescription(report);
+            _builder.append(_asDescription, "\t\t");
+            _builder.append("\" class=\"");
+            String _asCssClass_3 = this.asCssClass(report);
+            _builder.append(_asCssClass_3, "\t\t");
+            _builder.append("\" data-result=\"");
+            String _asCssClass_4 = this.asCssClass(reportType);
+            _builder.append(_asCssClass_4, "\t\t");
+            _builder.append("_");
+            String _asCssClass_5 = this.asCssClass(report);
+            _builder.append(_asCssClass_5, "\t\t");
+            _builder.append("_");
+            String _abbreviation_2 = this.abbreviation(checker_1);
+            _builder.append(_abbreviation_2, "\t\t");
+            _builder.append("\" data-checker=\"");
+            String _abbreviation_3 = this.abbreviation(checker_1);
+            _builder.append(_abbreviation_3, "\t\t");
+            _builder.append("\">");
+            String _asStatus = this.asStatus(report);
+            _builder.append(_asStatus, "\t\t");
+            _builder.append("</td>\t");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+        _builder.append("\t");
+        _builder.append("</tr>");
+        _builder.newLine();
+      }
+    }
+    _builder.append("\t");
+    _builder.append("</tbody>");
+    _builder.newLine();
+    _builder.append("</table>");
+    _builder.newLine();
+    final String html = _builder.toString();
+    return html;
+  }
+  
   public void addJsFile(final IP2RepositoryAnalyserConfiguration configs) {
     try {
       StringConcatenation _builder = new StringConcatenation();
       String _dataOutputDir = configs.getDataOutputDir();
       _builder.append(_dataOutputDir, "");
-      _builder.append("/errors-and-warnings.js");
+      _builder.append("/");
+      _builder.append(this.jsFileName, "");
       final PrintWriter writer = new PrintWriter(_builder.toString());
       final ReportType[] types = ReportType.values();
       for (final ReportType type : types) {
@@ -155,7 +356,8 @@ public class HtmlReport implements ICheckReporter {
       StringConcatenation _builder = new StringConcatenation();
       String _dataOutputDir = configs.getDataOutputDir();
       _builder.append(_dataOutputDir, "");
-      _builder.append("/errors-and-warnings.css");
+      _builder.append("/");
+      _builder.append(this.cssFileName, "");
       final PrintWriter writer = new PrintWriter(_builder.toString());
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("table {");
@@ -233,166 +435,6 @@ public class HtmlReport implements ICheckReporter {
     return _switchResult;
   }
   
-  public String htmlTable(final ReportType reportType, final Iterable<CheckReport> allreports) {
-    final Function1<CheckReport, Boolean> _function = (CheckReport it) -> {
-      ReportType _type = it.getType();
-      return Boolean.valueOf(Objects.equal(_type, reportType));
-    };
-    final Iterable<CheckReport> reports = IterableExtensions.<CheckReport>filter(allreports, _function);
-    final Function1<CheckReport, IInstallableUnit> _function_1 = (CheckReport it) -> {
-      return it.getIU();
-    };
-    final Map<IInstallableUnit, List<CheckReport>> groupbyIU = IterableExtensions.<IInstallableUnit, CheckReport>groupBy(reports, _function_1);
-    final Function1<CheckReport, String> _function_2 = (CheckReport it) -> {
-      return it.getCheckerId();
-    };
-    Iterable<String> _map = IterableExtensions.<CheckReport, String>map(allreports, _function_2);
-    Set<String> _set = IterableExtensions.<String>toSet(_map);
-    final List<String> checkerIds = IterableExtensions.<String>sort(_set);
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("<table id=\"table_");
-    String _asCssClass = this.asCssClass(reportType);
-    _builder.append(_asCssClass, "");
-    _builder.append("\">");
-    _builder.newLineIfNotEmpty();
-    _builder.append("\t");
-    _builder.append("<thead>");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("<tr>");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("<td>Id</td>");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("<td>Version</td>");
-    _builder.newLine();
-    {
-      for(final String checker : checkerIds) {
-        _builder.append("\t\t\t");
-        _builder.append("<td title=\"");
-        _builder.append(checker, "\t\t\t");
-        _builder.append("\">");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t\t");
-        String _abbreviation = this.abbreviation(checker);
-        _builder.append(_abbreviation, "\t\t\t");
-        _builder.append("&nbsp;");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t\t");
-        _builder.append("<input type=\"checkbox\" name=\"checker\" class=\"");
-        String _asCssClass_1 = this.asCssClass(reportType);
-        _builder.append(_asCssClass_1, "\t\t\t");
-        _builder.append("_toggler\" checker=\"");
-        String _abbreviation_1 = this.abbreviation(checker);
-        _builder.append(_abbreviation_1, "\t\t\t");
-        _builder.append("\" checked=\"true\">");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t\t");
-        _builder.append("</td>\t");
-        _builder.newLine();
-      }
-    }
-    _builder.append("\t\t");
-    _builder.append("</tr>");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("</thead>");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("<tbody>");
-    _builder.newLine();
-    {
-      Set<IInstallableUnit> _keySet = groupbyIU.keySet();
-      final Function1<IInstallableUnit, String> _function_3 = (IInstallableUnit it) -> {
-        return it.getId();
-      };
-      List<IInstallableUnit> _sortBy = IterableExtensions.<IInstallableUnit, String>sortBy(_keySet, _function_3);
-      for(final IInstallableUnit iu : _sortBy) {
-        _builder.append("\t");
-        final Function1<CheckReport, Boolean> _function_4 = (CheckReport it) -> {
-          IInstallableUnit _iU = it.getIU();
-          return Boolean.valueOf(Objects.equal(_iU, iu));
-        };
-        final Iterable<CheckReport> iuReports = IterableExtensions.<CheckReport>filter(allreports, _function_4);
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("<tr class=\"");
-        String _id = iu.getId();
-        _builder.append(_id, "\t");
-        _builder.append("_");
-        Version _version = iu.getVersion();
-        String _original = _version.getOriginal();
-        _builder.append(_original, "\t");
-        _builder.append("\">");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("<td>");
-        String _id_1 = iu.getId();
-        _builder.append(_id_1, "\t\t");
-        _builder.append("</td>");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("<td>");
-        Version _version_1 = iu.getVersion();
-        String _original_1 = _version_1.getOriginal();
-        _builder.append(_original_1, "\t\t");
-        _builder.append("</td>");
-        _builder.newLineIfNotEmpty();
-        {
-          for(final String checker_1 : checkerIds) {
-            _builder.append("\t");
-            _builder.append("\t");
-            final Function1<CheckReport, Boolean> _function_5 = (CheckReport it) -> {
-              String _checkerId = it.getCheckerId();
-              return Boolean.valueOf(Objects.equal(_checkerId, checker_1));
-            };
-            Iterable<CheckReport> _filter = IterableExtensions.<CheckReport>filter(iuReports, _function_5);
-            final CheckReport report = IterableExtensions.<CheckReport>head(_filter);
-            _builder.newLineIfNotEmpty();
-            _builder.append("\t");
-            _builder.append("\t");
-            _builder.append("<td title=\"");
-            String _asDescription = this.asDescription(report);
-            _builder.append(_asDescription, "\t\t");
-            _builder.append("\" class=\"");
-            String _asCssClass_2 = this.asCssClass(report);
-            _builder.append(_asCssClass_2, "\t\t");
-            _builder.append("\" data-result=\"");
-            String _asCssClass_3 = this.asCssClass(reportType);
-            _builder.append(_asCssClass_3, "\t\t");
-            _builder.append("_");
-            String _asCssClass_4 = this.asCssClass(report);
-            _builder.append(_asCssClass_4, "\t\t");
-            _builder.append("_");
-            String _abbreviation_2 = this.abbreviation(checker_1);
-            _builder.append(_abbreviation_2, "\t\t");
-            _builder.append("\" data-checker=\"");
-            String _abbreviation_3 = this.abbreviation(checker_1);
-            _builder.append(_abbreviation_3, "\t\t");
-            _builder.append("\">");
-            String _asStatus = this.asStatus(report);
-            _builder.append(_asStatus, "\t\t");
-            _builder.append("</td>\t");
-            _builder.newLineIfNotEmpty();
-          }
-        }
-        _builder.append("\t");
-        _builder.append("</tr>");
-        _builder.newLine();
-      }
-    }
-    _builder.append("\t");
-    _builder.append("</tbody>");
-    _builder.newLine();
-    _builder.append("</table>");
-    _builder.newLine();
-    final String html = _builder.toString();
-    return html;
-  }
-  
   public String asCssClass(final CheckReport report) {
     String _xblockexpression = null;
     {
@@ -421,6 +463,29 @@ public class HtmlReport implements ICheckReporter {
           break;
         case INFO:
           _switchResult = "info_result";
+          break;
+        default:
+          break;
+      }
+    }
+    return _switchResult;
+  }
+  
+  public String asHeaderTitle(final ReportType type) {
+    String _switchResult = null;
+    if (type != null) {
+      switch (type) {
+        case NOT_IN_TRAIN:
+          _switchResult = "Error";
+          break;
+        case BAD_GUY:
+          _switchResult = "Moderate Warning";
+          break;
+        case WARNING:
+          _switchResult = "Warning";
+          break;
+        case INFO:
+          _switchResult = "Info";
           break;
         default:
           break;
