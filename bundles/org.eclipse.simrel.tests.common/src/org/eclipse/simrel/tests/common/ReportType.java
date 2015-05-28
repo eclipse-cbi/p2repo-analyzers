@@ -12,6 +12,6 @@ package org.eclipse.simrel.tests.common;
  * @author dhuebner - Initial contribution and API
  */
 public enum ReportType {
-	INFO, BAD_GUY, NOT_IN_TRAIN
+	INFO, WARNING, BAD_GUY, NOT_IN_TRAIN
 
 }

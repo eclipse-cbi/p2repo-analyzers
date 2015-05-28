@@ -8,11 +8,11 @@
 package org.eclipse.simrel.tests.reports
 
 import java.io.PrintWriter
+import org.eclipse.simrel.tests.common.CheckReport
 import org.eclipse.simrel.tests.common.ReportType
 import org.eclipse.simrel.tests.common.reporter.CheckReportsManager
 import org.eclipse.simrel.tests.common.reporter.ICheckReporter
 import org.eclipse.simrel.tests.common.reporter.IP2RepositoryAnalyserConfiguration
-import org.eclipse.simrel.tests.common.CheckReport
 
 /** 
  * @author dhuebner - Initial contribution and API
@@ -24,61 +24,185 @@ class HtmlReport implements ICheckReporter {
 		val allreports = manager.reports
 		val xmlContent = '''
 			<html>
+			<head>
+			<link rel="stylesheet" href="./data/errors-and-warnings.css"/>
+			<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+			<script src="./data/errors-and-warnings.js"></script>
+			</head>
 			<body>
-			«val errors = allreports.filter[type == ReportType.NOT_IN_TRAIN]»
-			«IF !errors.empty»
-				<b>Errors</b><br>
-				«errors.htmlTable(allreports)»
-			«ENDIF»
-				<b>Warnings</b><br>
-			«val warnings = allreports.filter[type == ReportType.BAD_GUY]»
-			«warnings.htmlTable(allreports)»
+				<h3 class="«ReportType.NOT_IN_TRAIN.asCssClass»">Errors</h3>
+				«htmlTable(ReportType.NOT_IN_TRAIN,allreports)»
+				<br>
+				<br>
+				<h3 class="«ReportType.BAD_GUY.asCssClass»">Warnings</h3>
+				«htmlTable( ReportType.BAD_GUY,allreports)»
 			</body>
 			</html>
 		'''
 		writer.append(xmlContent);
 		writer.close
+		addCssFile(configs)
+		addJsFile(configs)
 	}
 
-	def htmlTable(Iterable<CheckReport> reports, Iterable<CheckReport> allreports) {
+	def addJsFile(IP2RepositoryAnalyserConfiguration configs) {
+		val writer = new PrintWriter('''«configs.dataOutputDir»/errors-and-warnings.js''')
+		val types = ReportType.values
+		for (type : types) {
+			writer.append(
+		'''
+				$(document).ready(function() {
+					$(".«type.asCssClass»_toggler").click(function(e) {
+						var targets = $('*[data-result="«type.asCssClass»_«type.asCssClass»_' + $(this).attr('checker')+'"]');
+						var state = $(this).attr('checked')
+						targets.each(function() {
+							var tr = $(this).parent();
+							tr.toggle(state)
+						});
+					});
+				});
+			''')
+		}
+		writer.close
+	}
+
+	def addCssFile(IP2RepositoryAnalyserConfiguration configs) {
+		val writer = new PrintWriter('''«configs.dataOutputDir»/errors-and-warnings.css''')
+		writer.append('''
+			table {
+				min-width: 79%;
+			}
+			thead {
+			    padding: 2px;
+			    background-color: #E8E8E8;
+			}
+			td {
+			    padding: 2px;
+			}
+		''')
+		for (type : ReportType.values) {
+			writer.append(
+			'''
+				.«type.asCssClass» {
+					text-align: center;
+					background-color: #«type.asBgColor»;
+				}
+			''')
+		}
+		writer.close
+
+	}
+
+	def asBgColor(ReportType type) {
+		switch (type) {
+			case NOT_IN_TRAIN: {
+				'FFCCCC'
+			}
+			case BAD_GUY: {
+				'FFCC66'
+			}
+			case WARNING: {
+				'FFFFCC'
+			}
+			case INFO: {
+				'CCFFCC'
+			}
+		}
+	}
+
+	def htmlTable(ReportType reportType, Iterable<CheckReport> allreports) {
+		val reports = allreports.filter[type == reportType]
 		val groupbyIU = reports.groupBy[IU]
 		val checkerIds = allreports.map[checkerId].toSet.sort
 		val html = '''
-			<table>
-				
-				<tr>
-					<td>IU Id</td>
-					«FOR checker : checkerIds»
-						<td>«checker.split('\\.').last»</td>	
-					«ENDFOR»
-				</tr>
-			«FOR iu : groupbyIU.keySet.sortBy[id]»
-				«val iuReports = allreports.filter[IU==iu]»
-				<tr>
-					<td>«iu.id»</td>
-					«FOR checker:checkerIds»
-						<td>«iuReports.filter[checkerId==checker].map[asStatus].join(',')»</td>	
-					«ENDFOR»
-				</tr>
-			«ENDFOR»
+			<table id="table_«reportType.asCssClass»">
+				<thead>
+					<tr>
+						<td>Id</td>
+						<td>Version</td>
+						«FOR checker : checkerIds»
+							<td title="«checker»">
+							«checker.abbreviation»&nbsp;
+							<input type="checkbox" name="checker" class="«reportType.asCssClass»_toggler" checker="«checker.abbreviation»" checked="true">
+							</td>	
+						«ENDFOR»
+					</tr>
+				</thead>
+				<tbody>
+				«FOR iu : groupbyIU.keySet.sortBy[id]»
+					«val iuReports = allreports.filter[IU==iu]»
+					<tr class="«iu.id»_«iu.version.original»">
+						<td>«iu.id»</td>
+						<td>«iu.version.original»</td>
+						«FOR checker:checkerIds»
+							«val report = iuReports.filter[checkerId==checker].head»
+							<td title="«report.asDescription»" class="«report.asCssClass»" data-result="«reportType.asCssClass»_«report.asCssClass»_«checker.abbreviation»" data-checker="«checker.abbreviation»">«report.asStatus»</td>	
+						«ENDFOR»
+					</tr>
+				«ENDFOR»
+				</tbody>
 			</table>
 		'''
 		return html
 	}
 
-	def asStatus(CheckReport report) {
-		switch (report.type) {
+	def asCssClass(CheckReport report) {
+		if (report == null)
+			return 'skipped_check'
+		asCssClass(report.type)
+	}
+
+	def asCssClass(ReportType type) {
+		switch (type) {
 			case NOT_IN_TRAIN: {
-				'_'
+				'error_result'
 			}
 			case BAD_GUY: {
-				'0'
+				'moderate_warning_result'
+			}
+			case WARNING: {
+				'warning_result'
 			}
 			case INFO: {
+				'info_result'
+			}
+		}
+	}
+
+	def abbreviation(String string) {
+		var simpleName = string
+		val dotIndex = string.lastIndexOf('.')
+		if (dotIndex >= 0 && dotIndex < string.length) {
+			simpleName = string.substring(dotIndex + 1)
+		}
+		return simpleName.replaceAll("([A-Z]+)((?![A-Z])\\w)+", "$1")
+	}
+
+	def asDescription(CheckReport report) {
+		if (report == null) {
+			return 'any reports'
+		} else {
+			val result = if(report.checkResult.nullOrEmpty) 'passed' else report.checkResult
+			return '''«result»«if(!report.additionalData.nullOrEmpty)' - '+report.additionalData»'''
+		}
+	}
+
+	def asStatus(CheckReport report) {
+		if (report == null) {
+			return '&nbsp;'
+		}
+		switch (report.type) {
+			case NOT_IN_TRAIN: {
+				'--'
+			}
+			case BAD_GUY: {
+				'-'
+			}
+			case WARNING: {
 				'+'
 			}
-			default: {
-				''
+			case INFO: {
+				'++'
 			}
 		}
 	}

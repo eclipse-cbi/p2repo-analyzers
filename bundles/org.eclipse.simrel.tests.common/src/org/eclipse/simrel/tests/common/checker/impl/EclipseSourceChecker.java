@@ -18,6 +18,7 @@ import org.eclipse.equinox.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
+import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.common.checker.IArtifactChecker;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
@@ -44,6 +45,7 @@ public class EclipseSourceChecker implements IArtifactChecker {
 				} else {
 					// no ES
 					report.setCheckResult("Missing " + PROPERTY_ECLIPSE_SOURCEREFERENCES);
+					report.setType(ReportType.WARNING);
 				}
 			}
 		}
