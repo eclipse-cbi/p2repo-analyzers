@@ -57,8 +57,10 @@ case $JAVA_VER in
     ;;
 esac
 
-INFO_FILENAME="info${JAVA_VER}.txt"
-INFO_FILE="${VERIFYOUTDIR}/${INFO_FILENAME}"
+#INFO_FILENAME="info${JAVA_VER}.txt"
+INFO_FILENAME="signing.txt"
+#INFO_FILE="${VERIFYOUTDIR}/${INFO_FILENAME}"
+INFO_FILE="${INFO_FILENAME}"
 # if already exists, we don't need to re-write
 if [[ ! -e "${INFO_FILE}" ]]
 then
