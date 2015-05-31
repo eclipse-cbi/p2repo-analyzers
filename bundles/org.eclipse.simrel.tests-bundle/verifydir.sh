@@ -132,13 +132,13 @@ fi
 # an error if exists or not, instead of based on size? 
 if [ ! -e "${VERIFYOUTDIR}"/unsigned8.txt ]
 then
-    echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned.txt
+    echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned${ver}.txt
 fi 
 if [ ! -e "${VERIFYOUTDIR}"/errors8.txt ]
 then
-    echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned.txt
+    echo  "There were no unsigned jars in the directories checked. " > "${VERIFYOUTDIR}"/unsigned${ver}.txt
 fi 
 if [ ! -e "${VERIFYOUTDIR}"/nestedjars8.txt ]
 then
-    echo  "There were no nested packed jars in the directories checked. " > "${VERIFYOUTDIR}"/nestedjars.txt
+    echo  "There were no nested packed jars in the directories checked. " > "${VERIFYOUTDIR}"/nestedjars${ver}.txt
 fi 
