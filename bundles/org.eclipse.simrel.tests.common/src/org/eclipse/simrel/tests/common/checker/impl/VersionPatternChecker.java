@@ -15,6 +15,7 @@ import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
+import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
  * @author dhuebner - Initial contribution and API
@@ -34,20 +35,22 @@ public class VersionPatternChecker implements IInstalationUnitChecker {
 	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
 		CheckReport report = createReport(iu);
 		Version version = iu.getVersion();
-		if (version.isOSGiCompatible()) {
-			if (version.getSegmentCount() == 4) {
-				Comparable<?> qualifier = version.getSegment(3);
-				if (!(qualifier instanceof String) || ((String) qualifier).isEmpty()) {
+		if (!IUUtil.isSpecial(iu) && !IUUtil.isCategory(iu)) {
+			if (version.isOSGiCompatible()) {
+				if (version.getSegmentCount() == 4) {
+					Comparable<?> qualifier = version.getSegment(3);
+					if (!(qualifier instanceof String) || ((String) qualifier).isEmpty()) {
+						report.setType(ReportType.BAD_GUY);
+						report.setCheckResult("Empty qualifier segment.");
+					}
+				} else {
 					report.setType(ReportType.BAD_GUY);
-					report.setCheckResult("Empty qualifier segment.");
+					report.setCheckResult("Does not contain 4 parts version");
 				}
 			} else {
 				report.setType(ReportType.BAD_GUY);
-				report.setCheckResult("Does not contain 4 parts version");
+				report.setCheckResult("Not an OSGI version");
 			}
-		} else {
-			report.setType(ReportType.BAD_GUY);
-			report.setCheckResult("Not an OSGI version");
 		}
 		report.setAdditionalData(String.valueOf(version.getOriginal()));
 		consumer.accept(report);

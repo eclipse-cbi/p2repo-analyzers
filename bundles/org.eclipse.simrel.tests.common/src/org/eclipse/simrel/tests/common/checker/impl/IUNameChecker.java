@@ -33,15 +33,11 @@ public class IUNameChecker implements IInstalationUnitChecker {
 	@Override
 	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
 		CheckReport report = createReport(iu);
-		// ignore categories
-		boolean isCategory = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
-		// TODO: should we exclude fragments?
-		boolean isFragment = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
 
 		String iuName = iu.getProperty(IInstallableUnit.PROP_NAME, null);
 		report.setCheckResult("Probably correct name");
 		report.setAdditionalData(iuName);
-		if (!isCategory && !IUUtil.isSpecial(iu) && !isFragment) {
+		if (!IUUtil.isCategory(iu) && !IUUtil.isSpecial(iu) && !IUUtil.isFragment(iu)) {
 			// not sure if can ever be null ... but, just in case
 			if (iuName == null || (iuName.startsWith("%") || iuName.startsWith("Feature-")
 					|| iuName.startsWith("Bundle-") || iuName.startsWith("feature") || iuName.startsWith("plugin")

@@ -18,6 +18,7 @@ import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
+import org.eclipse.simrel.tests.common.utils.CheckerUtils;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
@@ -29,26 +30,14 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	private static final String OLD_PROVIDER_NAME = "Eclipse.org";
 
-	private String[] EXPECTED_PROVIDER_NAMES = { "Eclipse Equinox Project", "Eclipse PTP", "Eclipse Orbit",
-			"Eclipse Web Tools Platform", "Eclipse CDT", "Eclipse Agent Modeling Platform", "Eclipse BIRT Project",
-			"Eclipse Data Tools Platform", "Eclipse Modeling Project", "Eclipse Mylyn", "Eclipse Memory Analyzer",
-			"Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit",
-			"Eclipse JGit", "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project",
-			"Eclipse Sequoyah", "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools",
-			"Eclipse Code Recommenders", "Eclipse RTP", "Eclipse Stardust", "Eclipse JWT", "Eclipse Xtend",
-			"Eclipse GEF" };
 	private Set<String> knownProviderNames = null;
 
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit iu) {
-		// ignore categories
-		boolean isCategory = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
-		// TODO: should we exclude fragments?
-		boolean isFragment = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
 
 		// || iu.getId().endsWith("feature.group")
-		if (!isCategory && !IUUtil.isSpecial(iu) && !isFragment) {
+		if (!IUUtil.isCategory(iu) && !IUUtil.isSpecial(iu) && !IUUtil.isFragment(iu)) {
 			CheckReport checkReport = new CheckReport(ProviderNameChecker.class, iu);
 
 			String providerName = iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
@@ -100,8 +89,13 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 	public Set<String> getKnownProviderNames() {
 		if (this.knownProviderNames == null) {
 			Set<String> temp = new HashSet<>();
-			for (String string : this.EXPECTED_PROVIDER_NAMES) {
-				temp.add(string);
+			String expectedProviderNames = CheckerUtils.loadCheckerProperties(ProviderNameChecker.class)
+					.getProperty("expectedProviderNames", "");
+			if (!expectedProviderNames.isEmpty()) {
+				String[] names = expectedProviderNames.split(",");
+				for (String string : names) {
+					temp.add(string);
+				}
 			}
 			this.knownProviderNames = Collections.unmodifiableSet(temp);
 		}

@@ -8,8 +8,6 @@
 
 package org.eclipse.simrel.tests.common.checker.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -21,6 +19,7 @@ import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
+import org.eclipse.simrel.tests.common.utils.CheckerUtils;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
@@ -28,20 +27,12 @@ import org.eclipse.simrel.tests.common.utils.IUUtil;
  */
 @SuppressWarnings("restriction")
 public class LicenseConsistencyChecker implements IInstalationUnitChecker {
-	private static String STANDARD_LICENSES_PROPERTIES_FILE = "standardLicenses.properties";
 	private License standardLicense2010;
 	private License standardLicense2011;
 	private License standardLicense2014;
 
 	public LicenseConsistencyChecker() {
-		Properties properties = new Properties();
-
-		InputStream inStream = this.getClass().getResourceAsStream(STANDARD_LICENSES_PROPERTIES_FILE);
-		try {
-			properties.load(inStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Properties properties = CheckerUtils.loadCheckerProperties(LicenseConsistencyChecker.class);
 		String body2014 = properties.getProperty("license2014");
 		String body2011 = properties.getProperty("license2011");
 		String body2010 = properties.getProperty("license2010");

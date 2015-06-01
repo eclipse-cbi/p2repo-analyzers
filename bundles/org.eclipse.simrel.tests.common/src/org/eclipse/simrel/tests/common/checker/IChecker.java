@@ -17,4 +17,5 @@ public interface IChecker {
 	default CheckReport createReport(IInstallableUnit iu) {
 		return new CheckReport(this.getClass(), iu);
 	}
+
 }

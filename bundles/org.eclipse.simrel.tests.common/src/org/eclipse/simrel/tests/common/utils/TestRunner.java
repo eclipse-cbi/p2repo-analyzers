@@ -3,8 +3,6 @@ package org.eclipse.simrel.tests.common.utils;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -60,11 +58,11 @@ public class TestRunner {
 
 	private static void dumpCheckerRegistry(CheckerRegistry registry) {
 		System.out.println("IU Checker:");
-		registry.getCheckers().forEach(
-				(final IInstalationUnitChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
+		registry.getCheckers().forEach((final IInstalationUnitChecker element) -> System.out
+				.println("   " + element.getClass().getSimpleName()));
 		System.out.println("Artifact Checker:");
-		registry.getArtifactCheckers()
-				.forEach((final IArtifactChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
+		registry.getArtifactCheckers().forEach(
+				(final IArtifactChecker element) -> System.out.println("   " + element.getClass().getSimpleName()));
 	}
 
 	@Test
@@ -76,32 +74,31 @@ public class TestRunner {
 
 	@Test
 	public void testProviderNames() {
-		Stream<CheckReport> reports = reportsByCheckerId(ProviderNameChecker.class.getName());
-		assertEquals("Wrong Provider name", 1,
-				reports.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
+		assertEquals("Bad Provider name", 0, reportsByCheckerId(ProviderNameChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.BAD_GUY).count());
+		assertEquals("Wrong Provider name", 0, reportsByCheckerId(ProviderNameChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
 	}
 
 	@Test
 	public void testLicense() {
 		Stream<CheckReport> filter = reportsByCheckerId(LicenseConsistencyChecker.class.getName())
 				.filter(report -> report.getType() == ReportType.BAD_GUY);
-		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
-		assertEquals("Old License", 1, collect.size());
+		assertEquals("Old License", 0, filter.count());
 	}
 
 	@Test
 	public void testSigning() {
-		Stream<CheckReport> filter = reportsByCheckerId(SignatureChecker.class.getName())
-				.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN);
-		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
-		assertEquals("Not signed", 3, collect.size());
+		Stream<CheckReport> reportsByCheckerId = reportsByCheckerId(SignatureChecker.class.getName());
+		Stream<CheckReport> filter = reportsByCheckerId.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN);
+		assertEquals("Not signed", 0, filter.count());
 	}
 
 	@Test
 	public void testAllError() {
-		assertEquals("Error Reports created", 4,
+		assertEquals("Error Reports created", 0,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
-		assertEquals("Warning Reports created", 187,
+		assertEquals("Warning Reports created", 0,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.BAD_GUY).count());
 	}
 

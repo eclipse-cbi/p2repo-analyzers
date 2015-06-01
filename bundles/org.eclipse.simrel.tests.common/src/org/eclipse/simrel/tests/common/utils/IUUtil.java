@@ -153,4 +153,24 @@ public class IUUtil {
 	public static String versionedId(final IInstallableUnit iu) {
 		return iu.getId() + (iu.getVersion() != null ? "_" + iu.getVersion().getOriginal() : "");
 	}
+
+	/**
+	 * @param iu
+	 *            {@link IInstallableUnit} to check
+	 * @return <code>true</code> if iu contains
+	 *         org.eclipse.equinox.p2.type.category=true
+	 */
+	public static boolean isCategory(IInstallableUnit iu) {
+		return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
+	}
+
+	/**
+	 * @param iu
+	 *            {@link IInstallableUnit} to check
+	 * @return <code>true</code> if iu contains
+	 *         org.eclipse.equinox.p2.type.fragment=true
+	 */
+	public static boolean isFragment(IInstallableUnit iu) {
+		return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
+	}
 }
