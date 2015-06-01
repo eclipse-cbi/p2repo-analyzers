@@ -40,13 +40,34 @@ public class SignatureChecker implements IArtifactChecker {
 			report.setCheckResult("Signing was disabled using the eclipse.inf file.");
 			report.setType(ReportType.BAD_GUY);
 		} else {
-			JarEntry jarEntry = IUUtil.getJarEntry(file, "META-INF/ECLIPSE_.RSA");
-			if (jarEntry == null) {
+			JarEntry newRSA = IUUtil.getJarEntry(file, "META-INF/ECLIPSE_.RSA");
+			JarEntry oldRSA = IUUtil.getJarEntry(file, "META-INF/ECLIPSEF.RSA");
+			boolean signed = false;
+			boolean reSigned = false;
+			if (newRSA == null) {
+				if (oldRSA != null) {
+					signed = true;
+				}
+			} else {
+				if (oldRSA != null) {
+					reSigned = true;
+				}
+				signed = true;
+			}
+			if (!signed) {
 				if (!artifactKey.getClassifier().equals("binary")) {
 					report.setCheckResult("Jar is probably not signed.");
 					report.setType(ReportType.NOT_IN_TRAIN);
 				} else {
 					report.setCheckResult("Unsigned binary file.");
+					report.setType(ReportType.INFO);
+				}
+			} else {
+				if (reSigned) {
+					report.setCheckResult("Probably re-signed. Contains ECLIPSE_.RSA and ECLIPSEF.RSA");
+					report.setType(ReportType.WARNING);
+				} else {
+					report.setCheckResult("Probably signed.");
 					report.setType(ReportType.INFO);
 				}
 			}

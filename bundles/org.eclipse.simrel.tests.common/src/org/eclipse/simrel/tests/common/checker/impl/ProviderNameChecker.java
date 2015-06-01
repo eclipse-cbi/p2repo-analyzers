@@ -124,7 +124,7 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 	}
 
 	private void oldProviderName(final CheckReport checkReport) {
-		checkReport.setType(ReportType.BAD_GUY);
+		checkReport.setType(ReportType.WARNING);
 		checkReport.setAdditionalData("Old provider name.");
 	}
 
