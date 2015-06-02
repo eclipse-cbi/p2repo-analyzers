@@ -36,6 +36,10 @@ public class HtmlReport implements ICheckReporter {
   
   private final String jsFileName = "html-report.js";
   
+  private final String errorsFileName = "errors-and-moderate_warnings.html";
+  
+  private final String warningsFileName = "warnings.html";
+  
   @Override
   public void createReport(final CheckReportsManager manager, final IP2RepositoryAnalyserConfiguration configs) {
     try {
@@ -67,9 +71,8 @@ public class HtmlReport implements ICheckReporter {
       _builder.append("<br>");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
-      _builder.append("<a href=\"");
-      String _warningsHtmlLocation = this.warningsHtmlLocation(configs);
-      _builder.append(_warningsHtmlLocation, "\t");
+      _builder.append("<a href=\"./");
+      _builder.append(this.warningsFileName, "\t");
       _builder.append("\">show warnings</a>");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
@@ -90,8 +93,8 @@ public class HtmlReport implements ICheckReporter {
       final String xmlContent = _builder.toString();
       PrintWriter _append = writer.append(xmlContent);
       _append.close();
-      String _warningsHtmlLocation_1 = this.warningsHtmlLocation(configs);
-      final PrintWriter warnWriter = new PrintWriter(_warningsHtmlLocation_1);
+      String _warningsHtmlLocation = this.warningsHtmlLocation(configs);
+      final PrintWriter warnWriter = new PrintWriter(_warningsHtmlLocation);
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("<html>");
       _builder_1.newLine();
@@ -116,9 +119,8 @@ public class HtmlReport implements ICheckReporter {
       _builder_1.append(_summary_1, "\t");
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
-      _builder_1.append("<a href=\"");
-      String _errorsHtmlLocation_1 = this.errorsHtmlLocation(configs);
-      _builder_1.append(_errorsHtmlLocation_1, "\t");
+      _builder_1.append("<a href=\"./");
+      _builder_1.append(this.errorsFileName, "\t");
       _builder_1.append("\">show errors</a>");
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
@@ -143,7 +145,8 @@ public class HtmlReport implements ICheckReporter {
     StringConcatenation _builder = new StringConcatenation();
     String _reportOutputDir = configs.getReportOutputDir();
     _builder.append(_reportOutputDir, "");
-    _builder.append("/errors-and-moderate_warnings.html");
+    _builder.append("/");
+    _builder.append(this.errorsFileName, "");
     return _builder.toString();
   }
   
@@ -151,7 +154,8 @@ public class HtmlReport implements ICheckReporter {
     StringConcatenation _builder = new StringConcatenation();
     String _reportOutputDir = configs.getReportOutputDir();
     _builder.append(_reportOutputDir, "");
-    _builder.append("/warnings.html");
+    _builder.append("/");
+    _builder.append(this.warningsFileName, "");
     return _builder.toString();
   }
   

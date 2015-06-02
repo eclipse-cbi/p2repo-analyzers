@@ -21,6 +21,9 @@ class HtmlReport implements ICheckReporter {
 	val cssFileName = "html-report.css"
 	val jsFileName = "html-report.js"
 
+	val errorsFileName = "errors-and-moderate_warnings.html"
+	val warningsFileName = "warnings.html"
+
 	override void createReport(CheckReportsManager manager, IP2RepositoryAnalyserConfiguration configs) {
 		val writer = new PrintWriter(configs.errorsHtmlLocation)
 		val allreports = manager.reports
@@ -33,7 +36,7 @@ class HtmlReport implements ICheckReporter {
 			</head>
 			<body>
 				«summary(configs)»<br>
-				<a href="«configs.warningsHtmlLocation»">show warnings</a>
+				<a href="./«warningsFileName»">show warnings</a>
 				«htmlTable(ReportType.NOT_IN_TRAIN,allreports)»
 				<br>
 				«htmlTable( ReportType.BAD_GUY,allreports)»
@@ -52,7 +55,7 @@ class HtmlReport implements ICheckReporter {
 			</head>
 			<body>
 				«summary(configs)»
-				<a href="«configs.errorsHtmlLocation»">show errors</a>
+				<a href="./«errorsFileName»">show errors</a>
 				«htmlTable(ReportType.WARNING,allreports)»
 			</body>
 			</html>
@@ -65,11 +68,11 @@ class HtmlReport implements ICheckReporter {
 	}
 
 	def String errorsHtmlLocation(IP2RepositoryAnalyserConfiguration configs) {
-		'''«configs.reportOutputDir»/errors-and-moderate_warnings.html'''
+		'''«configs.reportOutputDir»/«errorsFileName»'''
 	}
 
 	def String warningsHtmlLocation(IP2RepositoryAnalyserConfiguration configs) {
-		'''«configs.reportOutputDir»/warnings.html'''
+		'''«configs.reportOutputDir»/«warningsFileName»'''
 	}
 
 	def summary(IP2RepositoryAnalyserConfiguration conf) {
