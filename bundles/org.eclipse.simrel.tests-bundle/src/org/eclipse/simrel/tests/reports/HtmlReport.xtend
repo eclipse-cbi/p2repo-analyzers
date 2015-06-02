@@ -22,7 +22,7 @@ class HtmlReport implements ICheckReporter {
 	val jsFileName = "html-report.js"
 
 	override void createReport(CheckReportsManager manager, IP2RepositoryAnalyserConfiguration configs) {
-		val writer = new PrintWriter('''«configs.reportOutputDir»/errors-and-moderate_warnings.html''')
+		val writer = new PrintWriter(configs.errorsHtmlLocation)
 		val allreports = manager.reports
 		val xmlContent = '''
 			<html>
@@ -32,6 +32,8 @@ class HtmlReport implements ICheckReporter {
 			<script src="./data/«jsFileName»"></script>
 			</head>
 			<body>
+				«summary(configs)»<br>
+				<a href="«configs.warningsHtmlLocation»">show warnings</a>
 				«htmlTable(ReportType.NOT_IN_TRAIN,allreports)»
 				<br>
 				«htmlTable( ReportType.BAD_GUY,allreports)»
@@ -40,7 +42,7 @@ class HtmlReport implements ICheckReporter {
 		'''
 		writer.append(xmlContent).close
 
-		val warnWriter = new PrintWriter('''«configs.reportOutputDir»/warnings.html''')
+		val warnWriter = new PrintWriter(configs.warningsHtmlLocation)
 		val warnContent = '''
 			<html>
 			<head>
@@ -49,6 +51,8 @@ class HtmlReport implements ICheckReporter {
 			<script src="./data/«jsFileName»"></script>
 			</head>
 			<body>
+				«summary(configs)»
+				<a href="«configs.errorsHtmlLocation»">show errors</a>
 				«htmlTable(ReportType.WARNING,allreports)»
 			</body>
 			</html>
@@ -58,6 +62,20 @@ class HtmlReport implements ICheckReporter {
 		// other
 		addCssFile(configs)
 		addJsFile(configs)
+	}
+
+	def String errorsHtmlLocation(IP2RepositoryAnalyserConfiguration configs) {
+		'''«configs.reportOutputDir»/errors-and-moderate_warnings.html'''
+	}
+
+	def String warningsHtmlLocation(IP2RepositoryAnalyserConfiguration configs) {
+		'''«configs.reportOutputDir»/warnings.html'''
+	}
+
+	def summary(IP2RepositoryAnalyserConfiguration conf) {
+		'''
+			<h3>Check results for the repository: «conf.reportRepoURI»</h3>
+		'''
 	}
 
 	def htmlTable(ReportType reportType, Iterable<CheckReport> allreports) {
@@ -216,7 +234,7 @@ class HtmlReport implements ICheckReporter {
 		if (report == null) {
 			return 'any reports'
 		} else {
-			val result = if(report.checkResult.nullOrEmpty) 'passed' else report.checkResult
+			val result = if(report.checkResult == null) 'null' else report.checkResult
 			return '''«result»«if(!report.additionalData.nullOrEmpty)' - '+report.additionalData»'''
 		}
 	}

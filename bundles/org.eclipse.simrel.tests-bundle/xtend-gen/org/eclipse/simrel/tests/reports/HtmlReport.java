@@ -9,6 +9,7 @@ package org.eclipse.simrel.tests.reports;
 
 import com.google.common.base.Objects;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,12 +39,59 @@ public class HtmlReport implements ICheckReporter {
   @Override
   public void createReport(final CheckReportsManager manager, final IP2RepositoryAnalyserConfiguration configs) {
     try {
-      StringConcatenation _builder = new StringConcatenation();
-      String _reportOutputDir = configs.getReportOutputDir();
-      _builder.append(_reportOutputDir, "");
-      _builder.append("/errors-and-moderate_warnings.html");
-      final PrintWriter writer = new PrintWriter(_builder.toString());
+      String _errorsHtmlLocation = this.errorsHtmlLocation(configs);
+      final PrintWriter writer = new PrintWriter(_errorsHtmlLocation);
       final ConcurrentLinkedQueue<CheckReport> allreports = manager.getReports();
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("<html>");
+      _builder.newLine();
+      _builder.append("<head>");
+      _builder.newLine();
+      _builder.append("<link rel=\"stylesheet\" href=\"./data/");
+      _builder.append(this.cssFileName, "");
+      _builder.append("\"/>");
+      _builder.newLineIfNotEmpty();
+      _builder.append("<script src=\"http://code.jquery.com/jquery-1.11.3.min.js\"></script>");
+      _builder.newLine();
+      _builder.append("<script src=\"./data/");
+      _builder.append(this.jsFileName, "");
+      _builder.append("\"></script>");
+      _builder.newLineIfNotEmpty();
+      _builder.append("</head>");
+      _builder.newLine();
+      _builder.append("<body>");
+      _builder.newLine();
+      _builder.append("\t");
+      CharSequence _summary = this.summary(configs);
+      _builder.append(_summary, "\t");
+      _builder.append("<br>");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("<a href=\"");
+      String _warningsHtmlLocation = this.warningsHtmlLocation(configs);
+      _builder.append(_warningsHtmlLocation, "\t");
+      _builder.append("\">show warnings</a>");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      String _htmlTable = this.htmlTable(ReportType.NOT_IN_TRAIN, allreports);
+      _builder.append(_htmlTable, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("<br>");
+      _builder.newLine();
+      _builder.append("\t");
+      String _htmlTable_1 = this.htmlTable(ReportType.BAD_GUY, allreports);
+      _builder.append(_htmlTable_1, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("</body>");
+      _builder.newLine();
+      _builder.append("</html>");
+      _builder.newLine();
+      final String xmlContent = _builder.toString();
+      PrintWriter _append = writer.append(xmlContent);
+      _append.close();
+      String _warningsHtmlLocation_1 = this.warningsHtmlLocation(configs);
+      final PrintWriter warnWriter = new PrintWriter(_warningsHtmlLocation_1);
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("<html>");
       _builder_1.newLine();
@@ -64,56 +112,24 @@ public class HtmlReport implements ICheckReporter {
       _builder_1.append("<body>");
       _builder_1.newLine();
       _builder_1.append("\t");
-      String _htmlTable = this.htmlTable(ReportType.NOT_IN_TRAIN, allreports);
-      _builder_1.append(_htmlTable, "\t");
+      CharSequence _summary_1 = this.summary(configs);
+      _builder_1.append(_summary_1, "\t");
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
-      _builder_1.append("<br>");
-      _builder_1.newLine();
+      _builder_1.append("<a href=\"");
+      String _errorsHtmlLocation_1 = this.errorsHtmlLocation(configs);
+      _builder_1.append(_errorsHtmlLocation_1, "\t");
+      _builder_1.append("\">show errors</a>");
+      _builder_1.newLineIfNotEmpty();
       _builder_1.append("\t");
-      String _htmlTable_1 = this.htmlTable(ReportType.BAD_GUY, allreports);
-      _builder_1.append(_htmlTable_1, "\t");
+      String _htmlTable_2 = this.htmlTable(ReportType.WARNING, allreports);
+      _builder_1.append(_htmlTable_2, "\t");
       _builder_1.newLineIfNotEmpty();
       _builder_1.append("</body>");
       _builder_1.newLine();
       _builder_1.append("</html>");
       _builder_1.newLine();
-      final String xmlContent = _builder_1.toString();
-      PrintWriter _append = writer.append(xmlContent);
-      _append.close();
-      StringConcatenation _builder_2 = new StringConcatenation();
-      String _reportOutputDir_1 = configs.getReportOutputDir();
-      _builder_2.append(_reportOutputDir_1, "");
-      _builder_2.append("/warnings.html");
-      final PrintWriter warnWriter = new PrintWriter(_builder_2.toString());
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("<html>");
-      _builder_3.newLine();
-      _builder_3.append("<head>");
-      _builder_3.newLine();
-      _builder_3.append("<link rel=\"stylesheet\" href=\"./data/");
-      _builder_3.append(this.cssFileName, "");
-      _builder_3.append("\"/>");
-      _builder_3.newLineIfNotEmpty();
-      _builder_3.append("<script src=\"http://code.jquery.com/jquery-1.11.3.min.js\"></script>");
-      _builder_3.newLine();
-      _builder_3.append("<script src=\"./data/");
-      _builder_3.append(this.jsFileName, "");
-      _builder_3.append("\"></script>");
-      _builder_3.newLineIfNotEmpty();
-      _builder_3.append("</head>");
-      _builder_3.newLine();
-      _builder_3.append("<body>");
-      _builder_3.newLine();
-      _builder_3.append("\t");
-      String _htmlTable_2 = this.htmlTable(ReportType.WARNING, allreports);
-      _builder_3.append(_htmlTable_2, "\t");
-      _builder_3.newLineIfNotEmpty();
-      _builder_3.append("</body>");
-      _builder_3.newLine();
-      _builder_3.append("</html>");
-      _builder_3.newLine();
-      final String warnContent = _builder_3.toString();
+      final String warnContent = _builder_1.toString();
       PrintWriter _append_1 = warnWriter.append(warnContent);
       _append_1.close();
       this.addCssFile(configs);
@@ -121,6 +137,32 @@ public class HtmlReport implements ICheckReporter {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  public String errorsHtmlLocation(final IP2RepositoryAnalyserConfiguration configs) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _reportOutputDir = configs.getReportOutputDir();
+    _builder.append(_reportOutputDir, "");
+    _builder.append("/errors-and-moderate_warnings.html");
+    return _builder.toString();
+  }
+  
+  public String warningsHtmlLocation(final IP2RepositoryAnalyserConfiguration configs) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _reportOutputDir = configs.getReportOutputDir();
+    _builder.append(_reportOutputDir, "");
+    _builder.append("/warnings.html");
+    return _builder.toString();
+  }
+  
+  public CharSequence summary(final IP2RepositoryAnalyserConfiguration conf) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("<h3>Check results for the repository: ");
+    URI _reportRepoURI = conf.getReportRepoURI();
+    _builder.append(_reportRepoURI, "");
+    _builder.append("</h3>");
+    _builder.newLineIfNotEmpty();
+    return _builder;
   }
   
   public String htmlTable(final ReportType reportType, final Iterable<CheckReport> allreports) {
@@ -519,9 +561,9 @@ public class HtmlReport implements ICheckReporter {
     } else {
       String _xifexpression = null;
       String _checkResult = report.getCheckResult();
-      boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_checkResult);
-      if (_isNullOrEmpty) {
-        _xifexpression = "passed";
+      boolean _equals_1 = Objects.equal(_checkResult, null);
+      if (_equals_1) {
+        _xifexpression = "null";
       } else {
         _xifexpression = report.getCheckResult();
       }
@@ -530,8 +572,8 @@ public class HtmlReport implements ICheckReporter {
       _builder.append(result, "");
       String _xifexpression_1 = null;
       String _additionalData = report.getAdditionalData();
-      boolean _isNullOrEmpty_1 = StringExtensions.isNullOrEmpty(_additionalData);
-      boolean _not = (!_isNullOrEmpty_1);
+      boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_additionalData);
+      boolean _not = (!_isNullOrEmpty);
       if (_not) {
         String _additionalData_1 = report.getAdditionalData();
         _xifexpression_1 = (" - " + _additionalData_1);

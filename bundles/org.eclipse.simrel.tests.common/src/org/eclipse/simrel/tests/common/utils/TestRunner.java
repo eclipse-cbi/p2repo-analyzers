@@ -32,12 +32,12 @@ public class TestRunner {
 	private static CheckReportsManager reporter = null;
 
 	@BeforeClass
-	public static void setupOnce() throws ProvisionException, OperationCanceledException {
+	public static synchronized void setupOnce() throws ProvisionException, OperationCanceledException {
 		if (reporter == null) {
 			long start = System.currentTimeMillis();
 			long time = start;
 
-			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(LUNA));
+			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(JENKINS_XTEXT));
 			System.out.println("create repo descr " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
 

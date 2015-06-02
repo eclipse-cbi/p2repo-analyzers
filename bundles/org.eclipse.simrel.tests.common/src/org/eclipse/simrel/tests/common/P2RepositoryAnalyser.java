@@ -8,10 +8,6 @@
 package org.eclipse.simrel.tests.common;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -21,6 +17,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.simrel.tests.common.checker.CheckerRegistry;
+import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
 
 /**
  * @author dhuebner - Initial contribution and API
@@ -46,29 +43,37 @@ public class P2RepositoryAnalyser {
 		parallelStream.forEach(iu -> {
 			// run content unit tests
 			registry.getCheckers().stream().forEach(checker -> checker.check(consumer, repoDescr, iu));
-			// run artifacts tests for each artifact which belongs to IU
-			iu.getArtifacts().parallelStream()
-					.forEach(artifactKey -> registry.getArtifactCheckers().stream().forEach(artChecker -> {
+			// run artifacts tests for each artifact which belongs to IU and has
+			// a File loadable
+			iu.getArtifacts().parallelStream().forEach(artifactKey -> {
 				File artifactFile = repoDescr.getArtifactRepository().getArtifactFile(artifactKey);
-				if (artifactFile == null) {
-					try {
-						URL artifactUrl = repoDescr.getArtifactRepository().getLocation().toURL();
-						System.out.println("Downloading " + artifactKey.getId() + " from " + artifactUrl);
-						artifactFile = File.createTempFile("p2RepoAnanylse", artifactKey.getId());
-						InputStream inStr = artifactUrl.openStream();
-						Files.copy(inStr, artifactFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-						inStr.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				if (artifactFile != null) {
+					registry.getArtifactCheckers().stream().forEach(artChecker -> {
+						artChecker.check(consumer, repoDescr, iu, artifactKey, artifactFile);
+
+					});
+				} else {
+					CheckReport report = new CheckReport(SystemCheck.class, iu, artifactKey);
+					report.setType(ReportType.INFO);
+					report.setCheckResult("Unable to load artifact file.");
+					report.setAdditionalData(
+							artifactKey.toExternalForm() + " from " + repoDescr.getArtifactRepository().getLocation());
+					consumer.accept(report);
 				}
-				artChecker.check(consumer, repoDescr, iu, artifactKey, artifactFile);
-			} ));
-		} );
+
+			});
+		});
 	}
 
 	protected IQueryResult<IInstallableUnit> collectInstalableUnits(final P2RepositoryDescription descr) {
 		return descr.getMetadataRepository().query(QueryUtil.createIUAnyQuery(), null);
 	}
 
+	class SystemCheck implements IInstalationUnitChecker {
+
+		@Override
+		public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
+
+		}
+	}
 }
