@@ -12,7 +12,7 @@ import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.simrel.tests.jars.BREETest;
 import org.eclipse.simrel.tests.jars.ESTest;
 import org.eclipse.simrel.tests.jars.Pack200Test;
-import org.eclipse.simrel.tests.jars.SignerTest;
+//import org.eclipse.simrel.tests.jars.SignerTest;
 import org.eclipse.simrel.tests.jars.TestLayoutTest;
 import org.eclipse.simrel.tests.jars.VersionTest;
 //import org.eclipse.simrel.tests.repos.CheckGreedy;
@@ -250,12 +250,13 @@ public class BuildRepoTests {
             setFailuresOccurred(true);
         }
 
-        SignerTest signerTest = new SignerTest(getConfigurations());
-        signerTest.setDirectoryToCheck(getDirectoryToCheck());
-        boolean signFailures = signerTest.verifySignatures();
-        if (signFailures) {
-            setFailuresOccurred(true);
-        }
+// Disabled inbranch, since *might* be what causes batch locations to show "no errors"? 
+//        SignerTest signerTest = new SignerTest(getConfigurations());
+//        signerTest.setDirectoryToCheck(getDirectoryToCheck());
+//        boolean signFailures = signerTest.verifySignatures();
+//        if (signFailures) {
+//            setFailuresOccurred(true);
+//        }
 
         VersionTest versionTest = new VersionTest(getConfigurations());
         versionTest.setDirectoryToCheck(getDirectoryToCheck());
