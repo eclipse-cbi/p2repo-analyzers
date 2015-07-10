@@ -23,7 +23,7 @@
   -->
   <property
     name="reportOutputDir"
-    value="${testRepoDirectory}/buildInfo/" />
+    value="${testRepoDirectory}/buildInfo" />
 
   <!-- buildInfo should already exist, and contain "properties" of build -->
   <mkdir dir="${reportOutputDir}" />
