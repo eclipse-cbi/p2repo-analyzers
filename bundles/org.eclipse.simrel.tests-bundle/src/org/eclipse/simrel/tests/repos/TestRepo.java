@@ -105,11 +105,12 @@ public class TestRepo extends BuildRepoTests {
     }
     
     /**
+     * In the shared eclipse license, the provider- and feature- name are <code>null</code> 
      * @param iu Unit to check
      * @return <code>true</code> if the <code>iu</code> an eclipse shared license feature
      */
-    protected boolean isEclipseLicenseFeature(IInstallableUnit iu) {
-        return "org.eclipse.license.feature.group".equals(iu.getId());
+    protected boolean isEclipseLicenseIU(IInstallableUnit iu) {
+        return "org.eclipse.license.feature.group".equals(iu.getId()) || "org.eclipse.license.feature.jar".equals(iu.getId());
     }
     
 
