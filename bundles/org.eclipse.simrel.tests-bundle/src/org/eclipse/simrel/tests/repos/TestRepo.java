@@ -103,6 +103,15 @@ public class TestRepo extends BuildRepoTests {
                 || iuId.startsWith("toolingorg.eclipse") || iuId.startsWith("tooling.");
         return isSpecial;
     }
+    
+    /**
+     * @param iu Unit to check
+     * @return <code>true</code> if the <code>iu</code> an eclipse shared license feature
+     */
+    protected boolean isEclipseLicenseFeature(IInstallableUnit iu) {
+        return "org.eclipse.license.feature.group".equals(iu.getId());
+    }
+    
 
     protected boolean isFeatureGroup(IInstallableUnit iu) {
 
