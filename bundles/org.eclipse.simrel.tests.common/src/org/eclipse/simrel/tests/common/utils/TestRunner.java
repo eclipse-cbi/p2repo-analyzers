@@ -3,8 +3,6 @@ package org.eclipse.simrel.tests.common.utils;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -14,12 +12,12 @@ import org.eclipse.simrel.tests.common.P2RepositoryAnalyser;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
 import org.eclipse.simrel.tests.common.checker.CheckerRegistry;
-import org.eclipse.simrel.tests.common.checker.FeatureNameChecker;
 import org.eclipse.simrel.tests.common.checker.IArtifactChecker;
 import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
-import org.eclipse.simrel.tests.common.checker.LicenseConsistencyChecker;
-import org.eclipse.simrel.tests.common.checker.ProviderNameChecker;
-import org.eclipse.simrel.tests.common.checker.SignatureChecker;
+import org.eclipse.simrel.tests.common.checker.impl.FeatureNameChecker;
+import org.eclipse.simrel.tests.common.checker.impl.LicenseConsistencyChecker;
+import org.eclipse.simrel.tests.common.checker.impl.ProviderNameChecker;
+import org.eclipse.simrel.tests.common.checker.impl.SignatureChecker;
 import org.eclipse.simrel.tests.common.reporter.CheckReportsManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,18 +25,19 @@ import org.junit.Test;
 public class TestRunner {
 
 	// private static final int FEATURES_IN_REPO = 76;
+	static final String JENKINS_XTEXT = "https://xtext-builds.itemis.de/jenkins/job/xtext-master/ws/xtext.p2.repository/";
 	static final String EMF = "file:///Users/dhuebner/Downloads/emf-xsd-Update-N201505120526";
 	static final String XTEXT = "file:///Users/dhuebner/Downloads/tmf-xtext-Update-2.8.3M7-2";
 	static final String LUNA = "file:///Users/dhuebner/git/org.eclipse.xtext-master/releng/org.eclipse.xtext.releng/distrobuilder/luna/local-repo/final";
 	private static CheckReportsManager reporter = null;
 
 	@BeforeClass
-	public static void setupOnce() throws ProvisionException, OperationCanceledException {
+	public static synchronized void setupOnce() throws ProvisionException, OperationCanceledException {
 		if (reporter == null) {
 			long start = System.currentTimeMillis();
 			long time = start;
 
-			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(EMF));
+			P2RepositoryDescription p2Repo = IUUtil.createRepositoryDescription(URI.create(JENKINS_XTEXT));
 			System.out.println("create repo descr " + (System.currentTimeMillis() - time) + "ms");
 			time = System.currentTimeMillis();
 
@@ -59,11 +58,11 @@ public class TestRunner {
 
 	private static void dumpCheckerRegistry(CheckerRegistry registry) {
 		System.out.println("IU Checker:");
-		registry.getCheckers().forEach(
-				(final IInstalationUnitChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
+		registry.getCheckers().forEach((final IInstalationUnitChecker element) -> System.out
+				.println("   " + element.getClass().getSimpleName()));
 		System.out.println("Artifact Checker:");
-		registry.getArtifactCheckers()
-				.forEach((final IArtifactChecker element) -> System.out.println("   "+element.getClass().getSimpleName()));
+		registry.getArtifactCheckers().forEach(
+				(final IArtifactChecker element) -> System.out.println("   " + element.getClass().getSimpleName()));
 	}
 
 	@Test
@@ -75,32 +74,31 @@ public class TestRunner {
 
 	@Test
 	public void testProviderNames() {
-		Stream<CheckReport> reports = reportsByCheckerId(ProviderNameChecker.class.getName());
-		assertEquals("Wrong Provider name", 1,
-				reports.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
+		assertEquals("Bad Provider name", 0, reportsByCheckerId(ProviderNameChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.BAD_GUY).count());
+		assertEquals("Wrong Provider name", 0, reportsByCheckerId(ProviderNameChecker.class.getName())
+				.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
 	}
 
 	@Test
 	public void testLicense() {
 		Stream<CheckReport> filter = reportsByCheckerId(LicenseConsistencyChecker.class.getName())
 				.filter(report -> report.getType() == ReportType.BAD_GUY);
-		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
-		assertEquals("Old License", 1, collect.size());
+		assertEquals("Old License", 0, filter.count());
 	}
 
 	@Test
 	public void testSigning() {
-		Stream<CheckReport> filter = reportsByCheckerId(SignatureChecker.class.getName())
-				.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN);
-		ArrayList<CheckReport> collect = filter.collect(Collectors.toCollection(ArrayList::new));
-		assertEquals("Not signed", 3, collect.size());
+		Stream<CheckReport> reportsByCheckerId = reportsByCheckerId(SignatureChecker.class.getName());
+		Stream<CheckReport> filter = reportsByCheckerId.filter(report -> report.getType() == ReportType.NOT_IN_TRAIN);
+		assertEquals("Not signed", 0, filter.count());
 	}
 
 	@Test
 	public void testAllError() {
-		assertEquals("Error Reports created", 4,
+		assertEquals("Error Reports created", 0,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count());
-		assertEquals("Warning Reports created", 8,
+		assertEquals("Warning Reports created", 0,
 				reporter.getReports().stream().filter(report -> report.getType() == ReportType.BAD_GUY).count());
 	}
 

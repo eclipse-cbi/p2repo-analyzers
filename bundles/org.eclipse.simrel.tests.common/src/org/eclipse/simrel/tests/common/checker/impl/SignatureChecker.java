@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.simrel.tests.common.checker;
+package org.eclipse.simrel.tests.common.checker.impl;
 
 import java.io.File;
 import java.util.Properties;
@@ -17,6 +17,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
+import org.eclipse.simrel.tests.common.checker.IArtifactChecker;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
@@ -33,19 +34,40 @@ public class SignatureChecker implements IArtifactChecker {
 	@Override
 	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu,
 			IArtifactKey artifactKey, File file) {
-		CheckReport report = createReport(iu);
+		CheckReport report = createReport(iu, artifactKey);
 		Properties eclipseInf = IUUtil.getEclipseInf(file);
 		if (Boolean.valueOf(eclipseInf.getProperty(JARPROCESSOR_EXCLUDE_SIGN, "false"))) {
 			report.setCheckResult("Signing was disabled using the eclipse.inf file.");
 			report.setType(ReportType.BAD_GUY);
 		} else {
-			JarEntry jarEntry = IUUtil.getJarEntry(file, "META-INF/ECLIPSE_.RSA");
-			if (jarEntry == null) {
+			JarEntry newRSA = IUUtil.getJarEntry(file, "META-INF/ECLIPSE_.RSA");
+			JarEntry oldRSA = IUUtil.getJarEntry(file, "META-INF/ECLIPSEF.RSA");
+			boolean signed = false;
+			boolean reSigned = false;
+			if (newRSA == null) {
+				if (oldRSA != null) {
+					signed = true;
+				}
+			} else {
+				if (oldRSA != null) {
+					reSigned = true;
+				}
+				signed = true;
+			}
+			if (!signed) {
 				if (!artifactKey.getClassifier().equals("binary")) {
 					report.setCheckResult("Jar is probably not signed.");
 					report.setType(ReportType.NOT_IN_TRAIN);
 				} else {
 					report.setCheckResult("Unsigned binary file.");
+					report.setType(ReportType.INFO);
+				}
+			} else {
+				if (reSigned) {
+					report.setCheckResult("Probably re-signed. Contains ECLIPSE_.RSA and ECLIPSEF.RSA");
+					report.setType(ReportType.WARNING);
+				} else {
+					report.setCheckResult("Probably signed.");
 					report.setType(ReportType.INFO);
 				}
 			}

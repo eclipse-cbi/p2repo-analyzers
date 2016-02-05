@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.simrel.tests.common.checker;
+package org.eclipse.simrel.tests.common.checker.impl;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -16,6 +16,8 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
+import org.eclipse.simrel.tests.common.checker.IArtifactChecker;
+import org.eclipse.simrel.tests.common.utils.CheckerUtils;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 import org.osgi.framework.Constants;
 
@@ -23,11 +25,16 @@ import org.osgi.framework.Constants;
  * @author dhuebner - Initial contribution and API
  */
 public class BREEChecker implements IArtifactChecker {
+	private static final String EXCLUDE_PROPERTY = "breeExceptions";
 
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit iu, IArtifactKey artKey, final File child) {
-		CheckReport report = new CheckReport(BREEChecker.class, iu);
+		CheckReport report = createReport(iu, artKey);
+		String excludes = CheckerUtils.loadCheckerProperties(BREEChecker.class).getProperty(EXCLUDE_PROPERTY, null);
+		if (excludes != null && excludes.contains(iu.getId())) {
+			return;
+		}
 		try {
 			@SuppressWarnings("deprecation")
 			String bree = IUUtil.getBundleManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
@@ -38,7 +45,7 @@ public class BREEChecker implements IArtifactChecker {
 					report.setType(ReportType.INFO);
 					report.setCheckResult(bree);
 				} else {
-					report.setType(ReportType.BAD_GUY);
+					report.setType(ReportType.WARNING);
 					report.setCheckResult("None Java with BREE: " + bree);
 				}
 			} else {

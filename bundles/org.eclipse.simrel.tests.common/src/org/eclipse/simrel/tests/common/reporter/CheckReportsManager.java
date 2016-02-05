@@ -8,13 +8,12 @@
 
 package org.eclipse.simrel.tests.common.reporter;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.ReportType;
@@ -38,7 +37,7 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 		List<CheckReport> sorted = new ArrayList<CheckReport>(getReports());
 		Collections.sort(sorted, (CheckReport r1, CheckReport r2) -> {
 			return r2.getType().compareTo(r1.getType());
-		} );
+		});
 		sorted.forEach(report -> new ConsoleReporter().dumpReport(report));
 	}
 
@@ -47,24 +46,21 @@ public class CheckReportsManager implements Consumer<CheckReport> {
 		this.queue.add(report);
 	}
 
-	class ConsoleReporter implements ICheckReporter {
+	public Stream<CheckReport> reportsByCheckerId(final String checkerId) {
+		Stream<CheckReport> stream = getReports().parallelStream();
+		Stream<CheckReport> featureReports = stream.filter(report -> report.getCheckerId().equals(checkerId));
+		return featureReports;
+	}
 
-		private boolean dumpTime = false;
+	class ConsoleReporter implements ICheckReportDumper {
 
 		@Override
 		public void dumpReport(final CheckReport report) {
 			if (report == null) {
 				System.out.println("ERROR: Null report");
-			}
 
-			if (report.getType() != ReportType.INFO) {
-				String time = "";
-				if (this.dumpTime) {
-					time = new SimpleDateFormat("hh:mm:ss-SSS").format(new Date(report.getTimeMs()));
-				}
-				String message = report.getType() + ": " + report.getCheckResult() + " " + report.getIU().getId()
-						+ "  <- " + time + " " + report.getCheckerId();
-				System.out.println(message);
+			} else if (report.getType() != ReportType.INFO) {
+				System.out.println(report.toString());
 			}
 		}
 	}

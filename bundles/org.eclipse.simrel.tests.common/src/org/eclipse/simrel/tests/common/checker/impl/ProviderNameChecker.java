@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.simrel.tests.common.checker;
+package org.eclipse.simrel.tests.common.checker.impl;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,6 +17,8 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.simrel.tests.common.CheckReport;
 import org.eclipse.simrel.tests.common.P2RepositoryDescription;
 import org.eclipse.simrel.tests.common.ReportType;
+import org.eclipse.simrel.tests.common.checker.IInstalationUnitChecker;
+import org.eclipse.simrel.tests.common.utils.CheckerUtils;
 import org.eclipse.simrel.tests.common.utils.IUUtil;
 
 /**
@@ -28,39 +30,29 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	private static final String OLD_PROVIDER_NAME = "Eclipse.org";
 
-	private String[] EXPECTED_PROVIDER_NAMES = { "Eclipse Equinox Project", "Eclipse PTP", "Eclipse Orbit",
-			"Eclipse Web Tools Platform", "Eclipse CDT", "Eclipse Agent Modeling Platform", "Eclipse BIRT Project",
-			"Eclipse Data Tools Platform", "Eclipse Modeling Project", "Eclipse Mylyn", "Eclipse Memory Analyzer",
-			"Eclipse Linux Tools", "Eclipse Jubula", "Eclipse Jetty Project", "Eclipse Gyrex", "Eclipse EGit",
-			"Eclipse JGit", "Eclipse Agent Modeling Project", "Eclipse Packaging Project", "Eclipse Scout Project",
-			"Eclipse Sequoyah", "Eclipse TM Project", "Eclipse SOA", "Eclipse Koneki", "Eclipse Model Focusing Tools",
-			"Eclipse Code Recommenders", "Eclipse RTP", "Eclipse Stardust", "Eclipse JWT", "Eclipse Xtend" };
 	private Set<String> knownProviderNames = null;
 
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit iu) {
-		// ignore categories
-		boolean isCategory = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
-		// TODO: should we exclude fragments?
-		boolean isFragment = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
 
 		// || iu.getId().endsWith("feature.group")
-		if (!isCategory && !IUUtil.isSpecial(iu) && !isFragment) {
+		if (!IUUtil.isCategory(iu) && !IUUtil.isSpecial(iu) && !IUUtil.isFragment(iu)) {
 			CheckReport checkReport = new CheckReport(ProviderNameChecker.class, iu);
 
 			String providerName = iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
+			checkReport.setCheckResult(providerName);
+
 			if (providerName == null) {
-				incorrectProviderName(checkReport);
-			}
-			// common errors and misspellings
-			else if (providerName.startsWith("%") || providerName.equals("Eclipse")
+				missingProviderName(checkReport);
+			} else if (providerName.startsWith("%") || providerName.equals("Eclipse")
 					|| providerName.startsWith("eclipse.org") || providerName.equals("unknown")
 					|| providerName.startsWith("Engineering") || providerName.contains("org.eclipse.jwt")
 					|| providerName.contains("www.example.org") || providerName.contains("www.eclipse.org")
 					|| providerName.contains("Provider") || providerName.contains("provider")
 					|| providerName.startsWith("Bundle-") || providerName.startsWith("bund")
 					|| providerName.startsWith("Eclispe")) {
+				// common errors and misspellings
 				incorrectProviderName(checkReport);
 			} else if (providerName.startsWith("Eclipse.org - ")) {
 				correctProviderName(checkReport);
@@ -68,11 +60,10 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 				correctProviderName(checkReport);
 			} else if (OLD_PROVIDER_NAME.equals(providerName)) {
 				oldProviderName(checkReport);
-			}
-			// order is important, starts with Eclipse, but not one
-			// of the above e.g. "Eclipse Orbit" or "Eclipse.org"?
-			// TODO: eventually put in with "incorrect?"
-			else if (providerName.startsWith("Eclipse")) {
+			} else if (providerName.startsWith("Eclipse")) {
+				// order is important, starts with Eclipse, but not one
+				// of the above e.g. "Eclipse Orbit" or "Eclipse.org"?
+				// TODO: eventually put in with "incorrect?"
 				unknownProviderName(checkReport);
 			} else {
 				if (iu.getId().startsWith("org.eclipse")) {
@@ -87,11 +78,24 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	}
 
+	/**
+	 * @param checkReport
+	 */
+	private void missingProviderName(CheckReport checkReport) {
+		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Provider name is missing.");
+	}
+
 	public Set<String> getKnownProviderNames() {
 		if (this.knownProviderNames == null) {
 			Set<String> temp = new HashSet<>();
-			for (String string : this.EXPECTED_PROVIDER_NAMES) {
-				temp.add(string);
+			String expectedProviderNames = CheckerUtils.loadCheckerProperties(ProviderNameChecker.class)
+					.getProperty("expectedProviderNames", "");
+			if (!expectedProviderNames.isEmpty()) {
+				String[] names = expectedProviderNames.split(",");
+				for (String string : names) {
+					temp.add(string);
+				}
 			}
 			this.knownProviderNames = Collections.unmodifiableSet(temp);
 		}
@@ -100,21 +104,26 @@ public class ProviderNameChecker implements IInstalationUnitChecker {
 
 	private void suspectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Suspect provider name.");
 	}
 
 	private void incorrectProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.NOT_IN_TRAIN);
+		checkReport.setAdditionalData("Incorrect provider name.");
 	}
 
 	private void unknownProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.BAD_GUY);
+		checkReport.setAdditionalData("Unknown provider name.");
 	}
 
 	private void oldProviderName(final CheckReport checkReport) {
-		checkReport.setType(ReportType.BAD_GUY);
+		checkReport.setType(ReportType.WARNING);
+		checkReport.setAdditionalData("Old provider name.");
 	}
 
 	private void correctProviderName(final CheckReport checkReport) {
 		checkReport.setType(ReportType.INFO);
+		checkReport.setAdditionalData("Correct provider name.");
 	}
 }

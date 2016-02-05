@@ -8,6 +8,7 @@
 
 package org.eclipse.simrel.tests.common;
 
+import org.eclipse.equinox.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
 /**
@@ -19,12 +20,22 @@ public class CheckReport {
 	private IInstallableUnit iu;
 	private String checkerId;
 	private String checkResult;
+	private String additionalData;
+	private String iuVersion;
+	private String artifactKey;
 
 	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu) {
 		super();
 		this.iu = iu;
 		this.checkerId = checkerId.getName();
+		if (iu != null)
+			this.iuVersion = iu.getVersion().getOriginal();
 		this.setTimeMs(System.currentTimeMillis());
+	}
+
+	public CheckReport(final Class<?> checkerId, final IInstallableUnit iu, final IArtifactKey artifactKey) {
+		this(checkerId, iu);
+		this.artifactKey = artifactKey.toExternalForm();
 	}
 
 	public void setType(final ReportType type) {
@@ -57,5 +68,54 @@ public class CheckReport {
 
 	public void setTimeMs(final long timeMs) {
 		this.timeMs = timeMs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(type).append(": ").append(getVersionedId());
+		if (artifactKey != null) {
+			builder.append(" (").append(artifactKey).append(")");
+		}
+		builder.append(" <- ").append(checkerId).append(": ").append(checkResult).append(' ').append(additionalData)
+				.append(" " + timeMs);
+		return builder.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getVersionedId() {
+		return iu.getId() + (iuVersion != null ? "_" + iuVersion : "");
+	}
+
+	/**
+	 * @return the additionalData provided by a checker
+	 */
+	public String getAdditionalData() {
+		return additionalData;
+	}
+
+	public void setAdditionalData(String additionalData) {
+		this.additionalData = additionalData;
+	}
+
+	/**
+	 * @return the iuVersion
+	 */
+	public String getIuVersion() {
+		return iuVersion;
+	}
+
+	/**
+	 * @return the artifactKey
+	 */
+	public String getArtifactKey() {
+		return artifactKey;
 	}
 }

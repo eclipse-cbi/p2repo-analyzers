@@ -51,7 +51,7 @@ public class ProviderNameChecker extends TestRepo {
                     boolean isProduct = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.product"));
 
                     // || iu.getId().endsWith("feature.group")
-                    if (!isCategory && !isSpecial(iu) && !isFragment && !isProduct) {
+                    if (!isCategory && !isSpecial(iu) && !isFragment && !isProduct && !isEclipseLicenseIU(iu)) {
                         String providerName = iu.getProperty(IInstallableUnit.PROP_PROVIDER, null);
                         if (providerName == null) {
                             incorrectProviderName.add(iu);

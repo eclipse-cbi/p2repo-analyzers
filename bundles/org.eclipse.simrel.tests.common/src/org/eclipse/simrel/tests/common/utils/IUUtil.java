@@ -88,7 +88,7 @@ public class IUUtil {
 				}
 			}
 			return result;
-		} );
+		});
 
 	}
 
@@ -136,7 +136,7 @@ public class IUUtil {
 				}
 			}
 			return properties;
-		} );
+		});
 	}
 
 	/**
@@ -148,5 +148,29 @@ public class IUUtil {
 	 */
 	public static JarEntry getJarEntry(File file, String entryName) {
 		return workWithJarEntry(file, entryName, (jarEntry, entryStream) -> jarEntry);
+	}
+
+	public static String versionedId(final IInstallableUnit iu) {
+		return iu.getId() + (iu.getVersion() != null ? "_" + iu.getVersion().getOriginal() : "");
+	}
+
+	/**
+	 * @param iu
+	 *            {@link IInstallableUnit} to check
+	 * @return <code>true</code> if iu contains
+	 *         org.eclipse.equinox.p2.type.category=true
+	 */
+	public static boolean isCategory(IInstallableUnit iu) {
+		return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.category"));
+	}
+
+	/**
+	 * @param iu
+	 *            {@link IInstallableUnit} to check
+	 * @return <code>true</code> if iu contains
+	 *         org.eclipse.equinox.p2.type.fragment=true
+	 */
+	public static boolean isFragment(IInstallableUnit iu) {
+		return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.fragment"));
 	}
 }

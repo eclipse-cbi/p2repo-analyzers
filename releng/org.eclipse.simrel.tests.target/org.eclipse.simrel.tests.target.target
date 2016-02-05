@@ -22,7 +22,13 @@
 <unit id="org.eclipse.equinox.security.macosx" version="0.0.0" />
 <repository location="http://download.eclipse.org/eclipse/updates/4.4/R-4.4.2-201502041700/"/>
 </location>
-
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="com.google.guava" version="0.0.0"/>
+<unit id="org.eclipse.xtext.xbase.lib" version="0.0.0"/>
+<unit id="org.eclipse.xtend.lib" version="0.0.0"/>
+<unit id="org.eclipse.xtend.lib.macro" version="0.0.0"/>
+<repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.8.2/"/>
+</location>
     <!-- uncomment 'eclipse_home' location, with text editor, for use in Eclipse IDE 
     <location path="${eclipse_home}" type="Profile"/>
     -->

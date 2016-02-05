@@ -52,7 +52,7 @@ public class IUNameChecker extends TestRepo {
 
                     // TODO: probably do not need to exclude all of these? Since
                     // we are specifically selecting "groups"?
-                    if ((isGroup(iu) && !isCategory) && !isSpecial(iu) && !isFragment) {
+                    if ((isGroup(iu) && !isCategory) && !isSpecial(iu) && !isFragment && !isEclipseLicenseIU(iu)) {
                         String bundleName = iu.getProperty(IInstallableUnit.PROP_NAME, null);
                         // not sure fi can ever be null ... but, just in case
                         if (bundleName == null) {
@@ -122,7 +122,7 @@ public class IUNameChecker extends TestRepo {
 
                     // we exclude feature groups here, so they can be in their
                     // own list, for better focus
-                    if (!isCategory && !isSpecial(iu) && !isFragment && !isGroup(iu)) {
+                    if (!isCategory && !isSpecial(iu) && !isFragment && !isGroup(iu) &&!isEclipseLicenseIU(iu)) {
                         String bundleName = iu.getProperty(IInstallableUnit.PROP_NAME, null);
                         // not sure fi can ever be null ... but, just in case
                         if (bundleName == null) {

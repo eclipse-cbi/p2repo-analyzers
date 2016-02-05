@@ -44,6 +44,12 @@
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
+		<provider componentTypes="eclipse.feature,osgi.bundle"
+			readerType="p2" source="false" mutable="false">
+			<uri format="{0}/modeling/tmf/xtext/updates/releases/2.8.2/">
+				<bc:propertyRef key="eclipse.download" />
+			</uri>
+		</provider>
 	</searchPath>
 
 </rmap>
