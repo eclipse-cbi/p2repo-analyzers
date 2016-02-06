@@ -14,13 +14,21 @@
 	</parent>
 	<build>
 		<plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <includePackedArtifacts>true</includePackedArtifacts>
+        </configuration>
+      </plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
 					<repositoryName>Simrel Reports - Repository</repositoryName>
-          <includePackedArtifacts>true</includePackedArtifacts>
+          <compressed>true</compressed>
 				</configuration>
 			</plugin>
 		</plugins>
