@@ -20,6 +20,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<repositoryName>Simrel Reports - Repository</repositoryName>
+          <includePackedArtifacts>true</includePackedArtifacts>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -50,7 +51,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.eclipse.tycho</groupId>
 										<artifactId>tycho-packaging-plugin</artifactId>
-										<versionRange>[0.22.0,)</versionRange>
+										<versionRange>${tycho-version}</versionRange>
 										<goals>
 											<goal>build-qualifier-aggregator</goal>
 										</goals>
