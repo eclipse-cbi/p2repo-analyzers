@@ -23,6 +23,7 @@ Import-Package: javax.xml,
  org.osgi.service.packageadmin;version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: dir
 Export-Package: org.eclipse.simrel.tests,
  org.eclipse.simrel.tests.jars,
  org.eclipse.simrel.tests.reports,
