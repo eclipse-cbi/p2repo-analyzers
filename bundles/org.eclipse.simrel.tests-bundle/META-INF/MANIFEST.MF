@@ -28,3 +28,4 @@ Export-Package: org.eclipse.simrel.tests,
  org.eclipse.simrel.tests.repos,
  org.eclipse.simrel.tests.utils,
  templateFiles
+Bundle-ClassPath: .
