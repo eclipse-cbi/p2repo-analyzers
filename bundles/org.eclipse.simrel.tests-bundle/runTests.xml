@@ -19,7 +19,6 @@
        we will want to "save old reports", without saving the entire repository.
        .../reporeports/reports contains the actual reports.
        .../reporeports contains the index.html file.
-       .../reporeports/reports/verifyoutdir contains the "signing verification" reports.
   -->
   <property
     name="reportOutputDir"
@@ -73,7 +72,10 @@
 
     <antcall target="runReports" />
 
-    <antcall target="runSignatureVerification" />
+    <!--
+       call/done by app, now, but should explore ant's selector for signed files. 
+       <antcall target="runSignatureVerification" />
+     -->
 
     <!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
 
