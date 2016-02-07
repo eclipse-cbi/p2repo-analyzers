@@ -72,13 +72,6 @@
 
     <antcall target="runReports" />
 
-    <!--
-       call/done by app, now, but should explore ant's selector for signed files. 
-       <antcall target="runSignatureVerification" />
-     -->
-
-    <!-- TODO: confirm java.io.tmdir is in workspace, and not /tmp? -->
-
     <!-- currently, we never "fail" ... but, will in future -->
     <fail if="failuresoccurred" />
   </target>
@@ -103,7 +96,6 @@
       executable="${eclipseTestExecutable}"
       dir="${basedir}"
       failonerror="true">
-      <arg value="-debug" />
       <arg value="-nosplash" />
       <arg value="-debug" />
       <arg value="--launcher.suppressErrors" />
@@ -114,39 +106,6 @@
       <arg value="-vmargs" />
       <arg line="${VM_TEST_ARGS}" />
     </exec>
-  </target>
-
-    <!-- TODO: move this to java app too. May still want to have seperate, since takes so much longer -->
-  <target name="runSignatureVerification" unless="skipSignaturVerification">
-    <echo message="basedir: ${basedir}" />
-    <echo message="testRepoDirectory: ${testRepoDirectory}" />
-    <echo message="reportOutputDir: ${reportOutputDir}" />
-    <echo message="BUILD_TESTS_DIR: ${BUILD_TESTS_DIR}" />
-    <exec
-      executable="/bin/bash"
-      dir="${testRepoDirectory}">
-      <env key="TMP_DIR" path="tmp" />
-      <arg value="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/verifydir.sh" />
-      <arg value="${testRepoDirectory}" />
-      <arg value="${reportOutputDir}/reporeports/reports" />
-
-      <!-- we'll check jars only, to save time ... assume pack.gz files would
-        be correct too.
-        Changed, when we wanted to also test for nested packed jars.
-      -->
-      <arg value=".*\(\.jar$\|\.jar\.pack\.gz$\)" />
-
-      <!-- restricting to 'common' just for testing ... so finishes relatively quickly
-        <arg value=".*common.*\.jar$"/> -->
-      <!--
-          <arg value=".*\.jar$" />
-      -->
-    </exec>
-
-    <copy
-      tofile="${reportOutputDir}/reporeports/index.html"
-      file="${BUILD_TESTS_DIR}/bundles/org.eclipse.simrel.tests-bundle/src/templateFiles/indexmain.html"
-      overwrite="true" />
   </target>
 
 </project>
