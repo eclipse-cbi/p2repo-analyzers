@@ -9,9 +9,12 @@
   <packaging>pom</packaging>
   <properties>
     
-       <!-- For using Tycho 23.1 (currently "staged", removed staged repo below, once released) -->
-    <tycho-version>0.24.0</tycho-version>
-    <tycho-extras.version>0.24.0</tycho-extras.version>
+    <!-- Should stay on Tycho 0.22.0 until we move to Mars base. Then should try 
+         version 0.24.0 and make sure the "mac app" is created correctly, with no
+         other modifications.
+     -->
+    <tycho-version>0.22.0</tycho-version>
+    <tycho-extras.version>0.22.0</tycho-extras.version>
     <cbi-plugins.version>1.1.3</cbi-plugins.version>
     
     <!-- using snapshot repo for Tycho 0.23.0-SNAPSHOT, such as for bug 461207 -->
