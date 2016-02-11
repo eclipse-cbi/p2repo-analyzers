@@ -40,7 +40,7 @@
     <unit id="org.eclipse.xtend.lib" version="2.8.2.v201504100559"/>
     <unit id="org.eclipse.xtend.lib.source" version="2.8.2.v201504100559"/>
     <unit id="org.eclipse.xtend.lib.macro" version="2.8.2.v201504100559"/>
-    <unit id="org.eclipse.xtend.lib.macro" version="2.8.2.v201504100559"/>
+    <unit id="org.eclipse.xtend.lib.macro.source" version="2.8.2.v201504100559"/>
     <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.8.2/"/>
 </location>
 
