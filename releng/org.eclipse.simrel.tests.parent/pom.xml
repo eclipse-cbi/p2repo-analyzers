@@ -31,6 +31,10 @@
       <cbi-snapshots-repo.url>https://repo.eclipse.org/content/repositories/cbi-snapshots/</cbi-snapshots-repo.url>
     -->   
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
+  
+    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/simrel/org.eclipse.simrel.tests.git</tycho.scmUrl>
+  
   </properties>
   <profiles>
     <profile>
