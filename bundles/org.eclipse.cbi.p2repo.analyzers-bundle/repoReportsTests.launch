@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<setAttribute key="additional_plugins"/>
+<booleanAttribute key="append.args" value="true"/>
+<stringAttribute key="application" value="org.eclipse.cbi.p2repo.analyzers.repoReport"/>
+<booleanAttribute key="askclear" value="true"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="false"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/repoReportsTests"/>
+<booleanAttribute key="default" value="false"/>
+<stringAttribute key="featureDefaultLocation" value="workspace"/>
+<stringAttribute key="featurePluginResolution" value="workspace"/>
+<booleanAttribute key="generateProfile" value="true"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="location" value="${workspace_loc}/../runtime-repoReports"/>
+<setAttribute key="name.schedenig.eclipse.grepconsole.DisabledIds"/>
+<setAttribute key="name.schedenig.eclipse.grepconsole.EnabledIds"/>
+<setAttribute key="name.schedenig.eclipse.grepconsole.FilterDisabledIds"/>
+<setAttribute key="name.schedenig.eclipse.grepconsole.FilterEnabledIds"/>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="release" value="juno"/>
+</mapAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -debug"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XX:MaxPermSize=256m -Xms40m -Xmx512m -DreportOutputDir=/home/davidw/temp/ -DreportRepoDir=/data/httpd/download.eclipse.org/eclipse/updates/4.5-I-builds/I20150430-1445 -DreferenceRepo=/data/httpd/download.eclipse.org/eclipse/updates/4.4/R-4.4.2-201502041700/"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="org.eclipse.sdk.ide"/>
+<setAttribute key="selected_features">
+<setEntry value="TestFeature:default"/>
+<setEntry value="org.eclipse.b3.aggregator.editor.feature:default"/>
+<setEntry value="org.eclipse.b3.aggregator.engine.feature.patch:default"/>
+<setEntry value="org.eclipse.b3.aggregator.engine.feature:default"/>
+<setEntry value="org.eclipse.b3.license.feature:default"/>
+<setEntry value="org.eclipse.cvs.source:default"/>
+<setEntry value="org.eclipse.cvs:default"/>
+<setEntry value="org.eclipse.e4.rcp.source:default"/>
+<setEntry value="org.eclipse.e4.rcp:default"/>
+<setEntry value="org.eclipse.ecf.core.feature:default"/>
+<setEntry value="org.eclipse.ecf.core.source.feature:default"/>
+<setEntry value="org.eclipse.ecf.core.ssl.feature:default"/>
+<setEntry value="org.eclipse.ecf.core.ssl.source.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.source.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.source.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.ssl.feature:default"/>
+<setEntry value="org.eclipse.ecf.filetransfer.ssl.source.feature:default"/>
+<setEntry value="org.eclipse.egit.source:default"/>
+<setEntry value="org.eclipse.egit:default"/>
+<setEntry value="org.eclipse.emf.common.source:default"/>
+<setEntry value="org.eclipse.emf.common:default"/>
+<setEntry value="org.eclipse.emf.ecore.source:default"/>
+<setEntry value="org.eclipse.emf.ecore:default"/>
+<setEntry value="org.eclipse.equinox.p2.core.feature.source:default"/>
+<setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
+<setEntry value="org.eclipse.equinox.p2.extras.feature.source:default"/>
+<setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
+<setEntry value="org.eclipse.equinox.p2.rcp.feature.source:default"/>
+<setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
+<setEntry value="org.eclipse.equinox.p2.user.ui.source:default"/>
+<setEntry value="org.eclipse.equinox.p2.user.ui:default"/>
+<setEntry value="org.eclipse.help.source:default"/>
+<setEntry value="org.eclipse.help:default"/>
+<setEntry value="org.eclipse.jdt.source:default"/>
+<setEntry value="org.eclipse.jdt:default"/>
+<setEntry value="org.eclipse.jgit.http.apache:default"/>
+<setEntry value="org.eclipse.jgit.java7:default"/>
+<setEntry value="org.eclipse.jgit.pgm.source:default"/>
+<setEntry value="org.eclipse.jgit.pgm:default"/>
+<setEntry value="org.eclipse.jgit.source:default"/>
+<setEntry value="org.eclipse.jgit:default"/>
+<setEntry value="org.eclipse.license:default"/>
+<setEntry value="org.eclipse.pde.source:default"/>
+<setEntry value="org.eclipse.pde:default"/>
+<setEntry value="org.eclipse.platform.source:default"/>
+<setEntry value="org.eclipse.platform:default"/>
+<setEntry value="org.eclipse.rcp.configuration:default"/>
+<setEntry value="org.eclipse.rcp.source:default"/>
+<setEntry value="org.eclipse.rcp:default"/>
+<setEntry value="org.eclipse.releng.tools:default"/>
+<setEntry value="org.eclipse.sdk:default"/>
+<setEntry value="org.eclipse.wst.common_core.feature:default"/>
+<setEntry value="org.eclipse.wst.common_ui.feature:default"/>
+<setEntry value="org.eclipse.wst.xml_core.feature:default"/>
+<setEntry value="org.eclipse.wst.xml_ui.feature:default"/>
+<setEntry value="org.eclipse.wst.xml_userdoc.feature:default"/>
+</setAttribute>
+<stringAttribute key="selected_target_plugins" value="org.apache.felix.gogo.command@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.gogo.shell@default:default,org.eclipse.core.jobs@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.console@default:default,org.eclipse.equinox.ds@1:true,org.eclipse.equinox.frameworkadmin.equinox@default:default,org.eclipse.equinox.frameworkadmin@default:default,org.eclipse.equinox.launcher@default:default,org.eclipse.equinox.p2.artifact.repository@default:default,org.eclipse.equinox.p2.console@default:default,org.eclipse.equinox.p2.core@1:true,org.eclipse.equinox.p2.director@1:true,org.eclipse.equinox.p2.engine@default:default,org.eclipse.equinox.p2.garbagecollector@default:default,org.eclipse.equinox.p2.jarprocessor@default:default,org.eclipse.equinox.p2.metadata.repository@default:default,org.eclipse.equinox.p2.metadata@default:default,org.eclipse.equinox.p2.operations@default:default,org.eclipse.equinox.p2.ql@default:default,org.eclipse.equinox.p2.repository@default:default,org.eclipse.equinox.p2.touchpoint.eclipse@default:default,org.eclipse.equinox.p2.touchpoint.natives@default:default,org.eclipse.equinox.p2.transport.ecf@default:default,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.equinox.security@default:default,org.eclipse.equinox.simpleconfigurator.manipulator@default:default,org.eclipse.equinox.simpleconfigurator@1:true,org.eclipse.equinox.util@default:default,org.eclipse.osgi.compatibility.state@default:false,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.junit@default:default,org.sat4j.core@default:default,org.sat4j.pb@default:default"/>
+<stringAttribute key="selected_workspace_plugins" value="com.ning.async-http-client@default:default,org.eclipse.b3.aggregator.edit@default:default,org.eclipse.b3.aggregator.editor@default:default,org.eclipse.b3.aggregator.engine.maven@default:default,org.eclipse.b3.aggregator.engine@default:default,org.eclipse.b3.aggregator.legacy.ui@default:default,org.eclipse.b3.aggregator.legacy@default:default,org.eclipse.b3.aggregator@default:default,org.eclipse.b3.backend@default:default,org.eclipse.b3.beelang.generator@default:default,org.eclipse.b3.beelang.junit@default:default,org.eclipse.b3.beelang.tests@default:default,org.eclipse.b3.beelang.ui.experiments@default:default,org.eclipse.b3.beelang.ui@default:default,org.eclipse.b3.beelang@default:default,org.eclipse.b3.build.ui.idefragment@default:false,org.eclipse.b3.build.ui@default:default,org.eclipse.b3.build@default:default,org.eclipse.b3.cli@default:default,org.eclipse.b3.core@default:default,org.eclipse.b3.p2.edit@default:default,org.eclipse.b3.p2.maven.indexer@default:default,org.eclipse.b3.p2.maven@default:default,org.eclipse.b3.p2.tests@default:default,org.eclipse.b3.p2@default:default,org.eclipse.b3.util@default:default,org.eclipse.epp.package.automotive@default:default,org.eclipse.epp.package.committers@default:default,org.eclipse.epp.package.cpp@default:default,org.eclipse.epp.package.dsl@default:default,org.eclipse.epp.package.java@default:default,org.eclipse.epp.package.jee@default:default,org.eclipse.epp.package.modeling@default:default,org.eclipse.epp.package.parallel@default:default,org.eclipse.epp.package.php@default:default,org.eclipse.epp.package.rcp@default:default,org.eclipse.epp.package.reporting@default:default,org.eclipse.epp.package.scout@default:default,org.eclipse.epp.package.testing@default:default,org.eclipse.cbi.p2repo.analyzers.common@default:default,org.eclipse.cbi.p2repo.analyzers.junit@default:default,org.eclipse.cbi.p2repo.analyzers@default:default,org.eclipse.simrel.tools@default:default"/>
+<booleanAttribute key="show_selected_only" value="false"/>
+<stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
+<booleanAttribute key="tracing" value="true"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="false"/>
+</launchConfiguration>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.5"?>
+<plugin>
+
+
+   <extension
+         id="repoReport"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.cbi.p2repo.analyzers.RepoReportApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="org_eclipse_cbi_p2repo_analyzers"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.cbi.p2repo.analyzers.repoReport"
+            name="%product.name">
+         <property
+               name="appName"
+               value="CBI p2 Repository Analyzers">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
