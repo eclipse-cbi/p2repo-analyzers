@@ -27,5 +27,5 @@ mvn -version
 
 java -version
 
-mvn clean verify -Dmaven.repo.local=$LOCAL_REPO -f ${POM_DIR}/pom.xml  2>&1 | tee ~/temp/out.txt
+mvn clean verify -Dtycho.localArtifacts=ignore -Dmaven.repo.local=$LOCAL_REPO -f ${POM_DIR}/pom.xml  2>&1 | tee ~/temp/out.txt
 

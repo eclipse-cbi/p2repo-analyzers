@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><?pde version="3.8"?>
-<target name="cbi.p2repo.analyzers.target" sequenceNumber="6">
+<target name="org.eclipse.cbi.p2repo.analyzers.prereqs" sequenceNumber="6">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
