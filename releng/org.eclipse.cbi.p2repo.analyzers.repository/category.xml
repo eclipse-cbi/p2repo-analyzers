@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature id="org.eclipse.cbi.p2repo.analyzers.feature" 
-            version="1.3.1.qualifier" >
+            version="2.0.0.qualifier" >
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
    <feature id="org.eclipse.cbi.p2repo.analyzers.feature.source" 
-            version="1.3.1.qualifier">            
+            version="2.0.0.qualifier">            
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
    <category-def name="CBI p2 Repository Analyzers" label="CBI p2 Repository Analyzers"/>

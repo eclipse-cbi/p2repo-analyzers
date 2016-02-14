@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="CBI p2 Repository Analyzers" uid="org.eclipse.cbi.p2repo.analyzers.product" id="org.eclipse.cbi.p2repo.analyzers.org_eclipse_cbi_p2repo_analyzers" application="org.eclipse.cbi.p2repo.analyzers.repoReport" version="1.3.1.qualifier" useFeatures="false" includeLaunchers="true">
+<product name="CBI p2 Repository Analyzers" uid="org.eclipse.cbi.p2repo.analyzers.product" id="org.eclipse.cbi.p2repo.analyzers.org_eclipse_cbi_p2repo_analyzers" application="org.eclipse.cbi.p2repo.analyzers.repoReport" version="2.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
