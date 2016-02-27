@@ -189,7 +189,7 @@ public class ProviderNameChecker extends TestRepo {
                     StringTokenizer tokenizer = new StringTokenizer(expectedProviders, ",", false);
                     while (tokenizer.hasMoreTokens()) {
                         String name = tokenizer.nextToken();
-                        namesAsList.add(name);
+                        namesAsList.add(name.trim());
                     }
                 } finally {
                     if (inStream != null) {
