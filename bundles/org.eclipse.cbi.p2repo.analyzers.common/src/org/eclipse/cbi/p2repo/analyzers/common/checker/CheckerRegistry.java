@@ -16,6 +16,7 @@ import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.BREEChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.EclipseSourceChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.FeatureNameChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.IUNameChecker;
+import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.LayoutChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.LicenseConsistencyChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.ProviderNameChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.SignatureChecker;
@@ -38,6 +39,7 @@ public class CheckerRegistry {
 		this.artifactCheckers.add(new BREEChecker());
 		this.artifactCheckers.add(new SignatureChecker());
 		this.artifactCheckers.add(new EclipseSourceChecker());
+		this.artifactCheckers.add(new LayoutChecker());
 		this.artifactCheckers = Collections.unmodifiableSet(this.artifactCheckers);
 	}
 
