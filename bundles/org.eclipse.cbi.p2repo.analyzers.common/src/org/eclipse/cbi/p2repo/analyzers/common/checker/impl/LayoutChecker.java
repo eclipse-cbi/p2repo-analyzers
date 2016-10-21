@@ -45,16 +45,17 @@ public class LayoutChecker implements IArtifactChecker {
 		CheckReport report = createReport(iu, artifactKey);
 		Properties checkerProperties = CheckerUtils.loadCheckerProperties(LayoutChecker.class);
 		String property;
+		boolean sourceIU = isSourceIUName(iu.getId());
 		if (IUUtil.isFeature(iu)) {
 			property = KEY_DFT_FEATURE;
-		} else if (iu.getId().endsWith(".source")) {
+		} else if (sourceIU) {
 			property = KEY_DFT_SRC_JAR;
 		} else {
 			property = KEY_DFT_BIN_JAR;
 		}
 
 		String expectedEntries = checkerProperties.getProperty(property, null);
-		if (iu.getId().endsWith(".source")) {
+		if (sourceIU) {
 			expectedEntries = MessageFormat.format(expectedEntries, iu.getId().substring(0, iu.getId().lastIndexOf('.')));
 		} else {
 			expectedEntries = MessageFormat.format(expectedEntries, iu.getId());
@@ -62,6 +63,12 @@ public class LayoutChecker implements IArtifactChecker {
 		processArchive(file, Arrays.asList(expectedEntries.split(",")), report);
 
 		consumer.accept(report);
+	}
+
+	private boolean isSourceIUName(String id) {
+		return id.endsWith(".source") || id.endsWith(".infopop") || id.endsWith(".doc.user") || id.endsWith(".doc")
+				|| id.endsWith(".doc.isv") || id.endsWith(".doc.dev") || id.endsWith(".doc.api") || id.endsWith("standard.schemas")
+				|| id.endsWith(".branding");
 	}
 
 	private void processArchive(File file, List<String> expected, CheckReport report) {
