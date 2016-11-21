@@ -18,7 +18,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author dhuebner - Initial contribution and API
  */
-@SuppressWarnings("restriction")
+
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;

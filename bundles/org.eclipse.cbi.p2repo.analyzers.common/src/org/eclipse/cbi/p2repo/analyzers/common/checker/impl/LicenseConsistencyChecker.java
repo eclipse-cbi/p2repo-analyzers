@@ -25,7 +25,6 @@ import org.eclipse.cbi.p2repo.analyzers.common.utils.IUUtil;
 /**
  * @author dhuebner - Initial contribution and API
  */
-@SuppressWarnings("restriction")
 public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 	private License standardLicense2010;
 	private License standardLicense2011;

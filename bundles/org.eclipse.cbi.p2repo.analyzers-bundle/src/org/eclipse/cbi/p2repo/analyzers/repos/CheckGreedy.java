@@ -164,18 +164,26 @@ public class CheckGreedy extends TestRepo {
         // not file IO with get getDirectoryToCheck
         File file = new File(getDirectoryToCheck() + "/" + "content.jar");
         if (file.exists()) {
+            ZipFile zipfile = null;
             try {
-                ZipFile zipfile = new ZipFile(file);
+                zipfile = new ZipFile(file);
                 ZipEntry zipEntry = zipfile.getEntry("content.xml");
                 InputStream inputStream = zipfile.getInputStream(zipEntry);
                 characterStream = new InputStreamReader(inputStream);
                 System.out.println("Using content.jar file from " + getDirectoryToCheck());
             } catch (ZipException e) {
-
                 e.printStackTrace();
             } catch (IOException e) {
-
                 e.printStackTrace();
+            } finally {
+                if (zipfile != null) {
+                    try {
+                        zipfile.close();
+                    } catch (IOException e) {
+                        // Unlikely, but just in case ...
+                        e.printStackTrace();
+                    }
+                }
             }
         } else {
             file = new File(getRepoURLToTest() + "/" + "content.xml");
