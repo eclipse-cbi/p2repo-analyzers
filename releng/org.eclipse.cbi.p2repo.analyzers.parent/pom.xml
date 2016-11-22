@@ -9,26 +9,15 @@
   <packaging>pom</packaging>
 
   <properties>
-    
-    <!-- Should stay on Tycho 0.22.0 until we move to Mars base. Then should try 
-         version 0.24.0 and make sure the "mac app" is created correctly, with no
-         other modifications.
-     -->
-    <tycho-version>0.22.0</tycho-version>
-    <tycho-extras.version>0.22.0</tycho-extras.version>
+    <tycho-version>0.26.0</tycho-version>
+    <tycho-extras.version>0.26.0</tycho-extras.version>
     <cbi-plugins.version>1.1.3</cbi-plugins.version>
-    
-    <!-- using snapshot repo for Tycho 0.23.0-SNAPSHOT, such as for bug 461207 -->
-    <!-- Does it hurt to always leave snapshot repo here? Even if not used?
-      <tycho-snapshot-repo.url>https://repo.eclipse.org/content/repositories/tycho-snapshots/</tycho-snapshot-repo.url>
-    -->
-    <tycho-repo.url>https://oss.sonatype.org/content/repositories/public/</tycho-repo.url>
     <!--
       repo for released versions of CBI. Note, we intentionally use as specific a repo as possible.
       See bug 471835.
     -->
     <eclipse-repo.url>https://repo.eclipse.org/content/repositories/cbi/</eclipse-repo.url>
-    <!-- comment out snapshots repo, when not intending to use snapshots. releases come from "eclipse-repo.url" 
+    <!-- comment out snapshots repo, when not intending to use snapshots. releases come from "eclipse-repo.url"
       <cbi-snapshots-repo.url>https://repo.eclipse.org/content/repositories/cbi-snapshots/</cbi-snapshots-repo.url>
     -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -176,16 +165,6 @@
     </profile>
   </profiles>
   <pluginRepositories>
-    <pluginRepository>
-      <id>tycho</id>
-      <url>${tycho-repo.url}</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
     <!-- comment out cbi snapshots, if not intending to use 
       <pluginRepository>
       <id>cbi-snapshots</id>
@@ -202,7 +181,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
