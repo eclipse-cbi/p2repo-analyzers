@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.cbi.p2repo.analyzers.ui.contribution.p2dolder"
+            objectClass="org.eclipse.core.resources.IFolder">
+         <menu
+               id="org.eclipse.cbi.p2repo.analyzers.ui.menu"
+               label="P2 Analyzer"
+               path="additions">
+            <separator
+                  name="mainGroup">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.cbi.p2repo.analyzers.ui.popup.actions.P2AnalyzerAction"
+               enablesFor="1"
+               id="org.eclipse.cbi.p2repo.analyzers.ui.analyzeAction"
+               label="Analyze P2 Repository"
+               menubarPath="org.eclipse.cbi.p2repo.analyzers.ui.menu/mainGroup">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
