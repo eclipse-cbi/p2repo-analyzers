@@ -102,14 +102,14 @@ deployRepos ${ideUpdate} ${build_home}/output/p2repo
 #deployRepos ${headlessUpdate} ${build_home}/org.eclipse.cbi.p2repo.analyzers/releng/org.eclipse.cbi.p2repo.cli.product/target/repository
 
 # save away "data" from the build, as well as the deployable headless products
-cp ${build_home}/aggr/buildOutput.txt ${ideUpdate}
+#cp ${build_home}/aggr/buildOutput.txt ${ideUpdate}
 cp ${sourceProperties} ${ideUpdate}
 cp ${propertiesfile} ${ideUpdate}
 cp ${phpProperties} ${ideUpdate}
 
-productroot=${build_home}/output
-cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-linux.gtk.x86_64.tar.gz  ${ideUpdate}/analyzers_${buildId}_linux.gtk.x86_64.tar.gz
-cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-macosx.cocoa.x86_64.tar.gz ${ideUpdate}/analyzers_${buildId}_macosx.cocoa.x86_64.tar.gz
-cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-win32.win32.x86_64.zip ${ideUpdate}/headless_${buildId}_win32.win32.x86_64.zip
+productroot=${build_home}/output/products
+cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-linux.gtk.x86_64.tar.gz  ${ideUpdate}/org.eclipse.cbi.p2repo.analyzers.product_${buildId}_linux.gtk.x86_64.tar.gz
+cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-macosx.cocoa.x86_64.tar.gz ${ideUpdate}/org.eclipse.cbi.p2repo.analyzers.product_${buildId}_macosx.cocoa.x86_64.tar.gz
+cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-win32.win32.x86_64.zip ${ideUpdate}/org.eclipse.cbi.p2repo.analyzers.product_${buildId}_win32.win32.x86_64.zip
 
-cp -r ${build_home}/p2repoSelfReport/reporeports ${ideUpdate}/
+rsync -a ${productroot}/reporeports ${ideUpdate}/
