@@ -4,7 +4,7 @@
 
 # The default for build home is simply where I do my local build. Feel free to change in your local copy. 
 build_home=${WORKSPACE:-/home/davidw/gitCBI}
-propertiesfile="${build_home}/org.eclipse.cbi.p2repo.analyzers/org.eclipse.cbi.p2repo.analyzers.product/target/mavenproperties.properties"
+propertiesfile="${build_home}/org.eclipse.cbi.p2repo.analyzers/releng/org.eclipse.cbi.p2repo.analyzers.product/target/mavenproperties.properties"
 sourceProperties="${build_home}/mavenproperties.shsource"
 phpProperties="${build_home}/mavenproperties.php"
 
@@ -25,7 +25,7 @@ ideUpdate=${baseDL}/${updateRelease}/${buildId}
 #headlessUpdate=${baseDL}/headless/${updateRelease}/${buildId}
 
 deployRepos ${ideUpdate} ${build_home}/org.eclipse.cbi.p2repo.analyzers/releng/org.eclipse.cbi.p2repo.analyzers.repository/target/repository
-#deployRepos ${headlessUpdate} ${build_home}/org.eclipse.cbi.p2repo.analyzers/org.eclipse.cbi.p2repo.cli.product/target/repository
+#deployRepos ${headlessUpdate} ${build_home}/org.eclipse.cbi.p2repo.analyzers/releng/org.eclipse.cbi.p2repo.cli.product/target/repository
 
 # save away "data" from the build, as well as the deployable headless products
 cp ${build_home}/aggr/buildOutput.txt ${ideUpdate}
