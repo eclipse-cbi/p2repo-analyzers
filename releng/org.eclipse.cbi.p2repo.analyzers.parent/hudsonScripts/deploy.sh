@@ -112,4 +112,4 @@ cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-linux.gtk.x86_64.tar.
 cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-macosx.cocoa.x86_64.tar.gz ${ideUpdate}/org.eclipse.cbi.p2repo.analyzers.product_${buildId}_macosx.cocoa.x86_64.tar.gz
 cp ${productroot}/org.eclipse.cbi.p2repo.analyzers.product-win32.win32.x86_64.zip ${ideUpdate}/org.eclipse.cbi.p2repo.analyzers.product_${buildId}_win32.win32.x86_64.zip
 
-rsync -a ${productroot}/reporeports ${ideUpdate}/
+rsync -a ${build_home}/output/reporeports ${ideUpdate}/
