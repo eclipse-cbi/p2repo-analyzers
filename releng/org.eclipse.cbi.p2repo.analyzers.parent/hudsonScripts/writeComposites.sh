@@ -5,7 +5,7 @@ function writeArtifactsHeader
     outfile=$1
     printf "%s\n" "<?xml version='1.0' encoding='UTF-8'?>" > ${outfile}
     printf "%s\n" "<?compositeArtifactRepository version='1.0.0'?>" >> ${outfile}
-    printf "%s\n" "<repository name='Eclipse CBI p2 Repository Aggregator'  type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>" >> ${outfile}
+    printf "%s\n" "<repository name='Eclipse CBI p2 Repository Analyzers'  type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>" >> ${outfile}
     printf "%s\n" "  <properties size='3'>" >> ${outfile}
     printf "%s\n" "    <property name='p2.timestamp' value='1313779613118'/>" >> ${outfile}
     printf "%s\n" "    <property name='p2.compressed' value='true'/>" >> ${outfile}
@@ -20,7 +20,7 @@ function writeContentHeader
     outfile=$1
     printf "%s\n" "<?xml version='1.0' encoding='UTF-8'?>" > ${outfile}
     printf "%s\n" "<?compositeMetadataRepository version='1.0.0'?>" >> ${outfile}
-    printf "%s\n" "<repository name='Eclipse CBI p2 Repository Aggregator'  type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>" >> ${outfile}
+    printf "%s\n" "<repository name='Eclipse CBI p2 Repository Analyzers'  type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>" >> ${outfile}
     printf "%s\n" "  <properties size='3'>" >> ${outfile}
     printf "%s\n" "    <property name='p2.timestamp' value='1313779613118'/>" >> ${outfile}
     printf "%s\n" "    <property name='p2.compressed' value='true'/>" >> ${outfile}
@@ -63,12 +63,12 @@ function writeChildren
 
 }
 
-repoRoots=("/home/data/httpd/download.eclipse.org/cbi/updates/aggregator/ide/4.6" "/home/data/httpd/download.eclipse.org/cbi/updates/aggregator/headless/4.6")
+repoRoots=("/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/4.6")
 # Normally "writeRepoRoots" is the same as "repoRoots", but might not always be, plus
 # it is very handy for testing this script not to have to write to the "production" area.
 #writeRepoRoots=("${PWD}/ide" "${PWD}/headless")
 writeRepoRoots=(${repoRoots[@]})
-indices=(0 1)
+indices=(0)
 for index in ${indices[@]} 
 do
     #echo -e "[DEBUG] index: ${index}\n"
