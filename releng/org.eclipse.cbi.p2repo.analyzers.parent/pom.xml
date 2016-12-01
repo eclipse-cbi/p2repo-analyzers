@@ -462,7 +462,7 @@
             <environment>
               <os>solaris</os>
               <ws>gtk</ws>
-              <arch>sparc</arch>
+              <arch>sparcv9</arch>
             </environment>
             <environment>
               <os>solaris</os>

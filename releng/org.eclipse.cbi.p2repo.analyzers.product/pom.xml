@@ -3,9 +3,10 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
-  <artifactId>org.eclipse.cbi.p2repo.analyzers.product</artifactId>
   <packaging>eclipse-repository</packaging>
+  <groupId>org.eclipse.cbi</groupId>
+  <artifactId>org.eclipse.cbi.p2repo.analyzers.product</artifactId>
+  <version>2.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>org.eclipse.cbi</groupId>
@@ -13,8 +14,55 @@
     <version>2.0.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.cbi.p2repo.analyzers.parent</relativePath>
   </parent>
+
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <format>'${buildId}'</format>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <includePackedArtifacts>false</includePackedArtifacts>
+          <dependency-resolution>
+            <extraRequirements>
+              <requirement>
+                <id>org.eclipse.update.configurator</id>
+                <type>p2-installable-unit</type>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-feature</type>
+                <id>org.eclipse.equinox.executable</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+            </extraRequirements>
+          </dependency-resolution>
+          <environments>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-repository-plugin</artifactId>
@@ -54,10 +102,34 @@
             <configuration>
               <formats>
                 <win32>zip</win32>
-                <linux>tar.gz</linux>
                 <macosx>tar.gz</macosx>
+                <linux>tar.gz</linux>
               </formats>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <id>saveproperties</id>
+            <configuration>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <directory>saveproperties</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
