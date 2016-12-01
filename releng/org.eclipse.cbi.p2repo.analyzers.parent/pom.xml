@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <skipTests>true</skipTests>
+    <skipTests>false</skipTests>
     <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     <buildTimestamp>${maven.build.timestamp}</buildTimestamp>
     <buildType>I</buildType>
