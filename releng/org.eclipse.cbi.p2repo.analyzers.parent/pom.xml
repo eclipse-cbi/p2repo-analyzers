@@ -14,7 +14,7 @@
     <buildTimestamp>${maven.build.timestamp}</buildTimestamp>
     <buildType>I</buildType>
     <buildId>${buildType}${buildTimestamp}</buildId>
-    <comparator.repo>http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/</comparator.repo>
+    <comparator.repo>http://download.eclipse.org/cbi/updates/analyzers/4.6/</comparator.repo>
     <!-- For using Tycho 23.1 (currently "staged", removed staged repo below, once released) -->
     <tycho-version>0.26.0</tycho-version>
     <tycho-extras.version>0.26.0</tycho-extras.version>
@@ -52,7 +52,7 @@
       the comparatorRepo but the comparator can use a composite whereas the
       reference repo needs to be absolute file location of simple repository.
     -->
-    <referenceRepo>/home/data/httpd/download.eclipse.org/cbi/updates/aggregator/ide/4.6/I20161119-0315</referenceRepo>
+    <referenceRepo>/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/4.6/I20161119-0315</referenceRepo>
 
   </properties>
 
