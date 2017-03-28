@@ -65,7 +65,7 @@
             <dd>Similar to the "Feature versions" report, this report scans the repo, looking for "non-groups" (bundles) and tabulates the comparison to reference repository. 
             The comparisons to pay most attention to are those that "decrease" from last release, to the current release. Note: this report does not correctly handle cases where 
             there are more than one version of a bundle in the repo. Sometimes those are not valid to have anyway, but sometimes it is valid, and this report does not 
-            have enough logic to know what to do with those that occur with same ID, but multiple versions. You can usually just ignore those cmparisons in this report.</dd>
+            have enough logic to know what to do with those that occur with same ID, but multiple versions. You can usually just ignore those comparisons in this report.</dd>
             <dt>
                 <a href="reports/versionPatternCheck.txt">Bundles and Features not using 4 part versions</a>
             </dt>
@@ -90,7 +90,7 @@
             <dt>
                 reports/greedyReport.html   Optional Runtime Requirements and Greediness</a>
             </dt>
-            <dd> NOTE: This "greedyness test" has been disabled until memory issues can be fixed/improved. <br />
+            <dd> NOTE: This "greediness test" has been disabled until memory issues can be fixed/improved. <br />
             See <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=424376">bug 424376</a><br />
             This report summarizes the 'required' element in the content.jar/xml file and lists those that appear to be
                 created with the new p2 publishers and those with old (and, cases where this results in overlap: some greedy, some
@@ -159,7 +159,7 @@
             <dt>
                 <a href="reports/versionPatterns.txt">Version Qualifier Patterns</a>
             </dt>
-            <dd>This is an exploratory report of the the types or patterns of version qualifers by bundles and features in the
+            <dd>This is an exploratory report of the the types or patterns of version qualifiers by bundles and features in the
                 repository. Longer term, this report can be improved to spot typos and also find bundles or features in the
                 repository that do not use 4 part versioning. (A report, above, also detects lack of 4 part versioning, but is based
                 on jars, found in common directory, rather than all of content metadata in repository.)</dd>
