@@ -63,7 +63,7 @@ function writeChildren
 
 }
 
-repoRoots=("/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/4.6")
+repoRoots=("/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/4.7")
 # Normally "writeRepoRoots" is the same as "repoRoots", but might not always be, plus
 # it is very handy for testing this script not to have to write to the "production" area.
 #writeRepoRoots=("${PWD}/ide" "${PWD}/headless")
