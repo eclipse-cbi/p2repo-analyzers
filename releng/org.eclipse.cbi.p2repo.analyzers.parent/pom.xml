@@ -67,6 +67,8 @@
               <artifactId>tycho-compiler-plugin</artifactId>
               <version>${tycho-version}</version>
               <configuration>
+                <!-- default of 'useProjectSettings' was changed to 'true' in Tycho 1.0 -->
+                <useProjectSettings>false</useProjectSettings>
                 <compilerArgs>
                   <args>${code.ignoredWarnings}</args>
                   <args>-verbose</args>
