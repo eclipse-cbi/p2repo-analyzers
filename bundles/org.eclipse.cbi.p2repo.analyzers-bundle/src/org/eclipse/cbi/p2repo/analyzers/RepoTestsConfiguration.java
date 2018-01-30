@@ -87,10 +87,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
 
     @Override
     public URI getReportRepoURI() {
-        URI repoURL = URI.create(getReportRepoDir());
-        if (repoURL.getScheme() == null) {
-            repoURL = URI.create("file://" + getReportRepoDir());
-        }
+        URI repoURL = (new File(getReportRepoDir()).toURI());
         return repoURL;
     }
 
