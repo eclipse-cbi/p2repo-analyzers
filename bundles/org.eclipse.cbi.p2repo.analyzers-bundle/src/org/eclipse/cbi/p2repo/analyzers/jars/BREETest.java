@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2007, 2018 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -27,13 +27,16 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
+import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.FullJarNameParser;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
-import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
 import org.osgi.framework.Constants;
 
@@ -68,6 +71,9 @@ public class BREETest extends TestJars {
 
     private static final String            outputFilename = "breedata.txt";
     private static final FullJarNameParser nameParser     = new FullJarNameParser();
+    private static final Pattern breeFilter = Pattern.compile("\\(&\\(osgi.ee=\\w+\\)\\(version=\\d.\\d\\)");
+    private static final Pattern breeName = Pattern.compile("osgi.ee=\\w+");
+    private static final Pattern breeVersion = Pattern.compile("version=\\d.\\d");
 
     public static void main(String[] args) {
 
@@ -145,6 +151,9 @@ public class BREETest extends TestJars {
                 checked++;
                 try {
                     String bree = BundleJarUtils.getJarManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+                    if (bree == null) {
+                        bree = parseBREECapability(BundleJarUtils.getJarManifestEntry(child, Constants.REQUIRE_CAPABILITY));
+                    }
                     boolean needsBree = needsBree(child);
                     if ((bree != null) && (bree.length() > 0)) {
                         // has BREE, confirm is java file
@@ -173,6 +182,32 @@ public class BREETest extends TestJars {
         printreport(invalidJars, javaWithBree, nonjavaWithBree, javaWithoutBree, nonJavaNoBREE, totalsize, checked);
 
         return failuresOccured;
+    }
+
+    private String parseBREECapability(String reqCap) {
+        if (reqCap != null) {
+            String[] requires = reqCap.split(",");
+            for (String require : requires) {
+                String[] split = require.split(";");
+                if ("osgi.ee".equals(split[0]) && split[1] != null && split[1].startsWith("filter:=")) {
+                    String filter = split[1].substring(9, split[1].length() - 1);
+                    Matcher m = breeFilter.matcher(filter);
+                    List<String> brees = new ArrayList<>();
+                    while (m.find()) {
+                        String group = m.group();
+                        Matcher nameMatcher = breeName.matcher(group);
+                        Matcher verMatcher = breeVersion.matcher(group);
+                        if (nameMatcher.find() && verMatcher.find()) {
+                            String name = nameMatcher.group().split("=")[1];
+                            String version = verMatcher.group().split("=")[1];
+                            brees.add(name + "-" + version);
+                        }
+                    }
+                    return brees.stream().collect(Collectors.joining(","));
+                }
+            }
+        }
+        return null;
     }
 
     private boolean needsBree(File child) {
