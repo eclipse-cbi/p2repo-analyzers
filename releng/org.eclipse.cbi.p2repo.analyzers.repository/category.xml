@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="org.eclipse.cbi.p2repo.analyzers.feature" version="2.0.0.qualifier">
+   <feature id="org.eclipse.cbi.p2repo.analyzers.feature" version="2.0.1.qualifier">
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
-   <feature id="org.eclipse.cbi.p2repo.analyzers.feature.source" version="2.0.0.qualifier">
+   <feature id="org.eclipse.cbi.p2repo.analyzers.feature.source" version="2.0.1.qualifier">
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
    <bundle id="org.eclipse.cbi.p2repo.analyzers.ui" version="2.0.0.qualifier">
