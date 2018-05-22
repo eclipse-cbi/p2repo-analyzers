@@ -67,7 +67,7 @@ public class VerifyStep {
                 reader.close();
 
                 String outString = out.toString();
-                if (!JAR_VERIFIED.equals(outString)) {
+                if (!outString.contains(JAR_VERIFIED)) {
                     if (outString.contains("Warning:")) {
                         warnings.append(outString);
                     } else {
