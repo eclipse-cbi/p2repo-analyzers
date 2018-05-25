@@ -62,7 +62,9 @@ public class VerifyStep {
                 StringBuilder out = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    out.append(line);
+                    if (!line.startsWith("Picked up JAVA_TOOL_OPTIONS")) {
+                        out.append(line);
+                    }
                 }
                 reader.close();
 
