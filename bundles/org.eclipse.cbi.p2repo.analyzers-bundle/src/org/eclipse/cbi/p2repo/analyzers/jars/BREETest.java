@@ -12,6 +12,7 @@
 package org.eclipse.cbi.p2repo.analyzers.jars;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -122,10 +123,10 @@ public class BREETest extends TestJars {
                 }
             }
         }
-        // List errors = new ArrayList();
         Map javaWithBree = new HashMap();
         List invalidJars = new ArrayList();
         List nonjavaWithBree = new ArrayList();
+        Map plugins = new HashMap();
         List javaWithoutBree = new ArrayList();
         int nonJavaNoBREE = 0;
         boolean failuresOccured = false;
@@ -135,17 +136,6 @@ public class BREETest extends TestJars {
         for (int i = 0; i < totalsize; i++) {
             File child = children[i];
             String name = child.getName();
-            // with kepler, since we have all jars on file system, in addition
-            // to
-            // pack.gz files,
-            // we do not need to check the pack.gz ones. We can assume they are
-            // idential to their .jar version.
-            // if (child.getName().toLowerCase().endsWith(EXTENSION_PACEKD_JAR))
-            // {
-            // child = getFileFromPACKEDJAR(child);
-            // }
-            // if (child != null) {
-
             String bundleName = getBundleName(name);
             if ((bundleName != null) && !breeExceptions.contains(bundleName)) {
                 checked++;
@@ -158,6 +148,7 @@ public class BREETest extends TestJars {
                     if ((bree != null) && (bree.length() > 0)) {
                         // has BREE, confirm is java file
                         if (needsBree) {
+                            plugins.put(bundleName, bree);
                             incrementCounts(javaWithBree, bree);
                         } else {
                             trackFalseInclusions(nonjavaWithBree, child, bree);
@@ -179,7 +170,7 @@ public class BREETest extends TestJars {
             }
 
         }
-        printreport(invalidJars, javaWithBree, nonjavaWithBree, javaWithoutBree, nonJavaNoBREE, totalsize, checked);
+        printreport(invalidJars, javaWithBree, nonjavaWithBree, javaWithoutBree, plugins, nonJavaNoBREE, totalsize, checked);
 
         return failuresOccured;
     }
@@ -222,7 +213,7 @@ public class BREETest extends TestJars {
         return false;
     }
 
-    private void printreport(List invalidJars, Map javaWithBree, List nonjavaWithBree, List javaWithoutBree, int nonJavaNoBREE,
+    private void printreport(List invalidJars, Map javaWithBree, List nonjavaWithBree, List javaWithoutBree, Map<String, String> plugins, int nonJavaNoBREE,
             int totalsize, int checked) throws IOException {
 
         ReportWriter reportWriter = getReportWriter();
@@ -264,6 +255,7 @@ public class BREETest extends TestJars {
             reportWriter.writeln();
             Collections.sort(nonjavaWithBree);
             BREEFileData breefiledata = null;
+            
             for (Iterator iterator = nonjavaWithBree.iterator(); iterator.hasNext();) {
                 Object object = iterator.next();
                 if (object instanceof BREEFileData) {
@@ -273,6 +265,21 @@ public class BREETest extends TestJars {
                     throw new Error("Programming error.");
                 }
             }
+
+            reportWriter.writeln();
+            reportWriter.writeln("    List of all plug-ins with BREE: " + javaWithBree.size());
+            reportWriter.writeln();
+            
+            plugins.entrySet().stream()
+            .sorted(Map.Entry.<String, String>comparingByValue().reversed()) 
+            .forEach(entry-> {
+                try {
+                    reportWriter.printf("%24s\t%s\n",entry.getValue(), entry.getKey());
+                } catch (FileNotFoundException e) {
+                    throw new Error("Programming error in List of all plug-ins with BREE");
+                }
+            }); // or any other terminal method
+           
         } finally {
             reportWriter.close();
         }
