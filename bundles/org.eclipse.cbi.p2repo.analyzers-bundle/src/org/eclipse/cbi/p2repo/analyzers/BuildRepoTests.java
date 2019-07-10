@@ -56,7 +56,7 @@ public class BuildRepoTests {
     private String              reportOutputDirectoryName;
 
     /**
-     * variable to catch errors in use. initializing direcotry should only be
+     * variable to catch errors in use. initializing directory should only be
      * done once, per session or will end up deleting reports generated earlier
      * in session.
      *
@@ -83,7 +83,7 @@ public class BuildRepoTests {
         if (mainoutputDirectory == null) {
             mainoutputDirectory = System.getProperty("user.home") + "/temp/p2repo";
             System.out.println(
-                    "WARNING: no output direcotry explicitly set, so assumed to be based off user.home: " + mainoutputDirectory);
+                    "WARNING: no output directory explicitly set, so assumed to be based off user.home: " + mainoutputDirectory);
         }
 
         return mainoutputDirectory;
@@ -106,7 +106,7 @@ public class BuildRepoTests {
             if (topReportDir.exists()) {
                 success = removeDirectory(topReportDir);
                 if (!success) {
-                    handleFatalError("could not remove top level report direcotry: " + topReportDir);
+                    handleFatalError("could not remove top level report directory: " + topReportDir);
                 }
             }
             String reportDirName = getReportOutputDirectory();
