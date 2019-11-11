@@ -78,23 +78,23 @@
       type="InstallableUnit">
       <unit
         id="org.eclipse.core.runtime"
-        version="3.13.0.v20170207-1030" />
+        version="3.16.0.v20190823-1314" />
       <unit
         id="org.eclipse.equinox.concurrent"
-        version="1.1.0.v20130327-1442" />
+        version="1.1.400.v20190621-0852" />
       <unit
         id="org.eclipse.equinox.core.feature.feature.group"
-        version="1.4.2.v20180210-1608" />
+        version="1.10.0.v20190830-1434" />
       <unit
         id="org.eclipse.equinox.executable.feature.group"
-        version="3.7.2.v20171108-1834" />
+        version="3.8.500.v20190907-0428" />
       <unit
         id="org.eclipse.equinox.p2.core.feature.feature.group"
-        version="1.4.1.v20170928-1405" />
+        version="1.6.300.v20190903-0934" />
       <unit
         id="org.eclipse.platform.feature.group"
-        version="4.7.3.v20180330-0640" />
-      <repository location="http://download.eclipse.org/eclipse/updates/4.7/R-4.7.3a-201803300640/" />
+        version="4.13.0.v20190916-1323" />
+      <repository location="http://download.eclipse.org/eclipse/updates/4.13/" />
     </location>
     <location
       includeAllPlatforms="false"
