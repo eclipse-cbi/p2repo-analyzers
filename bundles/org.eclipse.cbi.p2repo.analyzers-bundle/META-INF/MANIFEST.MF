@@ -29,3 +29,4 @@ Export-Package: org.eclipse.cbi.p2repo.analyzers,
  org.eclipse.cbi.p2repo.analyzers.utils,
  templateFiles
 Bundle-ClassPath: .
+Automatic-Module-Name: org.eclipse.cbi.p2repo.analyzers

@@ -18,3 +18,4 @@ Export-Package: org.eclipse.cbi.p2repo.analyzers.common,
  org.eclipse.cbi.p2repo.analyzers.common.checker,
  org.eclipse.cbi.p2repo.analyzers.common.reporter,
  org.eclipse.cbi.p2repo.analyzers.common.utils
+Automatic-Module-Name: org.eclipse.cbi.p2repo.analyzers.common

@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.equinox.common;bundle-version=3.6.200,
  org.eclipse.cbi.p2repo.analyzers,
  org.eclipse.equinox.p2.core
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: org.eclipse.cbi.p2repo.analyzers.junit
