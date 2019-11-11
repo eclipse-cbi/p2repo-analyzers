@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 itemis AG (http://www.itemis.eu) and others.
+ * Copyright (c) 2014, 2019 itemis AG (http://www.itemis.eu) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,26 +29,20 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 	private License standardLicense2010;
 	private License standardLicense2011;
 	private License standardLicense2014;
+	private License standardLicense2017;
 
 	public LicenseConsistencyChecker() {
 		Properties properties = CheckerUtils.loadCheckerProperties(LicenseConsistencyChecker.class);
+		String body2017 = properties.getProperty("license2017");
 		String body2014 = properties.getProperty("license2014");
 		String body2011 = properties.getProperty("license2011");
 		String body2010 = properties.getProperty("license2010");
+		this.standardLicense2017 = new License(null, body2017, null);
 		this.standardLicense2014 = new License(null, body2014, null);
 		this.standardLicense2011 = new License(null, body2011, null);
 		this.standardLicense2010 = new License(null, body2010, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.cbi.p2repo.analyzers.common.IP2RepositoryChecker#check(java.util.
-	 * function.Consumer,
-	 * org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryDescription,
-	 * org.eclipse.equinox.p2.metadata.IInstallableUnit)
-	 */
 	@Override
 	public void check(final Consumer<? super CheckReport> consumer, final P2RepositoryDescription descr,
 			final IInstallableUnit feature) {
@@ -77,14 +71,17 @@ public class LicenseConsistencyChecker implements IInstalationUnitChecker {
 				report.setType(ReportType.BAD_GUY);
 				report.setCheckResult("Old 2011 License");
 			} else if (this.standardLicense2014.getUUID().equals(featureLicense.getUUID())) {
+				report.setType(ReportType.BAD_GUY);
+				report.setCheckResult("Old 2014 License");
+			} else if (this.standardLicense2017.getUUID().equals(featureLicense.getUUID())) {
 				report.setType(ReportType.INFO);
-				report.setCheckResult("New 2014 License");
+				report.setCheckResult("New 2017 License");
 			} else {
 				// if we get here, we have some kind of bad license, or its
 				// missing.
 				String featureLicenseText = featureLicense.getBody();
 				report.setType(ReportType.NOT_IN_TRAIN);
-				if (featureLicenseText == null || featureLicenseText.length() == 0) {
+				if (featureLicenseText == null || featureLicenseText.isEmpty()) {
 					report.setCheckResult("Missing license content");
 				} else {
 					// "bad" in this context means different from one of the
