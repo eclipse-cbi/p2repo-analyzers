@@ -71,29 +71,32 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
         InputStream inStream = this.getClass().getResourceAsStream(STANDARD_LICENSES_PROPERTIES_FILE);
         properties.load(inStream);
+        String body2017 = properties.getProperty("license2017");
         String body2014 = properties.getProperty("license2014");
         String body2011 = properties.getProperty("license2011");
         String body2010 = properties.getProperty("license2010");
+        ILicense standardLicense2017 = new License(null, body2017, null);
         ILicense standardLicense2014 = new License(null, body2014, null);
         ILicense standardLicense2011 = new License(null, body2011, null);
         ILicense standardLicense2010 = new License(null, body2010, null);
 
         List<IInstallableUnit> noLicense = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> extraLicense = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> license2017 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> license2014 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> license2011 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> license2010 = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> badLicense = new ArrayList<IInstallableUnit>();
-        checkLicenses(standardLicense2014, standardLicense2011, standardLicense2010, allFeatures, license2014, license2011,
+        checkLicenses(standardLicense2017, standardLicense2014, standardLicense2011, standardLicense2010, allFeatures, license2017, license2014, license2011,
                 license2010, badLicense, noLicense, extraLicense);
 
-        printReportLicense(license2014, license2011, license2010, badLicense, noLicense, extraLicense);
+        printReportLicense(license2017, license2014, license2011, license2010, badLicense, noLicense, extraLicense);
         result = ((badLicense.size() > 0) || (extraLicense.size() > 0) || (noLicense.size() > 0));
         return result;
     }
 
-    private void checkLicenses(ILicense platformLicense2014, ILicense platformLicense2011, ILicense platformLicense2010,
-            IQueryResult<IInstallableUnit> allFeatures, List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
+    private void checkLicenses(ILicense platformLicense2017, ILicense platformLicense2014, ILicense platformLicense2011, ILicense platformLicense2010,
+            IQueryResult<IInstallableUnit> allFeatures, List<IInstallableUnit> license2017, List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
             List<IInstallableUnit> license2010, List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense,
             List<IInstallableUnit> extraLicense) {
         System.out.println("Number of IUs during license check: " + allFeatures.toUnmodifiableSet().size());
@@ -122,10 +125,14 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                 license2014.add(feature);
                 continue;
             }
+            if (platformLicense2017.getUUID().equals(featureLicense.getUUID())) {
+                license2017.add(feature);
+                continue;
+            }
             // if we get here, we have some kind of bad license, or its
             // missing.
             String featureLicenseText = featureLicense.getBody();
-            if (featureLicenseText == null || featureLicenseText.length() == 0) {
+            if (featureLicenseText == null || featureLicenseText.isEmpty()) {
                 noLicense.add(feature);
             }
             // "bad" in this context means different from one of the
@@ -137,7 +144,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
     }
 
-    private void printReportLicense(List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
+    private void printReportLicense(List<IInstallableUnit> license2017, List<IInstallableUnit> license2014, List<IInstallableUnit> license2011,
             List<IInstallableUnit> license2010, List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense,
             List<IInstallableUnit> extraLicense) {
 
@@ -150,7 +157,8 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printparagraph(outfileWriter, "Repository ('repoURLToTest'): " + getRepoURLToTest());
             printparagraph(outfileWriter, "\toutput: " + outfile.getAbsolutePath());
             printHeader(outfileWriter, 2, "License Consistency Summary");
-            println(outfileWriter, "Features with conforming (2014) license: " + license2014.size());
+            println(outfileWriter, "Features with conforming (2017) license: " + license2017.size());
+            println(outfileWriter, "Features with old (2014) license: " + license2014.size());
             println(outfileWriter, "Features with old (2011) license: " + license2011.size());
             println(outfileWriter, "Features with old (2010) license: " + license2010.size());
             println(outfileWriter, "Features with different (or no) license: " + badLicense.size());
@@ -190,9 +198,14 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             for (IInstallableUnit unit : license2011) {
                 println(outfileWriter, printableIdString(unit));
             }
-            printHeader(outfileWriter, 3, "Features with current (2014) license");
+            printHeader(outfileWriter, 3, "Features with old (2014) license");
             Collections.sort(license2014, new IUIdComparator());
             for (IInstallableUnit unit : license2014) {
+                println(outfileWriter, printableIdString(unit));
+            }
+            printHeader(outfileWriter, 3, "Features with current (2017) license");
+            Collections.sort(license2017, new IUIdComparator());
+            for (IInstallableUnit unit : license2017) {
                 println(outfileWriter, printableIdString(unit));
             }
         } catch (IOException e) {
