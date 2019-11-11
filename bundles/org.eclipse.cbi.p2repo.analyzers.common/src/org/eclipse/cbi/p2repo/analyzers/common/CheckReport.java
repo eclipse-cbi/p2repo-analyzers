@@ -70,11 +70,6 @@ public class CheckReport {
 		this.timeMs = timeMs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -87,9 +82,6 @@ public class CheckReport {
 		return builder.toString();
 	}
 
-	/**
-	 * @return
-	 */
 	public String getVersionedId() {
 		return iu.getId() + (iuVersion != null ? "_" + iuVersion : "");
 	}

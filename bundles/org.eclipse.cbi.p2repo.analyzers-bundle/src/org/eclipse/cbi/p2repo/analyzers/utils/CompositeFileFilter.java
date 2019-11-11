@@ -28,11 +28,6 @@ public class CompositeFileFilter implements FilenameFilter {
         return new CompositeFileFilter(filters);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
-     */
     @Override
     public boolean accept(File dir, String name) {
         boolean result = false;

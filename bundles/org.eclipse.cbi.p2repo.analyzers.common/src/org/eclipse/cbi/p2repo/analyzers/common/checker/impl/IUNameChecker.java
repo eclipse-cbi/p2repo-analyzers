@@ -21,15 +21,6 @@ import org.eclipse.cbi.p2repo.analyzers.common.utils.IUUtil;
  */
 public class IUNameChecker implements IInstalationUnitChecker {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.cbi.p2repo.analyzers.common.checker.IInstalationUnitChecker#check(
-	 * java.util.function.Consumer,
-	 * org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryDescription,
-	 * org.eclipse.equinox.p2.metadata.IInstallableUnit)
-	 */
 	@Override
 	public void check(Consumer<? super CheckReport> consumer, P2RepositoryDescription descr, IInstallableUnit iu) {
 		CheckReport report = createReport(iu);

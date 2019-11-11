@@ -20,22 +20,10 @@ public class P2AnalyzerAction implements IObjectActionDelegate {
 	private ISelection selection;
 	private IWorkbenchPart targetPart;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
-	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
-	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
 	public void run(IAction action) {
 		if (this.selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) this.selection;
@@ -61,13 +49,6 @@ public class P2AnalyzerAction implements IObjectActionDelegate {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
-	 * IAction, org.eclipse.jface.viewers.ISelection)
-	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
