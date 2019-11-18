@@ -168,10 +168,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printHeader(outfileWriter, 2, "Details");
 
             printHeader(outfileWriter, 3, "Features with no license attribute");
-            Collections.sort(noLicense, new IUIdComparator());
-            for (IInstallableUnit unit : noLicense) {
-                println(outfileWriter, printableIdString(unit));
-            }
+            printUnits(outfileWriter, noLicense);
 
             printHeader(outfileWriter, 3, "Features with different (or no) license (and first few lines of license text)");
             Collections.sort(badLicense, new IUIdComparator());
@@ -189,25 +186,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                 printparagraph(outfileWriter, shortLicenseText);
             }
             printHeader(outfileWriter, 3, "Features with old (2010) license");
-            Collections.sort(license2010, new IUIdComparator());
-            for (IInstallableUnit unit : license2010) {
-                println(outfileWriter, printableIdString(unit));
-            }
+            printUnits(outfileWriter, license2010);
             printHeader(outfileWriter, 3, "Features with old (2011) license");
-            Collections.sort(license2011, new IUIdComparator());
-            for (IInstallableUnit unit : license2011) {
-                println(outfileWriter, printableIdString(unit));
-            }
+            printUnits(outfileWriter, license2011);
             printHeader(outfileWriter, 3, "Features with old (2014) license");
-            Collections.sort(license2014, new IUIdComparator());
-            for (IInstallableUnit unit : license2014) {
-                println(outfileWriter, printableIdString(unit));
-            }
+            printUnits(outfileWriter, license2014);
             printHeader(outfileWriter, 3, "Features with current (2017) license");
-            Collections.sort(license2017, new IUIdComparator());
-            for (IInstallableUnit unit : license2017) {
-                println(outfileWriter, printableIdString(unit));
-            }
+            printUnits(outfileWriter, license2017);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -225,6 +210,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         // fail("Errors in license consistency. For list, see " +
         // outfile.getAbsolutePath());
         // }
+    }
+
+    private void printUnits(FileWriter outfileWriter, List<IInstallableUnit> listOfUnits) throws IOException {
+        Collections.sort(listOfUnits, new IUIdComparator());
+        for (IInstallableUnit unit : listOfUnits) {
+            println(outfileWriter, printableIdString(unit));
+        }
     }
 
     private String printableIdString(IInstallableUnit unit) {
