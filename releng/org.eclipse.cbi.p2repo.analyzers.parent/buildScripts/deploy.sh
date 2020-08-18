@@ -2,6 +2,11 @@
 
 # This job is ran after a clean build is ran in the "cleanAndDeploy" Jenkins job.
 
+# Bash strict-mode
+set -o errexit
+set -o nounset
+set -o pipefail
+
 # The default for build home is simply where I do my local build. Feel free to change in your local copy. 
 build_home=${WORKSPACE:-/home/davidw/gitCBI}
 
@@ -84,7 +89,7 @@ function copyToServer {
   scp "${source}" "${user}@${host}:${destination}"
 }
 
-source $sourceProperties
+source "${sourceProperties}"
 
 baseDL=/home/data/httpd/download.eclipse.org/cbi/updates/analyzers
 ideUpdate=${baseDL}/${updateRelease}/${buildId}
