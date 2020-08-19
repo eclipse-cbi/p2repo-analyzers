@@ -7,12 +7,17 @@
 # SPDX-License-Identifier: EPL-2.0
 #*******************************************************************************
 
+# Write composite repo files. 
+# This script needs to run on the CBI JIPP.
+
 # This script is similar to /org.eclipse.cbi.p2repo.releng.parent/buildScripts/writeComposites.sh
 
 # Bash strict-mode
 set -o errexit
 set -o nounset
 set -o pipefail
+
+IFS=$'\n\t'
 
 script_name="$(basename ${0})"
 
@@ -65,7 +70,7 @@ artifact.repository.factory.order=compositeArtifacts.xml
 EOL
 }
 
-write_composite_repo () {
+write_composite_repo() {
   local outfile=$1
   local repoDir=$2
   local type=$3
