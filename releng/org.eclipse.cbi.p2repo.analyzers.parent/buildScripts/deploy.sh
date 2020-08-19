@@ -75,9 +75,10 @@ host=projects-storage.eclipse.org
 function deployRepos {
   local source=$1
   local destination=$2
-  mkdir -p "${destination}"
-  #cp -r "${builtRepo}/*" "${newRepo}/"
-  scp -r "${source}/*" "${user}@${host}:${destination}/"
+  #mkdir -p "${destination}"
+  ssh "${user}@${host}" mkdir -p "${destination}"
+  #cp -r "${builtRepo}"/* "${newRepo}/"
+  scp -r "${source}"/* "${user}@${host}:${destination}/"
 
   #TODO: add mirror URL, etc.
 }
