@@ -39,7 +39,7 @@ public abstract class TestJars extends BuildRepoTests {
                 bundleDirectory = property + PLUGINS_DIR;
                 inputdir = new File(bundleDirectory);
                 if (!(inputdir.exists() && inputdir.isDirectory())) {
-                    handleFatalError("bundle direcotry (" + bundleDirectory + ") must be an existing directory.");
+                    handleFatalError("bundle directory (" + bundleDirectory + ") must be an existing directory.");
                 }
             }
         }
@@ -73,7 +73,7 @@ public abstract class TestJars extends BuildRepoTests {
                 featureDirectory = property + FEATURES_DIR;
                 inputdir = new File(featureDirectory);
                 if (!(inputdir.exists() && inputdir.isDirectory())) {
-                    handleFatalError("feature direcotry (" + featureDirectory + ") must be an existing directory.");
+                    handleFatalError("feature directory (" + featureDirectory + ") must be an existing directory.");
                 }
             }
         }
