@@ -10,12 +10,11 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.jars;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -133,7 +132,7 @@ public class SignerTest extends TestJars {
     }
     final Function1<PlainCheckReport, Boolean> _function = (PlainCheckReport it) -> {
       ReportType _type = it.getType();
-      return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
+      return Boolean.valueOf(Objects.equals(_type, ReportType.NOT_IN_TRAIN));
     };
     final boolean containsErrors = IterableExtensions.<PlainCheckReport>exists(checkReports, _function);
     this.printSummary(checkReports);
@@ -173,7 +172,7 @@ public class SignerTest extends TestJars {
       _builder.append("Valid signatures: ");
       final Function1<PlainCheckReport, Boolean> _function_1 = (PlainCheckReport it) -> {
         ReportType _type = it.getType();
-        return Boolean.valueOf(Objects.equal(_type, ReportType.INFO));
+        return Boolean.valueOf(Objects.equals(_type, ReportType.INFO));
       };
       int _size_2 = IterableExtensions.size(IterableExtensions.<PlainCheckReport>filter(reports, _function_1));
       _builder.append(_size_2);
@@ -182,7 +181,7 @@ public class SignerTest extends TestJars {
       _builder.append("Explicitly excluded from signing: ");
       final Function1<PlainCheckReport, Boolean> _function_2 = (PlainCheckReport it) -> {
         ReportType _type = it.getType();
-        return Boolean.valueOf(Objects.equal(_type, ReportType.BAD_GUY));
+        return Boolean.valueOf(Objects.equals(_type, ReportType.BAD_GUY));
       };
       int _size_3 = IterableExtensions.size(IterableExtensions.<PlainCheckReport>filter(reports, _function_2));
       _builder.append(_size_3);
@@ -193,7 +192,7 @@ public class SignerTest extends TestJars {
       _builder.append("Invalid or missing signature: ");
       final Function1<PlainCheckReport, Boolean> _function_3 = (PlainCheckReport it) -> {
         ReportType _type = it.getType();
-        return Boolean.valueOf(Objects.equal(_type, ReportType.NOT_IN_TRAIN));
+        return Boolean.valueOf(Objects.equals(_type, ReportType.NOT_IN_TRAIN));
       };
       int _size_4 = IterableExtensions.size(IterableExtensions.<PlainCheckReport>filter(reports, _function_3));
       _builder.append(_size_4);
@@ -214,10 +213,10 @@ public class SignerTest extends TestJars {
         {
           int _length = report.getFileName().length();
           int _minus_1 = (longestFileName - _length);
-          final String indent = Strings.repeat(" ", _minus_1);
+          final String indent = " ".repeat(_minus_1);
           int _length_1 = report.getIuType().length();
           int _minus_2 = (10 - _length_1);
-          final String trailing = Strings.repeat(" ", _minus_2);
+          final String trailing = " ".repeat(_minus_2);
           StringConcatenation _builder_1 = new StringConcatenation();
           _builder_1.append(" ");
           String _fileName = report.getFileName();

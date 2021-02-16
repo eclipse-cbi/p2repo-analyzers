@@ -7,7 +7,6 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
-import com.google.common.base.Objects;
 import com.google.common.xml.XmlEscapers;
 import java.io.File;
 import java.io.PrintWriter;
@@ -15,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
@@ -117,7 +117,7 @@ public class JunitXmlReport implements ICheckReporter {
                   _builder_1.newLineIfNotEmpty();
                   {
                     String _checkResult = report.getCheckResult();
-                    boolean _notEquals = (!Objects.equal(_checkResult, null));
+                    boolean _notEquals = (!Objects.equals(_checkResult, null));
                     if (_notEquals) {
                       _builder_1.append("\t");
                       _builder_1.append("\t");
@@ -125,7 +125,7 @@ public class JunitXmlReport implements ICheckReporter {
                       _builder_1.append(_escape, "\t\t");
                       {
                         String _additionalData = report.getAdditionalData();
-                        boolean _notEquals_1 = (!Objects.equal(_additionalData, null));
+                        boolean _notEquals_1 = (!Objects.equals(_additionalData, null));
                         if (_notEquals_1) {
                           _builder_1.append(" - ");
                           String _escape_1 = XmlEscapers.xmlAttributeEscaper().escape(report.getAdditionalData());
@@ -180,7 +180,7 @@ public class JunitXmlReport implements ICheckReporter {
   }
   
   public String asTag(final ReportType type) {
-    boolean _equals = Objects.equal(type, ReportType.NOT_IN_TRAIN);
+    boolean _equals = Objects.equals(type, ReportType.NOT_IN_TRAIN);
     if (_equals) {
       return "failure";
     } else {

@@ -5,8 +5,6 @@ package org.eclipse.cbi.p2repo.analyzers;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryAnalyser;
 import org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryDescription;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.CheckerRegistry;
@@ -16,16 +14,17 @@ import org.eclipse.cbi.p2repo.analyzers.common.utils.IUUtil;
 import org.eclipse.cbi.p2repo.analyzers.reports.HtmlReport;
 import org.eclipse.cbi.p2repo.analyzers.reports.JunitXmlReport;
 import org.eclipse.cbi.p2repo.analyzers.reports.OverviewReport;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.equinox.p2.core.ProvisionException;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
 
 /**
  * @author dhuebner
  *
  */
 public class P2RepositoryCheck {
-    private List<ICheckReporter> reporter = Lists.newArrayList(new JunitXmlReport(), new OverviewReport(), new HtmlReport());
+    private List<ICheckReporter> reporter = List.of(new JunitXmlReport(), new OverviewReport(), new HtmlReport());
 
     public boolean runChecks(RepoTestsConfiguration configuration) {
         Stopwatch stopwatch = Stopwatch.createStarted();
