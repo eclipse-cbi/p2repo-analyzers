@@ -34,15 +34,15 @@ public class Activator implements BundleActivator {
 	}
 
 	public static IMetadataRepositoryManager getMetadataRepositoryManager() {
-		return (IMetadataRepositoryManager) agent().getService(IMetadataRepositoryManager.SERVICE_NAME);
+		return agent().getService(IMetadataRepositoryManager.class);
 	}
 
 	public static IArtifactRepositoryManager getArtifactRepositoryManager() {
-		return (IArtifactRepositoryManager) agent().getService(IArtifactRepositoryManager.SERVICE_NAME);
+		return agent().getService(IArtifactRepositoryManager.class);
 	}
 
 	private static IProvisioningAgent agent() {
-		return (IProvisioningAgent) ServiceHelper.getService(context, IProvisioningAgent.SERVICE_NAME);
+		return ServiceHelper.getService(context, IProvisioningAgent.class);
 	}
 
 }
