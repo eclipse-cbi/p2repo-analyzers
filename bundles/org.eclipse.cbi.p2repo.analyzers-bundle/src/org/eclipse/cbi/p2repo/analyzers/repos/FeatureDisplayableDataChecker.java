@@ -19,7 +19,6 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.ILicense;
 import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.repos.TestRepo;
 import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 
 public class FeatureDisplayableDataChecker extends TestRepo {

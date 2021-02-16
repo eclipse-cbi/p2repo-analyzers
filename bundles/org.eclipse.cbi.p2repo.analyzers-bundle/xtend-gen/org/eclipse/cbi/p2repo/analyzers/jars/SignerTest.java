@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
-import org.eclipse.cbi.p2repo.analyzers.jars.TestJars;
 import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.CompositeFileFilter;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
