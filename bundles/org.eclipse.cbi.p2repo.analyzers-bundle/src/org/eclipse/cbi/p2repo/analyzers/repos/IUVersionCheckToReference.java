@@ -48,7 +48,7 @@ public class IUVersionCheckToReference extends TestRepo {
             outfileWriter.write("<h1>All IUs</h1>" + EOL + "<p>(except groups, and categories)</p>");
             // The "System.out" lines are for sanity check/debugging purposes.
             outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
-            if (getRepoURLForReference().length() > 0) {
+            if (!getRepoURLForReference().isEmpty()) {
                 outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
                         + EOL);
             }
@@ -189,7 +189,7 @@ public class IUVersionCheckToReference extends TestRepo {
         if (refs != null) {
             for (Iterator iterator = refs.iterator(); iterator.hasNext();) {
                 IInstallableUnit iiu = (IInstallableUnit) iterator.next();
-                if (iiu.getId() == null || iiu.getId().length() == 0) {
+                if (iiu.getId() == null || iiu.getId().isEmpty()) {
                     throw new RuntimeException("IIU had no (or empty) ID string: " + iiu);
                 }
                 count++;
@@ -428,7 +428,7 @@ public class IUVersionCheckToReference extends TestRepo {
 
             outfileWriter.write("<h1>feature.group IU changes</h1>" + EOL);
             outfileWriter.write("<p>Current Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
-            if (getRepoURLForReference().length() > 0) {
+            if (!getRepoURLForReference().isEmpty()) {
                 outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
                         + EOL);
             }

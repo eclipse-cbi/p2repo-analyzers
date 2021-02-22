@@ -145,7 +145,7 @@ public class BREETest extends TestJars {
                         bree = parseBREECapability(BundleJarUtils.getJarManifestEntry(child, Constants.REQUIRE_CAPABILITY));
                     }
                     boolean needsBree = needsBree(child);
-                    if ((bree != null) && (bree.length() > 0)) {
+                    if ((bree != null) && (!bree.isEmpty())) {
                         // has BREE, confirm is java file
                         if (needsBree) {
                             plugins.put(bundleName, bree);

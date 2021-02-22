@@ -10,8 +10,8 @@ public class StringLengthComparator implements Comparator<String> {
         } else if ((string1 == null) || (string2 == null)) {
             return 1;
         } else {
-            Integer length1 = new Integer(string1.length());
-            Integer length2 = new Integer(string2.length());
+            Integer length1 = Integer.valueOf(string1.length());
+            Integer length2 = Integer.valueOf(string2.length());
             return length1.compareTo(length2);
         }
     }

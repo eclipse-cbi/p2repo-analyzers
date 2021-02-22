@@ -86,7 +86,7 @@ public class VersionChecking extends TestRepo {
                     refCount++;
                     type = EQUALS;
                 } else {
-                    if (reference.length() == 0) {
+                    if (reference.isEmpty()) {
                         reference = "[empty string]";
                         outfileWriter.write(refCount + "\t" + type + "\t\t\t" + reference + EOL);
                         reference = q;
@@ -138,7 +138,7 @@ public class VersionChecking extends TestRepo {
                         Comparable qualifier = bundleVersion.getSegment(3);
                         if (qualifier instanceof String) {
                             String qString = (String) qualifier;
-                            if (qString.length() == 0) {
+                            if (qString.isEmpty()) {
                                 outfileWriter.write("zero length 4th segment: " + iu.getId() + EOL);
                             }
                             allQualifiers.add(qString);

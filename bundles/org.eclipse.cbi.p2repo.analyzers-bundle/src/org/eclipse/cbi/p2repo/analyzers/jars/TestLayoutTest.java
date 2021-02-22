@@ -301,7 +301,7 @@ public class TestLayoutTest extends TestJars {
         File[] children = dir.listFiles();
         for (int index = 0; index < children.length; index++) {
             File child = children[index];
-            String name = root.length() == 0 ? child.getName() : root + '/' + child.getName();
+            String name = root.isEmpty() ? child.getName() : root + '/' + child.getName();
             if (child.isDirectory()) {
                 processDir(name, child, expected);
                 continue;
@@ -333,7 +333,7 @@ public class TestLayoutTest extends TestJars {
         try {
             Map attributes = ManifestElement.parseBundleManifest(input, null);
             id = (String) attributes.get(PROPERTY_BUNDLE_ID);
-            if ((id == null) || (id.length() == 0)) {
+            if ((id == null) || (id.isEmpty())) {
                 addError("BundleSymbolicName header not set in manifest for bundle: " + path);
             } else {
                 // identifier can be followed by attributes such as

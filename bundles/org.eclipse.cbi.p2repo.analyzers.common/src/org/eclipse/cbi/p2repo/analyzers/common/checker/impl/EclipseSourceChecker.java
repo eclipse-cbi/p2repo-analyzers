@@ -41,7 +41,7 @@ public class EclipseSourceChecker implements IArtifactChecker {
 				if ((es != null) && es.contains("project=")) {
 					report.setCheckResult("Contains " + PROPERTY_ECLIPSE_SOURCEREFERENCES + " and project=");
 				}
-				if ((es != null) && (es.length() > 0)) {
+				if ((es != null) && (!es.isEmpty())) {
 					report.setCheckResult("Contains " + PROPERTY_ECLIPSE_SOURCEREFERENCES);
 				} else {
 					// no ES
