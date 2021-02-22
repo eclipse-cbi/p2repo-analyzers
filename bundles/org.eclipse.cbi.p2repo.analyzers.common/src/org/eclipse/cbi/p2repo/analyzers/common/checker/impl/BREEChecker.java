@@ -39,7 +39,7 @@ public class BREEChecker implements IArtifactChecker {
 			@SuppressWarnings("deprecation")
 			String bree = IUUtil.getBundleManifestEntry(child, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
 			boolean needsBree = needsBree(child);
-			if ((bree != null) && (bree.length() > 0)) {
+			if ((bree != null) && !bree.isEmpty()) {
 				// has BREE, confirm is java file
 				if (needsBree) {
 					report.setType(ReportType.INFO);

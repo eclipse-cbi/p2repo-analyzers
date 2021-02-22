@@ -233,7 +233,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     private void makeHeaderIfNeeded(FileWriter outputfile, String id) throws IOException {
 
         String proposedHeader = getInitialSegments(id);
-        if (proposedHeader == null || proposedHeader.length() == 0) {
+        if (proposedHeader == null || proposedHeader.isEmpty()) {
             proposedHeader = "Unexpectedly empty package name?";
         }
         if (previousPackageHeader == null || !previousPackageHeader.equals(proposedHeader)) {
@@ -244,13 +244,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
     private String getInitialSegments(String id) {
         String proposedHeader = "";
-        if (!(id == null || id.length() == 0)) {
+        if (!(id == null || id.isEmpty())) {
             String[] proposedHeaderArray = id.split("\\.");
             if (proposedHeaderArray.length > 0) {
                 int nSegments = Math.min(proposedHeaderArray.length, 3);
                 int i = 0;
                 do {
-                    if (proposedHeader.length() != 0) {
+                    if (!proposedHeader.isEmpty()) {
                         proposedHeader = proposedHeader + ".";
                     }
                     proposedHeader = proposedHeader + proposedHeaderArray[i];
@@ -285,7 +285,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                     continue;
                 }
                 String body = copyright.getBody();
-                if ((body == null) || (body.length() == 0) || body.startsWith("%") || body.startsWith("[")) {
+                if ((body == null) || (body.isEmpty()) || body.startsWith("%") || body.startsWith("[")) {
                     noOrBadCopyright.add(feature);
                     continue;
                 }
@@ -320,7 +320,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         for (IInstallableUnit feature : allFeatures.toUnmodifiableSet()) {
             if (feature.getId().endsWith(".feature.group")) {
                 String description = feature.getProperty(IInstallableUnit.PROP_DESCRIPTION, null);
-                if ((description == null) || (description.length() <= 0) || description.startsWith("%")) {
+                if ((description == null) || (description.isEmpty()) || description.startsWith("%")) {
                     noneOrBad.add(feature);
                     continue;
                 }

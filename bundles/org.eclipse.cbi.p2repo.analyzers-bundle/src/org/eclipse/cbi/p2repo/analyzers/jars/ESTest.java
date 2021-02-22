@@ -122,7 +122,7 @@ public class ESTest extends TestJars {
                         if ((es != null) && es.contains("project=")) {
                             nProjectTags++;
                         }
-                        if ((es != null) && (es.length() > 0)) {
+                        if ((es != null) && (!es.isEmpty())) {
                             // has ES
                             incrementCounts(withEs, es);
                         } else {

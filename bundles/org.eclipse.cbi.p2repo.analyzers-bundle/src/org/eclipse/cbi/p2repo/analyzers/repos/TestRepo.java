@@ -174,7 +174,7 @@ public class TestRepo extends BuildRepoTests {
     protected IQueryResult<IInstallableUnit> getAllReferenceIUs() throws URISyntaxException, ProvisionException {
         if (allReferenceIUs == null) {
             String repoRefURL = getRepoURLForReference();
-            if (repoRefURL.length() > 0) {
+            if (!repoRefURL.isEmpty()) {
                 allReferenceIUs = getAllIUscore(repoRefURL);
             }
         }
@@ -225,7 +225,7 @@ public class TestRepo extends BuildRepoTests {
     protected IQueryResult<IInstallableUnit> getAllReferenceGroupIUs() throws URISyntaxException, ProvisionException {
         IQueryResult<IInstallableUnit> result = null;
         String repoURL = getRepoURLForReference();
-        if (repoURL.length() > 0) {
+        if (!repoURL.isEmpty()) {
             result = getAllGroupIUscore(repoURL);
         }
         return result;
@@ -281,7 +281,7 @@ public class TestRepo extends BuildRepoTests {
                 handleWarning("the 'repoURLForReference' property was not set");
                 repoURLForReference = "";
             }
-            if (repoURLForReference.length() > 0) {
+            if (!repoURLForReference.isEmpty()) {
                 System.out.println("repoURLForReference: " + repoURLForReference);
             }
 
