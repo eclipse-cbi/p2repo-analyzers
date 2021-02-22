@@ -24,6 +24,12 @@ pipeline {
       steps {
         sh 'mvn clean verify -f releng/org.eclipse.cbi.p2repo.analyzers.parent/pom.xml'
       }
+      post {
+		always {
+			junit '**/target/surefire-reports/TEST-*.xml'
+			archiveArtifacts artifacts: 'releng/org.eclipse.cbi.p2repo.analyzers.repository/target/**'
+		}
+	  }
     }
 
   }
