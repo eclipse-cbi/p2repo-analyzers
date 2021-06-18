@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.cbi.p2repo.analyzers.jars.BREETest;
 import org.eclipse.cbi.p2repo.analyzers.jars.ESTest;
-import org.eclipse.cbi.p2repo.analyzers.jars.Pack200Test;
 import org.eclipse.cbi.p2repo.analyzers.jars.SignerTest;
 import org.eclipse.cbi.p2repo.analyzers.jars.TestLayoutTest;
 import org.eclipse.cbi.p2repo.analyzers.jars.VersionTest;
@@ -23,6 +20,8 @@ import org.eclipse.cbi.p2repo.analyzers.repos.IUVersionCheckToReference;
 import org.eclipse.cbi.p2repo.analyzers.repos.ProviderNameChecker;
 import org.eclipse.cbi.p2repo.analyzers.repos.VersionChecking;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.equinox.p2.core.ProvisionException;
 
 /**
  * Highest super class of common repo and build directory tests. Should be only
@@ -240,13 +239,6 @@ public class BuildRepoTests {
         boolean breeFailures = breeTest.testBREESettingRule();
 
         if (breeFailures) {
-            setFailuresOccurred(true);
-        }
-
-        Pack200Test packTest = new Pack200Test(getConfigurations());
-        packTest.setDirectoryToCheck(getDirectoryToCheck());
-        boolean packFailures = packTest.testBundlePack();
-        if (packFailures) {
             setFailuresOccurred(true);
         }
 

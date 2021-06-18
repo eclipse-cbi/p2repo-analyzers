@@ -20,18 +20,17 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
 import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.CompositeFileFilter;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
-import org.eclipse.cbi.p2repo.analyzers.utils.PackGzFileNameFilter;
 import org.eclipse.cbi.p2repo.analyzers.utils.PlainCheckReport;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
 import org.eclipse.cbi.p2repo.analyzers.utils.VerifyStep;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -53,28 +52,6 @@ public class SignerTest extends TestJars {
       checkReport.setFileName(file.getName());
       checkReport.setIuType(this.iuTypeName);
       File fileToCheck = file;
-      boolean _endsWith = fileToCheck.getName().endsWith(PackGzFileNameFilter.EXTENSION_PACEKD_JAR);
-      if (_endsWith) {
-        try {
-          fileToCheck = BundleJarUtils.unpack200gz(fileToCheck);
-        } catch (final Throwable _t) {
-          if (_t instanceof IOException) {
-            final IOException e = (IOException)_t;
-            checkReport.setType(ReportType.NOT_IN_TRAIN);
-            StringConcatenation _builder = new StringConcatenation();
-            _builder.append("Unable to unpack ");
-            String _absolutePath = file.getAbsolutePath();
-            _builder.append(_absolutePath);
-            _builder.append(". Can not check signature. ");
-            String _message = e.getMessage();
-            _builder.append(_message);
-            checkReport.setCheckResult(_builder.toString());
-            return;
-          } else {
-            throw Exceptions.sneakyThrow(_t);
-          }
-        }
-      }
       Properties eclipseInf = BundleJarUtils.getEclipseInf(fileToCheck);
       Boolean _valueOf = Boolean.valueOf(eclipseInf.getProperty("jarprocessor.exclude.sign", "false"));
       if ((_valueOf).booleanValue()) {
@@ -141,8 +118,7 @@ public class SignerTest extends TestJars {
   
   public void checkJars(final File dirToCheck, final String iuType, final CopyOnWriteArraySet<PlainCheckReport> reports) {
     JARFileNameFilter _jARFileNameFilter = new JARFileNameFilter();
-    PackGzFileNameFilter _packGzFileNameFilter = new PackGzFileNameFilter();
-    final File[] jars = dirToCheck.listFiles(CompositeFileFilter.create(_jARFileNameFilter, _packGzFileNameFilter));
+    final File[] jars = dirToCheck.listFiles(CompositeFileFilter.create(_jARFileNameFilter));
     Stream<File> _parallelStream = ((List<File>)Conversions.doWrapArray(jars)).parallelStream();
     SignerTest.SignerCheck _signerCheck = new SignerTest.SignerCheck(reports, iuType);
     _parallelStream.forEach(_signerCheck);
