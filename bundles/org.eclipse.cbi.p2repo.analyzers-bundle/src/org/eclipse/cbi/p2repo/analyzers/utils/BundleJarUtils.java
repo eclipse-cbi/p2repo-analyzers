@@ -4,17 +4,12 @@
 package org.eclipse.cbi.p2repo.analyzers.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -26,24 +21,7 @@ import org.osgi.framework.BundleException;
  *
  */
 public class BundleJarUtils {
-    /**
-     * @param fileToUnpack
-     *            jar.pack.gz file
-     * @return unpacked jar file stored in the temp folder. This file is marked
-     *         as delete on VM exit.
-     * @throws IOException
-     */
-    public static File unpack200gz(File fileToUnpack) throws IOException {
-        GZIPInputStream input = new GZIPInputStream(new FileInputStream(fileToUnpack));
-        File unpacked = File.createTempFile("unpacked_" + fileToUnpack.getName() + "_", ".jar");
-        unpacked.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(unpacked);
-        JarOutputStream jarOutStream = new JarOutputStream(outStream);
-        Pack200.Unpacker unpacker = Pack200.newUnpacker();
-        unpacker.unpack(input, jarOutStream);
-        jarOutStream.close();
-        return unpacked;
-    }
+   
 
     /**
      * Return the bundle id from the manifest pointed to by the given input
