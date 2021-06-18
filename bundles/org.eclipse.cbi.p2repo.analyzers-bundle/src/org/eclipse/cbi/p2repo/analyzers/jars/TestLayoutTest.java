@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2007, 2021 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -39,10 +39,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.internal.provisional.equinox.p2.jarprocessor.JarProcessor;
-import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
+import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,7 +62,6 @@ public class TestLayoutTest extends TestJars {
 
     private static final String outputFilename       = "layoutCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
-    private static final String EXTENSION_PACEKD_JAR = ".pack.gz";
     private static final String EXTENSION_ZIP        = ".zip";
     private static final String PROPERTY_BUNDLE_ID   = "Bundle-SymbolicName";
     private String              configFilename       = "config.properties";
@@ -434,23 +432,6 @@ public class TestLayoutTest extends TestJars {
         return id;
     }
 
-    /*
-     * The given file points to a bundle contained in an archive. Look into the
-     * bundle manifest file to find the bundle identifier.
-     */
-    private File getFileFromPACKEDJAR(File file) {
-
-        File tmpjar = null;
-        try {
-            JarProcessor jarprocessor = JarProcessor.getUnpackProcessor(null);
-            jarprocessor.setWorkingDirectory(getTempWorkingDir());
-            tmpjar = jarprocessor.processJar(file);
-        } catch (IOException e) {
-            addError(e.getMessage());
-        }
-        return tmpjar;
-    }
-
     public String getConfigFilename() {
         return configFilename;
     }
@@ -507,9 +488,6 @@ public class TestLayoutTest extends TestJars {
         int checked = 0;
         for (int i = 0; i < children.length; i++) {
             File child = children[i];
-            if (child.getName().toLowerCase().endsWith(EXTENSION_PACEKD_JAR)) {
-                child = getFileFromPACKEDJAR(child);
-            }
             if (child != null) {
                 String id = getFeatureId(child);
                 if (id != null) {
