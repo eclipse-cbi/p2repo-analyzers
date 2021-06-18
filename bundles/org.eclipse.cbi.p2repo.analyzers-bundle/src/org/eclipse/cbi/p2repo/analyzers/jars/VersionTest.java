@@ -36,7 +36,6 @@ public class VersionTest extends TestJars {
 
     private static final String outputFilename       = "versionPatternCheck.txt";
     private static final String EXTENSION_JAR        = ".jar";
-    private static final String EXTENSION_PACEKD_JAR = ".jar.pack.gz";
     private static final String EXTENSION_ZIP        = ".zip";
     private FullJarNameParser   nameParser           = new FullJarNameParser();
     private String              BACKSLASH            = "\\";
@@ -82,9 +81,7 @@ public class VersionTest extends TestJars {
             String name = child.getName();
             // assume directory if not file
             if (child.isFile()) {
-                if (name.endsWith(EXTENSION_PACEKD_JAR)) {
-                    name = getBasicName(name, EXTENSION_PACEKD_JAR);
-                } else if (name.endsWith(EXTENSION_JAR)) {
+                if (name.endsWith(EXTENSION_JAR)) {
                     name = getBasicName(name, EXTENSION_JAR);
                 } else if (name.endsWith(EXTENSION_ZIP)) {
                     name = getBasicName(name, EXTENSION_ZIP);
