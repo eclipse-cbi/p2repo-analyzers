@@ -44,7 +44,6 @@ pipeline {
 						scp -r releng/org.eclipse.cbi.p2repo.analyzers.repository/target/repository/* genie.cbi@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
 						scp -r releng/org.eclipse.cbi.p2repo.analyzers.product/target/products/*.tar.gz genie.cbi@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
 					'''
-				}
 		}
       }
     }
