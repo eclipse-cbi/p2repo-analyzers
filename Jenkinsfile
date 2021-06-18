@@ -27,10 +27,27 @@ pipeline {
       post {
 		always {
 			junit '**/target/surefire-reports/TEST-*.xml'
-			archiveArtifacts artifacts: 'releng/org.eclipse.cbi.p2repo.analyzers.repository/target/**'
+			archiveArtifacts artifacts: 'releng/org.eclipse.cbi.p2repo.analyzers.repository/target/**, releng/org.eclipse.cbi.p2repo.analyzers.product/target/**'
+			
 		}
 	  }
     }
-
+    stage('Deploy') {
+      when {
+        branch 'master'
+	  }
+      steps {
+		steps {
+				sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
+					sh '''
+						ssh genie.cbi@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
+						ssh genie.cbi@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
+						scp -r releng/org.eclipse.cbi.p2repo.analyzers.repository/target/repository/* genie.cbi@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
+						scp -r releng/org.eclipse.cbi.p2repo.analyzers.product/target/products/*.tar.gz genie.cbi@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/snapshot
+					'''
+				}
+			}
+      }
+    }
   }
 }
