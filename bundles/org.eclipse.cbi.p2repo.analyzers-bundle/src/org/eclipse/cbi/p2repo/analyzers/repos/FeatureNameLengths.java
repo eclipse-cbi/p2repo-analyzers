@@ -30,7 +30,7 @@ public class FeatureNameLengths extends TestRepo {
     private List longestNames = new ArrayList();
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
-        List<T> list = new ArrayList<T>(c);
+        List<T> list = new ArrayList<>(c);
         java.util.Collections.sort(list);
         return list;
     }
@@ -41,11 +41,7 @@ public class FeatureNameLengths extends TestRepo {
         featureNameLengths.setMainOutputDirectory("/temp");
         try {
             featureNameLengths.testFeatureDirectoryLength();
-        } catch (ProvisionException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ProvisionException | URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -97,8 +93,8 @@ public class FeatureNameLengths extends TestRepo {
 
                 println(outfileWriter, NBSP + "Features directory names with lengths above " + MAX_CRITERIA + EOL);
                 Collections.sort(longestNames, new StringLengthComparator());
-                for (int i = 0; i < longestNames.size(); i++) {
-                    String line = (String) longestNames.get(i);
+                for (Object longestName : longestNames) {
+                    String line = (String) longestName;
                     println(outfileWriter, line.length() + NBSP + line + EOL);
                 }
             } else {

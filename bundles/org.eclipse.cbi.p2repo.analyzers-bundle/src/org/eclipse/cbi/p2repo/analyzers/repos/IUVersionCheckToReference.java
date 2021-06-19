@@ -28,16 +28,16 @@ public class IUVersionCheckToReference extends TestRepo {
     public boolean checkIUVersionsToReference() throws IOException, ProvisionException, URISyntaxException {
         FileWriter outfileWriter = null;
         File outfile = null;
-        List<IInstallableUnit> referenceOnly = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> newIUs = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> matchingVersions = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsService = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();
-        Set<String> refinboth = new TreeSet<String>();
-        Set<String> curinboth = new TreeSet<String>();
+        List<IInstallableUnit> referenceOnly = new ArrayList<>();
+        List<IInstallableUnit> newIUs = new ArrayList<>();
+        List<IInstallableUnit> decreasingVersions = new ArrayList<>();
+        List<IInstallableUnit> matchingVersions = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsService = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<>();
+        Set<String> refinboth = new TreeSet<>();
+        Set<String> curinboth = new TreeSet<>();
 
         String testDirName = getReportOutputDirectory();
         try {
@@ -386,16 +386,16 @@ public class IUVersionCheckToReference extends TestRepo {
     public boolean checkIUVersionsToReferenceForFeatures() throws IOException, ProvisionException, URISyntaxException {
         FileWriter outfileWriter = null;
         File outfile = null;
-        List<IInstallableUnit> inreferenceOnly = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> newIUs = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> decreasingVersions = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> matchingVersions = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsService = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<IInstallableUnit>();
-        Set<String> refinboth = new TreeSet<String>();
-        Set<String> curinboth = new TreeSet<String>();
+        List<IInstallableUnit> inreferenceOnly = new ArrayList<>();
+        List<IInstallableUnit> newIUs = new ArrayList<>();
+        List<IInstallableUnit> decreasingVersions = new ArrayList<>();
+        List<IInstallableUnit> matchingVersions = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsService = new ArrayList<>();
+        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<>();
+        Set<String> refinboth = new TreeSet<>();
+        Set<String> curinboth = new TreeSet<>();
 
         String testDirName = getReportOutputDirectory();
         try {

@@ -15,8 +15,8 @@ public class TestProperties {
     public static void main(String[] args) {
         try {
             ArrayList<String> testnames = new TestProperties().getKnownProviderNames();
-            for (int i = 0; i < testnames.size(); i++) {
-                System.out.println(testnames.get(i));
+            for (String testname : testnames) {
+                System.out.println(testname);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -25,15 +25,13 @@ public class TestProperties {
 
     public ArrayList<String> getKnownProviderNames() throws Exception {
         if (EXPECTED_PROVIDER_NAMES == null) {
-            ArrayList<String> namesAsList = new ArrayList<String>();
+            ArrayList<String> namesAsList = new ArrayList<>();
             // first try system properties, to allow override.
             String expectedProviders = System.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
             if (expectedProviders == null) {
                 // if no system property found, use out built-in list
                 Properties names = new Properties();
-                InputStream inStream = null;
-                try {
-                    inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE);
+                try (InputStream inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE)) {
                     names.load(inStream);
                     expectedProviders = names.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
                     if (expectedProviders == null) {
@@ -43,10 +41,6 @@ public class TestProperties {
                     while (tokenizer.hasMoreTokens()) {
                         String name = tokenizer.nextToken();
                         namesAsList.add(name.trim());
-                    }
-                } finally {
-                    if (inStream != null) {
-                        inStream.close();
                     }
                 }
                 EXPECTED_PROVIDER_NAMES=namesAsList;

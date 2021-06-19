@@ -112,8 +112,7 @@ public class TestLayoutTest extends TestJars {
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
         int checked = 0;
-        for (int i = 0; i < children.length; i++) {
-            File child = children[i];
+        for (File child : children) {
             String id = getBundleId(child);
             if (id != null) {
                 boolean sourceIU = isSourceIUName(id);
@@ -179,7 +178,7 @@ public class TestLayoutTest extends TestJars {
         } else {
             line = MessageFormat.format(line, id);
         }
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (StringTokenizer tokenizer = new StringTokenizer(line, ","); tokenizer.hasMoreTokens();) {
             result.add(tokenizer.nextToken().trim());
         }
@@ -224,9 +223,9 @@ public class TestLayoutTest extends TestJars {
         if (file.isDirectory()) {
             String[] array = (String[]) expected.toArray(new String[expected.size()]);
             processDir("", file, array);
-            for (int i = 0; i < array.length; i++) {
-                if (array[i] != null) {
-                    addError("Missing " + array[i] + " in dir: " + file.getAbsolutePath());
+            for (String element : array) {
+                if (element != null) {
+                    addError("Missing " + element + " in dir: " + file.getAbsolutePath());
                 }
             }
         } else {
@@ -238,9 +237,9 @@ public class TestLayoutTest extends TestJars {
         if (file.isDirectory()) {
             String[] array = (String[]) expected.toArray(new String[expected.size()]);
             processDir("", file, array);
-            for (int i = 0; i < array.length; i++) {
-                if (array[i] != null) {
-                    addError("Missing " + array[i] + " in dir: " + file.getAbsolutePath());
+            for (String element : array) {
+                if (element != null) {
+                    addError("Missing " + element + " in dir: " + file.getAbsolutePath());
                 }
             }
         } else {
@@ -272,9 +271,9 @@ public class TestLayoutTest extends TestJars {
                     }
                 }
             }
-            for (int i = 0; i < expected.length; i++) {
-                if (expected[i] != null) {
-                    addError("Missing " + expected[i] + " in file: " + file.getName());
+            for (String element : expected) {
+                if (element != null) {
+                    addError("Missing " + element + " in file: " + file.getName());
                 }
             }
         } catch (IOException e) {
@@ -295,8 +294,7 @@ public class TestLayoutTest extends TestJars {
      */
     private void processDir(String root, File dir, String[] expected) {
         File[] children = dir.listFiles();
-        for (int index = 0; index < children.length; index++) {
-            File child = children[index];
+        for (File child : children) {
             String name = root.isEmpty() ? child.getName() : root + '/' + child.getName();
             if (child.isDirectory()) {
                 processDir(name, child, expected);
@@ -340,10 +338,7 @@ public class TestLayoutTest extends TestJars {
                 }
             }
 
-        } catch (BundleException e) {
-            // e.printStackTrace();
-            addError(e.getMessage());
-        } catch (IOException e) {
+        } catch (BundleException | IOException e) {
             // e.printStackTrace();
             addError(e.getMessage());
         } finally {
@@ -484,8 +479,7 @@ public class TestLayoutTest extends TestJars {
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
         int checked = 0;
-        for (int i = 0; i < children.length; i++) {
-            File child = children[i];
+        for (File child : children) {
             if (child != null) {
                 String id = getFeatureId(child);
                 if (id != null) {
@@ -531,12 +525,7 @@ public class TestLayoutTest extends TestJars {
             }
             input = jar.getInputStream(entry);
             id = getFeatureFromFeatureXML(input);
-        } catch (IOException e) {
-            // e.printStackTrace();
-            addError(e.getMessage());
-        } catch (ParserConfigurationException e) {
-            addError(e.getMessage());
-        } catch (SAXException e) {
+        } catch (IOException | ParserConfigurationException | SAXException e) {
             addError(e.getMessage());
         } finally {
             if (input != null) {
@@ -608,11 +597,7 @@ public class TestLayoutTest extends TestJars {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             aDocument = builder.parse(inputSource);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         } finally {
             if (reader != null) {

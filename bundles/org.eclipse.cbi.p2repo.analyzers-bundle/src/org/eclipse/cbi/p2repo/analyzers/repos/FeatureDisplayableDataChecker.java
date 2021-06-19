@@ -42,11 +42,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         featureDisplayableDataChecker.setMainOutputDirectory("/home/shared/simrel/luna");
         try {
             featureDisplayableDataChecker.testDisplayableData();
-        } catch (ProvisionException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ProvisionException | URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -78,13 +74,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         ILicense standardLicense2011 = new License(null, body2011, null);
         ILicense standardLicense2010 = new License(null, body2010, null);
 
-        List<IInstallableUnit> noLicense = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> extraLicense = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> license2017 = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> license2014 = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> license2011 = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> license2010 = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> badLicense = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> noLicense = new ArrayList<>();
+        List<IInstallableUnit> extraLicense = new ArrayList<>();
+        List<IInstallableUnit> license2017 = new ArrayList<>();
+        List<IInstallableUnit> license2014 = new ArrayList<>();
+        List<IInstallableUnit> license2011 = new ArrayList<>();
+        List<IInstallableUnit> license2010 = new ArrayList<>();
+        List<IInstallableUnit> badLicense = new ArrayList<>();
         checkLicenses(standardLicense2017, standardLicense2014, standardLicense2011, standardLicense2010, allFeatures, license2017, license2014, license2011,
                 license2010, badLicense, noLicense, extraLicense);
 
@@ -268,9 +264,9 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     }
 
     private boolean checkCopyrights(IQueryResult<IInstallableUnit> allFeatures) {
-        List<IInstallableUnit> noOrBadCopyright = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> okCopyright = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> indeterminateCopyright = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> noOrBadCopyright = new ArrayList<>();
+        List<IInstallableUnit> okCopyright = new ArrayList<>();
+        List<IInstallableUnit> indeterminateCopyright = new ArrayList<>();
 
         for (IInstallableUnit feature : allFeatures.toUnmodifiableSet()) {
             if (feature.getId().endsWith(".feature.group")) {
@@ -306,8 +302,8 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     }
 
     private boolean checkDescriptions(IQueryResult<IInstallableUnit> allFeatures) {
-        List<IInstallableUnit> noneOrBad = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> ok = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> noneOrBad = new ArrayList<>();
+        List<IInstallableUnit> ok = new ArrayList<>();
 
         for (IInstallableUnit feature : allFeatures.toUnmodifiableSet()) {
             if (feature.getId().endsWith(".feature.group")) {

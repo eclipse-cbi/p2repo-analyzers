@@ -3,7 +3,6 @@ package org.eclipse.cbi.p2repo.analyzers.jars;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.cbi.p2repo.analyzers.BuildRepoTests;
@@ -84,8 +83,7 @@ public abstract class TestJars extends BuildRepoTests {
         if (invalidJars.size() > 0) {
             reportWriter.writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
             Collections.sort(invalidJars);
-            for (Iterator iterator = invalidJars.iterator(); iterator.hasNext();) {
-                Object bundle = iterator.next();
+            for (Object bundle : invalidJars) {
                 reportWriter.writeln("       " + bundle);
             }
         }

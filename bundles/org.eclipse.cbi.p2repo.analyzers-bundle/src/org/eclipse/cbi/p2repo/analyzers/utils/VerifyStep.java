@@ -77,10 +77,7 @@ public class VerifyStep {
                         return false;
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 return false;
             }

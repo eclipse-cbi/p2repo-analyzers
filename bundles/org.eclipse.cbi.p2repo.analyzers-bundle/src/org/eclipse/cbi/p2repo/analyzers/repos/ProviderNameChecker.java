@@ -32,11 +32,11 @@ public class ProviderNameChecker extends TestRepo {
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
         File outfile = null;
-        List<IInstallableUnit> incorrectProviderName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> correctProviderName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> oldProviderName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> unknownProviderName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> suspectProviderName = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> incorrectProviderName = new ArrayList<>();
+        List<IInstallableUnit> correctProviderName = new ArrayList<>();
+        List<IInstallableUnit> oldProviderName = new ArrayList<>();
+        List<IInstallableUnit> unknownProviderName = new ArrayList<>();
+        List<IInstallableUnit> suspectProviderName = new ArrayList<>();
         String testDirName = getReportOutputDirectory();
         try {
             outfile = new File(testDirName, "providerNames.html");
@@ -109,8 +109,8 @@ public class ProviderNameChecker extends TestRepo {
             printLinesProvider(outfileWriter, correctProviderName);
             outfileWriter.write("<h2>List of known branding provider names</h2>" + EOL);
             ArrayList<String> expectedProvidersNameLocal = getKnownProviderNames();
-            for (int i = 0; i < expectedProvidersNameLocal.size(); i++) {
-                println(outfileWriter, expectedProvidersNameLocal.get(i) + EOL);
+            for (String element : expectedProvidersNameLocal) {
+                println(outfileWriter, element + EOL);
             }
 
             // if (incorrectProviderName.size() > 0) {
@@ -139,8 +139,8 @@ public class ProviderNameChecker extends TestRepo {
         ArrayList<String> expectedProvidersNameLocal = getKnownProviderNames();
         boolean result = false;
         if (expectedProvidersNameLocal != null) {
-            for (int i = 0; i < expectedProvidersNameLocal.size(); i++) {
-                if (expectedProvidersNameLocal.get(i).equals(providerName)) {
+            for (String element : expectedProvidersNameLocal) {
+                if (element.equals(providerName)) {
                     result = true;
                     break;
                 }
@@ -166,7 +166,7 @@ public class ProviderNameChecker extends TestRepo {
 
     protected ArrayList<String> getKnownProviderNames() {
         if (expectedProvidersName == null) {
-            ArrayList<String> namesAsList = new ArrayList<String>();
+            ArrayList<String> namesAsList = new ArrayList<>();
             // first try system properties, to allow override.
             String expectedProviders = System.getProperty(EXPECTED_PROVIDER_NAMES_KEY);
             if (expectedProviders == null) {
