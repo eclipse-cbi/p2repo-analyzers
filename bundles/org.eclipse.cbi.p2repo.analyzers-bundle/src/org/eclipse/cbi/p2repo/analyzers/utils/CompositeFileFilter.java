@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.eclipse.cbi.p2repo.analyzers.utils;
 

@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 package org.eclipse.cbi.p2repo.analyzers.utils;
 
-import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
+import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
 /**
  * @author dhuebner

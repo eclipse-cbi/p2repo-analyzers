@@ -255,7 +255,7 @@ public class BREETest extends TestJars {
             reportWriter.writeln();
             Collections.sort(nonjavaWithBree);
             BREEFileData breefiledata = null;
-            
+
             for (Iterator iterator = nonjavaWithBree.iterator(); iterator.hasNext();) {
                 Object object = iterator.next();
                 if (object instanceof BREEFileData) {
@@ -269,9 +269,9 @@ public class BREETest extends TestJars {
             reportWriter.writeln();
             reportWriter.writeln("    List of all plug-ins with BREE: " + javaWithBree.size());
             reportWriter.writeln();
-            
+
             plugins.entrySet().stream()
-            .sorted(Map.Entry.<String, String>comparingByValue().reversed()) 
+            .sorted(Map.Entry.<String, String>comparingByValue().reversed())
             .forEach(entry-> {
                 try {
                     reportWriter.printf("%24s\t%s\n",entry.getValue(), entry.getKey());
@@ -279,7 +279,7 @@ public class BREETest extends TestJars {
                     throw new Error("Programming error in List of all plug-ins with BREE");
                 }
             }); // or any other terminal method
-           
+
         } finally {
             reportWriter.close();
         }

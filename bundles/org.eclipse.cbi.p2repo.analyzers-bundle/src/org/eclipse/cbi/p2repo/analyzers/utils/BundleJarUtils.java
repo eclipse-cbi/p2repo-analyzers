@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.eclipse.cbi.p2repo.analyzers.utils;
 
@@ -21,7 +21,7 @@ import org.osgi.framework.BundleException;
  *
  */
 public class BundleJarUtils {
-   
+
 
     /**
      * Return the bundle id from the manifest pointed to by the given input

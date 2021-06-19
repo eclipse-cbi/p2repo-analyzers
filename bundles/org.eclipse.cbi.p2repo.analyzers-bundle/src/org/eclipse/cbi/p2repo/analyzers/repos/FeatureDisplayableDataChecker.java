@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
+import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.internal.p2.metadata.License;
 import org.eclipse.equinox.p2.core.ProvisionException;
@@ -18,8 +20,6 @@ import org.eclipse.equinox.p2.metadata.ICopyright;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.ILicense;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 
 public class FeatureDisplayableDataChecker extends TestRepo {
     public FeatureDisplayableDataChecker(RepoTestsConfiguration configurations) {
