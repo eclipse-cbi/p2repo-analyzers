@@ -85,8 +85,7 @@ public class TestRepo extends BuildRepoTests {
         String result = wholeLine;
         result = result.replaceAll("\\r\\n", "<br />\n");
         result = result.replaceAll("\\n", "<br />\n");
-        result = result.replaceAll("\\r", "<br />\n");
-        return result;
+        return result.replaceAll("\\r", "<br />\n");
     }
 
     protected boolean isSpecial(IInstallableUnit iu) {
@@ -98,10 +97,9 @@ public class TestRepo extends BuildRepoTests {
          * (org.eclipse.equinox.p2.type.fragment). a.jre has no properties.
          */
         String iuId = iu.getId();
-        boolean isSpecial = iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") || iuId.endsWith("_root")
+        return iuId.startsWith("a.jre") || iuId.startsWith("config.a.jre") || iuId.endsWith("_root")
                 || iuId.contains(".executable.") || iuId.contains("configuration_root") || iuId.contains("executable_root")
                 || iuId.startsWith("toolingorg.eclipse") || iuId.startsWith("tooling.");
-        return isSpecial;
     }
 
     /**
@@ -117,14 +115,12 @@ public class TestRepo extends BuildRepoTests {
     protected boolean isFeatureGroup(IInstallableUnit iu) {
 
         String iuId = iu.getId();
-        boolean isFeatureGroup = iuId.endsWith("feature.group");
-        return isFeatureGroup;
+        return iuId.endsWith("feature.group");
     }
 
     protected boolean isGroup(IInstallableUnit iu) {
 
-        boolean isGroup = "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.group"));
-        return isGroup;
+        return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.group"));
     }
 
     protected void printLineListItem(FileWriter outfileWriter, IInstallableUnit iu, String iuproperty) throws IOException {
@@ -299,8 +295,6 @@ public class TestRepo extends BuildRepoTests {
     }
 
     protected boolean isCategory(IInstallableUnit curiu) {
-        // ignore categories
-        boolean isCategory = "true".equals(curiu.getProperty("org.eclipse.equinox.p2.type.category"));
-        return isCategory;
+        return "true".equals(curiu.getProperty("org.eclipse.equinox.p2.type.category"));
     }
 }

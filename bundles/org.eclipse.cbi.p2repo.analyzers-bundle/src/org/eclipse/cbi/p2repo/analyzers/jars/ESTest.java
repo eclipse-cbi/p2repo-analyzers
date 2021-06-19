@@ -66,9 +66,7 @@ public class ESTest extends TestJars {
 
         boolean failuresOccured;
         createReportWriter(outputFilename);
-        failuresOccured = checkBundleES(inputdir);
-
-        return failuresOccured;
+        return checkBundleES(inputdir);
     }
 
     private boolean checkBundleES(File inputdir) throws IOException {

@@ -47,7 +47,7 @@ public class VerifyStep {
     public static boolean verify(File input, StringBuilder errors, StringBuilder warnings) {
         if (canVerify() && verifyCommand != null) {
             try {
-                String[] cmd = new String[] { verifyCommand, "-verify", input.getCanonicalPath() }; //$NON-NLS-1$
+                String[] cmd = { verifyCommand, "-verify", input.getCanonicalPath() }; //$NON-NLS-1$
                 ProcessBuilder procBuilder = new ProcessBuilder(cmd);
                 procBuilder.redirectErrorStream(true);
 
@@ -103,8 +103,7 @@ public class VerifyStep {
             return -1;
         }
         try {
-            int result = proc.waitFor();
-            return result;
+            return proc.waitFor();
         } catch (InterruptedException e) {
             if (verbose)
                 e.printStackTrace();

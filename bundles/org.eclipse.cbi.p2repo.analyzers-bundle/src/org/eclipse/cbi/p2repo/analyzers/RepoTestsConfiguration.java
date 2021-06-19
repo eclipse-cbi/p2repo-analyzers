@@ -87,8 +87,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
 
     @Override
     public URI getReportRepoURI() {
-        URI repoURL = (new File(getReportRepoDir()).toURI());
-        return repoURL;
+        return (new File(getReportRepoDir()).toURI());
     }
 
     public String getTempWorkingDir() {

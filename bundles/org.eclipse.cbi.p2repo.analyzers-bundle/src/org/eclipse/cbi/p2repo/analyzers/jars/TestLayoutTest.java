@@ -634,14 +634,10 @@ public class TestLayoutTest extends TestJars {
     }
 
     private Document getDOM(InputStream stream) throws ParserConfigurationException, SAXException, IOException {
-
-        Document aDocument = null;
         InputSource inputSource = new InputSource(stream);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        aDocument = builder.parse(inputSource);
-
-        return aDocument;
+        return builder.parse(inputSource);
 
     }
 

@@ -324,9 +324,7 @@ public class CheckGreedy extends TestRepo {
     private String getID(Node iuelement) {
         NamedNodeMap attributes = iuelement.getAttributes();
         Node idattr = attributes.getNamedItem("id");
-        String unitid = idattr.getNodeValue();
-
-        return unitid;
+        return idattr.getNodeValue();
     }
 
     private Node walkbackToUnit(Node iuNode) {
@@ -390,8 +388,7 @@ public class CheckGreedy extends TestRepo {
                 intersectionSet.add(nongreedyRequirement);
             }
         }
-        List<String> intersectionList = new ArrayList<String>(intersectionSet);
-        return intersectionList;
+        return new ArrayList<String>(intersectionSet);
     }
 
     private FileWriter createOutputFile() throws IOException {
@@ -400,8 +397,7 @@ public class CheckGreedy extends TestRepo {
         String testDirName = getReportOutputDirectory();
         outfile = new File(testDirName, "greedyReport.html");
         System.out.println("output: " + outfile.getAbsolutePath());
-        outfileWriter = new FileWriter(outfile);
-        return outfileWriter;
+        return new FileWriter(outfile);
     }
 
     private String getAttributeValue(NamedNodeMap attributes, String name) {

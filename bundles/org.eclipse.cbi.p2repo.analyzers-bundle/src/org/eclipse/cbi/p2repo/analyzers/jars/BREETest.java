@@ -95,9 +95,7 @@ public class BREETest extends TestJars {
 
         boolean failuresOccured;
 
-        failuresOccured = checkBundleBREE(inputdir);
-
-        return failuresOccured;
+        return checkBundleBREE(inputdir);
     }
 
     private boolean checkBundleBREE(File inputdir) throws IOException {

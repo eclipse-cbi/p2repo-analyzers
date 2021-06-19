@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 
 public class ReportWriter {
     public ReportWriter(String outputFilename) {
-        super();
         this.outputFilename = outputFilename;
     }
 
