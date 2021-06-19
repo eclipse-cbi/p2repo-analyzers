@@ -35,7 +35,7 @@ public class RepoReportApplication implements IApplication {
         }
         stopwatch.stop();
         if (testfailures) {
-            appresult = new Integer(-1);
+            appresult = Integer.valueOf(-1);
             System.out.println("Report tests failed. Took: " + stopwatch);
         } else {
             System.out.println("Reports completed as expected. Took: " + stopwatch);
