@@ -65,7 +65,6 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     }
 
     private boolean checkLicenseConsistency(IQueryResult<IInstallableUnit> allFeatures) throws IOException {
-        boolean result = false;
         Properties properties = new Properties();
 
         InputStream inStream = this.getClass().getResourceAsStream(STANDARD_LICENSES_PROPERTIES_FILE);
@@ -90,8 +89,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                 license2010, badLicense, noLicense, extraLicense);
 
         printReportLicense(license2017, license2014, license2011, license2010, badLicense, noLicense, extraLicense);
-        result = ((badLicense.size() > 0) || (extraLicense.size() > 0) || (noLicense.size() > 0));
-        return result;
+        return ((badLicense.size() > 0) || (extraLicense.size() > 0) || (noLicense.size() > 0));
     }
 
     private void checkLicenses(ILicense platformLicense2017, ILicense platformLicense2014, ILicense platformLicense2011, ILicense platformLicense2010,
@@ -266,13 +264,10 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         IQueryResult<IInstallableUnit> allIUs = getAllGroupIUs();
         result = checkLicenseConsistency(allIUs);
         result = result | checkCopyrights(allIUs);
-        result = result | checkDescriptions(allIUs);
-        return result;
+        return result | checkDescriptions(allIUs);
     }
 
     private boolean checkCopyrights(IQueryResult<IInstallableUnit> allFeatures) {
-        boolean result = false;
-
         List<IInstallableUnit> noOrBadCopyright = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> okCopyright = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> indeterminateCopyright = new ArrayList<IInstallableUnit>();
@@ -307,13 +302,10 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         }
 
         printReportCopyrights(okCopyright, noOrBadCopyright, indeterminateCopyright);
-        result = ((noOrBadCopyright.size() > 0));
-        return result;
+        return ((noOrBadCopyright.size() > 0));
     }
 
     private boolean checkDescriptions(IQueryResult<IInstallableUnit> allFeatures) {
-        boolean result = false;
-
         List<IInstallableUnit> noneOrBad = new ArrayList<IInstallableUnit>();
         List<IInstallableUnit> ok = new ArrayList<IInstallableUnit>();
 
@@ -331,8 +323,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         }
 
         printReportDescription(ok, noneOrBad);
-        result = ((noneOrBad.size() > 0));
-        return result;
+        return ((noneOrBad.size() > 0));
     }
 
     private void printReportDescription(List<IInstallableUnit> ok, List<IInstallableUnit> noneOrBad) {

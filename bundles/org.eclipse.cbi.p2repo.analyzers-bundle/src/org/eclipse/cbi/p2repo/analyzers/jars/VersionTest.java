@@ -63,10 +63,10 @@ public class VersionTest extends TestJars {
         File inputdir = new File(getBundleDirectory());
 
         getReportWriter().writeln(" Check for 4-part versions in Bundles");
-        boolean failuresOccured = checkFilesVersions(inputdir);
+
         // assertFalse("Some bundles did not have 4 part version numbers",
         // failuresOccured);
-        return failuresOccured;
+        return checkFilesVersions(inputdir);
     }
 
     private boolean checkFilesVersions(File inputdir) throws IOException {
@@ -141,10 +141,10 @@ public class VersionTest extends TestJars {
         File inputdir = new File(getFeatureDirectory());
 
         getReportWriter().writeln(" Check for 4-part versions in Features");
-        boolean failuresOccured = checkFilesVersions(inputdir);
+
         // assertFalse("Some features did not have 4 part version numbers",
         // failuresOccured);
-        return failuresOccured;
+        return checkFilesVersions(inputdir);
 
     }
 }
