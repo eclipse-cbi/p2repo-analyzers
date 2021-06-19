@@ -153,14 +153,12 @@ public class BREETest extends TestJars {
                             trackFalseInclusions(nonjavaWithBree, child, bree);
                             failuresOccured = true;
                         }
+                    } else // no BREE, confirm is non-java
+                    if (needsBree) {
+                        trackOmissions(javaWithoutBree, child);
+                        failuresOccured = true;
                     } else {
-                        // no BREE, confirm is non-java
-                        if (needsBree) {
-                            trackOmissions(javaWithoutBree, child);
-                            failuresOccured = true;
-                        } else {
-                            nonJavaNoBREE++;
-                        }
+                        nonJavaNoBREE++;
                     }
                 } catch (SecurityException e) {
                     // https://bugs.eclipse.org/bugs/show_bug.cgi?id=378764

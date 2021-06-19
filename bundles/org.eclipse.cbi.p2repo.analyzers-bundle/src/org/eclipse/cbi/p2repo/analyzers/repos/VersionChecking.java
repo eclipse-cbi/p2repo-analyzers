@@ -81,32 +81,30 @@ public class VersionChecking extends TestRepo {
             if (reference == null) {
                 reference = q;
                 refCount = 1;
+            } else if (reference.equals(q)) {
+                refCount++;
+                type = EQUALS;
             } else {
-                if (reference.equals(q)) {
-                    refCount++;
+                if (reference.isEmpty()) {
+                    reference = "[empty string]";
+                    outfileWriter.write(refCount + "\t" + type + "\t\t\t" + reference + EOL);
+                    reference = q;
+                    refCount = 1;
                     type = EQUALS;
+                } else if (startsSimilar(reference, q)) {
+                    refCount++;
+                    type = STARTS_WITH;
                 } else {
-                    if (reference.isEmpty()) {
-                        reference = "[empty string]";
+                    if (STARTS_WITH.equals(type)) {
+                        outfileWriter.write(refCount + "\t" + type + "\t\t" + subsection(reference) + EOL);
+                    } else if (EQUALS.equals(type)) {
                         outfileWriter.write(refCount + "\t" + type + "\t\t\t" + reference + EOL);
-                        reference = q;
-                        refCount = 1;
-                        type = EQUALS;
-                    } else if (startsSimilar(reference, q)) {
-                        refCount++;
-                        type = STARTS_WITH;
                     } else {
-                        if (STARTS_WITH.equals(type)) {
-                            outfileWriter.write(refCount + "\t" + type + "\t\t" + subsection(reference) + EOL);
-                        } else if (EQUALS.equals(type)) {
-                            outfileWriter.write(refCount + "\t" + type + "\t\t\t" + reference + EOL);
-                        } else {
-                            throw new Error();
-                        }
-                        reference = q;
-                        refCount = 1;
-                        type = EQUALS;
+                        throw new Error();
                     }
+                    reference = q;
+                    refCount = 1;
+                    type = EQUALS;
                 }
             }
 
