@@ -6,6 +6,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 
 public class IUProviderAndIdComparator implements Comparator<IInstallableUnit> {
 
+    @Override
     public int compare(IInstallableUnit iu1, IInstallableUnit iu2) {
         // neither iu should be null ... but, just to cover all cases
         if ((iu1 == null) && (iu2 == null)) {

@@ -59,6 +59,7 @@ public class BREETest extends TestJars {
             this.breeValue = breeValue;
         }
 
+        @Override
         public int compareTo(Object o) {
             // first sort on bree name, then on file/bundle name
             int result = breeValue.compareTo(((BREEFileData) o).breeValue);

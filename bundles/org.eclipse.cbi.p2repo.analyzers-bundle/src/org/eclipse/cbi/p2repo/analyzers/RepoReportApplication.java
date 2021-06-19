@@ -11,6 +11,7 @@ import com.google.common.base.Stopwatch;
 
 public class RepoReportApplication implements IApplication {
 
+    @Override
     public Object start(IApplicationContext context) throws Exception {
         Object appresult = IApplication.EXIT_OK;
         RepoTestsConfiguration configurations = RepoTestsConfiguration.createFromSystemProperties();
@@ -55,6 +56,7 @@ public class RepoReportApplication implements IApplication {
         System.out.println(string);
     }
 
+    @Override
     public void stop() {
         // nothing special
 
