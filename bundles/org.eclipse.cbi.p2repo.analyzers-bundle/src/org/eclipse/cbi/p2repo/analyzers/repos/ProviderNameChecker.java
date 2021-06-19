@@ -77,12 +77,10 @@ public class ProviderNameChecker extends TestRepo {
                         // TODO: eventually put in with "incorrect?"
                         else if (providerName.startsWith("Eclipse")) {
                             unknownProviderName.add(iu);
+                        } else if (iu.getId().startsWith("org.eclipse")) {
+                            suspectProviderName.add(iu);
                         } else {
-                            if (iu.getId().startsWith("org.eclipse")) {
-                                suspectProviderName.add(iu);
-                            } else {
-                                unknownProviderName.add(iu);
-                            }
+                            unknownProviderName.add(iu);
                         }
                         // experiment to find configs and categories
                         if (DEBUG) {

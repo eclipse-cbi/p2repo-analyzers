@@ -164,12 +164,10 @@ public class TestLayoutTest extends TestJars {
         if (line == null) {
             if (feature) {
                 line = config.getProperty(KEY_DFT_FEATURE);
+            } else if (source) {
+                line = config.getProperty(KEY_DFT_SRC_JAR);
             } else {
-                if (source) {
-                    line = config.getProperty(KEY_DFT_SRC_JAR);
-                } else {
-                    line = config.getProperty(KEY_DFT_BIN_JAR);
-                }
+                line = config.getProperty(KEY_DFT_BIN_JAR);
             }
         }
         if (line == null) {
