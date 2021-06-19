@@ -2,7 +2,7 @@
 
 if [[ $# != 2 && $# != 3 ]] 
 then
-  printf "\tERROR: Wrong number of arguments. This script, "${0##*/}", requires the name of the jar or jar.pack.gz file to verify and the version of Java to use 8,7,6, or 5, and optionally the location scanned.\n" >&2
+  printf "\tERROR: Wrong number of arguments. This script, "${0##*/}", requires the name of the jar file to verify and the version of Java to use 8,7,6, or 5, and optionally the location scanned.\n" >&2
   exit 1
 fi
 
@@ -91,39 +91,15 @@ KNOWN_EXCEPTION=${KNOWN_EXCEPTION:-"${VERIFYOUTDIR}/knownunsigned${JAVA_VER}.txt
 UNSIGNED_OUTFILE=${UNSIGNED_OUTFILE:-"${VERIFYOUTDIR}/unsigned${JAVA_VER}.txt"}
 NOMANIFEST=${NOMANIFEST:-"${VERIFYOUTDIR}/nomanifest${JAVA_VER}.txt"}
 ERROR_EXIT_FILE=${ERROR_EXIT_FILE:-"${VERIFYOUTDIR}/errors${JAVA_VER}.txt"}
-NESTED_JARS=${NESTED_JARS:-"${VERIFYOUTDIR}/nestedjars${JAVA_VER}.txt"}
 TMP_DIR=${TMP_DIR:-/shared/simrel/tmp/}
 mkdir -p ${TMP_DIR}
-PPAT_PACKGZ="(.*).pack.gz$"
-if [[ "$jarname" =~  $PPAT_PACKGZ ]]
-then 
-  basejarname=${BASH_REMATCH[1]}
-  #echo -e "\n basejarname: " $basejarname "\n"
-  "${UNPACK200_EXE}" $filename ${TMP_DIR}/$basejarname
-  vresult=`"${VERIFY_EXE}" ${VERIFY_OPTIONS} ${TMP_DIR}/$basejarname`
-  exitcode=$?
-  #nestedPackedJars=$( ${JAVA_HOME}/bin/jar -t ${TMP_DIR}/$basejarname | grep "pack.gz" )
-  nestedPackedJars=$(  unzip -t ${TMP_DIR}/$basejarname 2>/dev/null | grep "pack.gz" )
-  if [[ -n $nestedPackedJars ]]
-  then
-    echo "$filename contains nested packed jars" >> ${NESTED_JARS}
-    echo "$nestedPackedJars" >> ${NESTED_JARS}
-  fi
-  csum=$(md5sum "${TMP_DIR}/${basejarname}")
-  # echo -e "$basejarname  \t${csum%% *}  \tjar.pack.gz" >> "${CHECK_SUM_FILE}"
-  printable_basejarname=$basejarname
-  printable_checksum=${csum%% *}
-  printable_type=jar.pack.gz
-  rm ${TMP_DIR}/$basejarname
-else
-  vresult=`"${VERIFY_EXE}" ${VERIFY_OPTIONS} $filename`
-  exitcode=$?
-  csum=$(md5sum "$filename")
-  # echo -e "${filename##*/} \t${csum%% *} \tjar" >> "${CHECK_SUM_FILE}"
-  printable_basejarname=${filename##*/}
-  printable_checksum=${csum%% *}
-  printable_type=jar
-fi
+vresult=`"${VERIFY_EXE}" ${VERIFY_OPTIONS} $filename`
+exitcode=$?
+csum=$(md5sum "$filename")
+# echo -e "${filename##*/} \t${csum%% *} \tjar" >> "${CHECK_SUM_FILE}"
+printable_basejarname=${filename##*/}
+printable_checksum=${csum%% *}
+printable_type=jar
 
 # jarsigner sometimes returns one line, sometimes two ... we take 
 # out EOLs to print compactly
@@ -139,7 +115,6 @@ PPAT_VERIFIED="^.*jar\ verified.*"
 # no manifest is not signed for our purposes ... occurs a lot for unsigned feature jars
 PPAT_UNSIGNED_OR_NOMANIFEST="^.*(jar is unsigned)|(no manifest).*"
 # do not currently use unsigned or no manifest (by themselves) 
-# nor "copy mode" ... copy mode printed to stdout by unpack200
 #PPAT_UNSIGNED="^jar is unsigned.*"
 #PPAT_NOMANIFEST="^no manifest.*"
 #PPAT_COPYMODE="^Copy-mode\..*"
@@ -187,7 +162,7 @@ then
     printf '%s\n' " ${vresultoneline} "  >> "${UNSIGNED_OUTFILE}"
   fi 
 else 
-  # fall through if unexpected result. Will happen if can not unpack200 a file
+  # fall through if unexpected result.
   printf '%-80s \t%-15s \t\t' "${jarname}" "$JAR_TYPE" >> "${ERROR_EXIT_FILE}" 
   printf '%s\n' " ${vresultpneline} "  >> "${ERROR_EXIT_FILE}" 
 fi

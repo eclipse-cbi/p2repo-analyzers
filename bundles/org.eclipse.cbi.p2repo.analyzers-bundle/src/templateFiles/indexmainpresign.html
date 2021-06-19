@@ -49,8 +49,6 @@
                 quality.</dd>
             <dt>Unsigned bundles and features</dt>
             <dd>(pending)</dd>
-            <dt>Nested packed jars</dt>
-            <dd>(pending)</dd>
             <dt>
                 <a href="reports/versionChecksFeatures.html">Feature versions compared to reference repository</a>
             </dt>
@@ -99,13 +97,6 @@
             </dt>
             <dd>Interesting report showing what BREEs are in use, and which bundles are missing it. All bundles with Java code
                 should have one, but it is not required in resource-only bundles.</dd>
-            <dt>
-                <a href="reports/pack200data.txt">Jars missing corresponding Pack200 file</a>
-            </dt>
-            <dd>Pack200 compression is important to save bandwidth. This report will never be perfect ... that is, there are
-                cases where it is known that a jar can not be cleanly compressed with pack200. But nearly all can. So one or two
-                from a project should be ignored as "OK" ... but a pattern of all jars/bundles from a project not being compressed
-                indicates the project simply has not implemented that yet in their build or contribution process.</dd>
             <dt>
                 <a href="reports/featureNames.html">Feature names report</a>
             </dt>

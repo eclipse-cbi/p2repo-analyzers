@@ -51,7 +51,7 @@ fi
 
 if [ -z $3 ]
 then
-  pat=".*\(\.jar$\|\.jar\.pack\.gz$\)"
+  pat=".*\(\.jar$\)"
 else
   pat="${3}"
 fi
@@ -67,7 +67,6 @@ fi
 # make, in case doesn't exist
 mkdir -p "${VERIFYOUTDIR}"
 
-UNPACK200_EXE=$JAVA_HOME/jre/bin/unpack200
 VERIFY_EXE=$JAVA_HOME/bin/jarsigner
 #VERIFY_OPTIONS=${VERIFY_OPTIONS:-"-verify -verbose  -certs"
 #COMPACT=${COMPACT:-false}
@@ -93,7 +92,6 @@ do
   UNSIGNED_OUTFILE="${VERIFYOUTDIR}/unsigned${ver}.txt"
   NOMANIFEST="${VERIFYOUTDIR}/nomanifest${ver}.txt"
   ERROR_EXIT_FILE="${VERIFYOUTDIR}/error${ver}.txt"
-  NESTED_JARS="${VERIFYOUTDIR}/nestedjars${ver}.txt"
 
   find "${loc}" -regex "${pat}" -exec ${EXECDIR}/verify.sh '{}' $ver "${loc}" \;
 done
@@ -137,8 +135,4 @@ fi
 if [ ! -e "${VERIFYOUTDIR}"/errors${ver}.txt ]
 then
     echo  "There were no verify error jars in the directories checked. " > "${VERIFYOUTDIR}"/errors${ver}.txt
-fi 
-if [ ! -e "${VERIFYOUTDIR}"/nestedjars${ver}.txt ]
-then
-    echo  "There were no nested packed jars in the directories checked. " > "${VERIFYOUTDIR}"/nestedjars${ver}.txt
 fi 
