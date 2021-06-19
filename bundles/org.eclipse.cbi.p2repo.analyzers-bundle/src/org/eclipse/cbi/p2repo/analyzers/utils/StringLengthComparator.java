@@ -11,9 +11,9 @@ public class StringLengthComparator implements Comparator<String> {
         } else if ((string1 == null) || (string2 == null)) {
             return 1;
         } else {
-            Integer length1 = Integer.valueOf(string1.length());
+            int length1 = string1.length();
             Integer length2 = Integer.valueOf(string2.length());
-            return length1.compareTo(length2);
+            return Integer.compare(length1, length2);
         }
     }
 }
