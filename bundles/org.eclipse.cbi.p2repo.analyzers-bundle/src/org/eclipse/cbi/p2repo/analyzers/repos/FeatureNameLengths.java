@@ -77,7 +77,7 @@ public class FeatureNameLengths extends TestRepo {
             println(outfileWriter, "<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             println(outfileWriter, "<br /><br />Distribution of Feature Directory Lengths:" + SPACER);
 
-            Integer total = Integer.valueOf(0);
+            int total = 0;
             Set keys = distribution.keySet();
             List<Integer> list = asSortedList(keys);
             for (Iterator iterator = list.iterator(); iterator.hasNext();) {

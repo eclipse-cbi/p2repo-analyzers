@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -53,22 +51,12 @@ public class CheckGreedy extends TestRepo {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-        Reader characterStream = getCharacterStream();
+        Reader characterStream = getCharacterStreamFromURL();
         if (characterStream != null) {
             InputSource is = new InputSource(characterStream);
             document = documentBuilder.parse(is);
         }
         return document;
-    }
-
-    private Reader getCharacterStream() throws IOException {
-        Reader characterStream = null;
-        if (Boolean.FALSE) {
-            characterStream = getCharacterStreamFromFile();
-        } else {
-            characterStream = getCharacterStreamFromURL();
-        }
-        return characterStream;
     }
 
     /*
@@ -141,53 +129,6 @@ public class CheckGreedy extends TestRepo {
             }
         }
         return outpath;
-    }
-
-    private Reader getCharacterStreamFromFile() {
-
-        Reader characterStream = null;
-
-        // for this test, we expect the repo to be a simple repo, with
-        // a content.jar or content.xml file. We try to follow the same
-        // rules as p2, check for jar first, then xml.
-        // TODO: to be a correct "repo test" we should use use URL Connection,
-        // with getRepoURLToTest()
-        // not file IO with get getDirectoryToCheck
-        File file = new File(getDirectoryToCheck() + "/" + "content.jar");
-        if (file.exists()) {
-            ZipFile zipfile = null;
-            try {
-                zipfile = new ZipFile(file);
-                ZipEntry zipEntry = zipfile.getEntry("content.xml");
-                InputStream inputStream = zipfile.getInputStream(zipEntry);
-                characterStream = new InputStreamReader(inputStream);
-                System.out.println("Using content.jar file from " + getDirectoryToCheck());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (zipfile != null) {
-                    try {
-                        zipfile.close();
-                    } catch (IOException e) {
-                        // Unlikely, but just in case ...
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else {
-            file = new File(getRepoURLToTest() + "/" + "content.xml");
-            if (!file.exists()) {
-                throw new RuntimeException("neither content.jar nor content.xml file found at " + getDirectoryToCheck());
-            }
-            try {
-                characterStream = new FileReader(file);
-                System.out.println("Using content.xml file from " + getDirectoryToCheck());
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException("Program Error, for file suddenly disappeared after being found.", e);
-            }
-        }
-
-        return characterStream;
     }
 
     protected boolean xcheckGreedyOptionals(Document document) throws IOException {
