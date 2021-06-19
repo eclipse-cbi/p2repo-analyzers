@@ -9,12 +9,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
+import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 
 public class IUNameChecker extends TestRepo {
 

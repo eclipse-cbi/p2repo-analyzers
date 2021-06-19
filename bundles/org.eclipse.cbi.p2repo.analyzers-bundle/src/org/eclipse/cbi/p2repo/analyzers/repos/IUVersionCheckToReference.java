@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
+import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.utils.IUIdComparator;
 
 public class IUVersionCheckToReference extends TestRepo {
 

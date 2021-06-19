@@ -25,11 +25,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
-import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.utils.FullJarNameParser;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
+import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleException;
 
 /**

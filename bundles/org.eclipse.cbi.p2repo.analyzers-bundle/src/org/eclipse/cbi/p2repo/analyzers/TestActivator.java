@@ -11,6 +11,7 @@
 package org.eclipse.cbi.p2repo.analyzers;
 
 import java.io.File;
+
 import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.osgi.framework.log.FrameworkLog;
 import org.osgi.framework.Bundle;

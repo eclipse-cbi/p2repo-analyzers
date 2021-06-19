@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
+import org.eclipse.cbi.p2repo.analyzers.utils.StringLengthComparator;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.utils.StringLengthComparator;
 
 public class FeatureNameLengths extends TestRepo {
 

@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.query.IQueryResult;
-import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 
 public class VersionChecking extends TestRepo {
 
