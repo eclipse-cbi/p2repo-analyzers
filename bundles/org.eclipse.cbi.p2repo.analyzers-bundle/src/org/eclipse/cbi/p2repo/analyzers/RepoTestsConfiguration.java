@@ -77,6 +77,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
         return referenceRepoDir;
     }
 
+    @Override
     public String getReportOutputDir() {
         return this.reportOutputDir;
     }

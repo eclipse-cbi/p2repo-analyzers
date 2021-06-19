@@ -38,12 +38,14 @@ public class TestActivator implements BundleActivator {
         return log == null ? null : log.getFile();
     }
 
+    @Override
     public void start(BundleContext context) throws Exception {
         TestActivator.context = context;
         packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
         packageAdmin = (PackageAdmin) context.getService(packageAdminRef);
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception {
         TestActivator.context = null;
     }

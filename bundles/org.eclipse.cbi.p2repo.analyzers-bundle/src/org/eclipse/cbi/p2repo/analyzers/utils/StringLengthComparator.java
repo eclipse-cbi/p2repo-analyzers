@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 public class StringLengthComparator implements Comparator<String> {
 
+    @Override
     public int compare(String string1, String string2) {
         if ((string1 == null) && (string2 == null)) {
             return 0;
