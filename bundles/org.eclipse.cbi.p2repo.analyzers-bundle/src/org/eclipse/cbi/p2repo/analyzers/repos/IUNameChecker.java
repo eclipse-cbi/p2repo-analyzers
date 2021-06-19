@@ -35,8 +35,8 @@ public class IUNameChecker extends TestRepo {
     private boolean checkFeatureNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
         File outfile = null;
-        List<IInstallableUnit> incorrectBundleName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> incorrectBundleName = new ArrayList<>();
+        List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<>();
         String testDirName = getReportOutputDirectory();
         try {
             outfile = new File(testDirName, "featureNames.html");
@@ -105,8 +105,8 @@ public class IUNameChecker extends TestRepo {
     private boolean checkBundleNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         FileWriter outfileWriter = null;
         File outfile = null;
-        List<IInstallableUnit> incorrectBundleName = new ArrayList<IInstallableUnit>();
-        List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<IInstallableUnit>();
+        List<IInstallableUnit> incorrectBundleName = new ArrayList<>();
+        List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<>();
         String testDirName = getReportOutputDirectory();
         try {
             outfile = new File(testDirName, "bundleNames.html");

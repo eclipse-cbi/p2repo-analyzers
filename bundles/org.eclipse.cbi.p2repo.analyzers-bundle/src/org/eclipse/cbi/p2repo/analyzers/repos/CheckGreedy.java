@@ -16,12 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -136,17 +134,10 @@ public class CheckGreedy extends TestRepo {
         // reading until read returns 0 or less.
         byte[] buffer = new byte[8192];
         String outpath = getConfigurations().getTempWorkingDir() + "/" + zipEntry.getName();
-        FileOutputStream output = null;
-        try {
-            output = new FileOutputStream(outpath);
+        try (FileOutputStream output = new FileOutputStream(outpath)) {
             int len = 0;
             while ((len = zipStream.read(buffer)) > 0) {
                 output.write(buffer, 0, len);
-            }
-        } finally {
-
-            if (output != null) {
-                output.close();
             }
         }
         return outpath;
@@ -171,8 +162,6 @@ public class CheckGreedy extends TestRepo {
                 InputStream inputStream = zipfile.getInputStream(zipEntry);
                 characterStream = new InputStreamReader(inputStream);
                 System.out.println("Using content.jar file from " + getDirectoryToCheck());
-            } catch (ZipException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -234,11 +223,11 @@ public class CheckGreedy extends TestRepo {
             result = false;
         } else {
 
-            List<String> intenionallyTrueOptionals = new ArrayList<String>();
-            List<String> intenionallyImpliedTrueOptionals = new ArrayList<String>();
-            List<String> intenionallyFalseOptionals = new ArrayList<String>();
+            List<String> intenionallyTrueOptionals = new ArrayList<>();
+            List<String> intenionallyImpliedTrueOptionals = new ArrayList<>();
+            List<String> intenionallyFalseOptionals = new ArrayList<>();
             // List will be list of parent IU Nodes that contain the optional
-            Map<String, List> blameIU = new HashMap<String, List>();
+            Map<String, List> blameIU = new HashMap<>();
             NodeList iuElements = document.getElementsByTagName("required");
             int nUnits = iuElements.getLength();
             // System.out.println("Number of total required elements found: "
@@ -343,8 +332,8 @@ public class CheckGreedy extends TestRepo {
             List<String> intenionallyFalseOptionals, Map<String, List> blameIUs) throws IOException {
 
         FileWriter outfile = createOutputFile();
-        try {
-            List<String> conflictingStatements = new ArrayList<String>();
+        try (outfile) {
+            List<String> conflictingStatements = new ArrayList<>();
             conflictingStatements = overlapping(intenionallyFalseOptionals, intenionallyImpliedTrueOptionals);
             conflictingStatements.addAll(overlapping(intenionallyFalseOptionals, intenionallyTrueOptionals));
 
@@ -370,15 +359,11 @@ public class CheckGreedy extends TestRepo {
             printHeader(outfile, 2,
                     "Correct cases. Optional runtime requirements with explicit no-greedy install (new publisher default)");
             printLinesProvider(outfile, intenionallyFalseOptionals);
-        } finally {
-            if (outfile != null) {
-                outfile.close();
-            }
         }
     }
 
     private List<String> overlapping(List<String> intenionallyFalseOptionals, List<String> intenionallyImpliedTrueOptionals) {
-        Set<String> intersectionSet = new HashSet<String>();
+        Set<String> intersectionSet = new HashSet<>();
         // if requirement is specified in both lists, it sometimes is
         // optional=true greedy=true, but sometimes
         // optional=true greedy=false.
@@ -388,11 +373,10 @@ public class CheckGreedy extends TestRepo {
                 intersectionSet.add(nongreedyRequirement);
             }
         }
-        return new ArrayList<String>(intersectionSet);
+        return new ArrayList<>(intersectionSet);
     }
 
     private FileWriter createOutputFile() throws IOException {
-        FileWriter outfileWriter = null;
         File outfile = null;
         String testDirName = getReportOutputDirectory();
         outfile = new File(testDirName, "greedyReport.html");
@@ -411,12 +395,12 @@ public class CheckGreedy extends TestRepo {
 
     private void printLinesProvider(FileWriter out, List<String> names) throws IOException {
 
-        Set<String> namesSet = new HashSet<String>(names);
+        Set<String> namesSet = new HashSet<>(names);
         out.write("<p>Total Count: " + names.size() + EOL);
         out.write("<p>Unique Count: " + namesSet.size() + EOL);
         out.write("<ol>" + EOL);
 
-        List<String> sortedUniqueNames = new ArrayList<String>(namesSet);
+        List<String> sortedUniqueNames = new ArrayList<>(namesSet);
 
         Collections.sort(sortedUniqueNames);
 
@@ -428,12 +412,12 @@ public class CheckGreedy extends TestRepo {
 
     private void printLinesProvider(FileWriter out, List<String> names, Map<String, List> blameIUs) throws IOException {
 
-        Set<String> namesSet = new HashSet<String>(names);
+        Set<String> namesSet = new HashSet<>(names);
         out.write("<p>Total Count: " + names.size() + EOL);
         out.write("<p>Unique Count: " + namesSet.size() + EOL);
         out.write("<ol>" + EOL);
 
-        List<String> sortedUniqueNames = new ArrayList<String>(namesSet);
+        List<String> sortedUniqueNames = new ArrayList<>(namesSet);
 
         Collections.sort(sortedUniqueNames);
 
@@ -452,8 +436,7 @@ public class CheckGreedy extends TestRepo {
         Collections.sort(toblame);
         out.write("<p>Number of IUs using optional, but greedy for this case: " + toblame.size() + EOL);
         out.write("<ol>" + EOL);
-        for (Iterator iterator = toblame.iterator(); iterator.hasNext();) {
-            Object iu = iterator.next();
+        for (Object iu : toblame) {
             printLineListItem(out, (String) iu);
         }
         out.write("</ol></p>" + EOL);

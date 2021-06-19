@@ -32,9 +32,7 @@ public class BundleJarUtils {
         try {
             Map attributes = ManifestElement.parseBundleManifest(input, null);
             manifestEntry = (String) attributes.get(key);
-        } catch (BundleException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (BundleException | IOException e) {
             e.printStackTrace();
         } finally {
             if (input != null) {

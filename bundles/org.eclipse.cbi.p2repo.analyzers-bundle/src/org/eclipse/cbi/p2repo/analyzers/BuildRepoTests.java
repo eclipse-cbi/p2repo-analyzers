@@ -127,8 +127,7 @@ public class BuildRepoTests {
     private boolean removeDirectory(File dir) {
         boolean result = true;
         String[] dirlist = dir.list();
-        for (int i = 0; i < dirlist.length; i++) {
-            String childentry = dirlist[i];
+        for (String childentry : dirlist) {
             File child = new File(dir, childentry);
             if (child.isDirectory()) {
                 result = removeDirectory(child);
@@ -205,16 +204,7 @@ public class BuildRepoTests {
             // is copied into place when output directory is first created.
             copyTemplateForIndexFile("/templateFiles/indexmain.html");
 
-        } catch (ProvisionException e) {
-            e.printStackTrace();
-            failuresOccurred = true;
-        } catch (OperationCanceledException e) {
-            e.printStackTrace();
-            failuresOccurred = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            failuresOccurred = true;
-        } catch (URISyntaxException e) {
+        } catch (ProvisionException | OperationCanceledException | IOException | URISyntaxException e) {
             e.printStackTrace();
             failuresOccurred = true;
         }

@@ -76,8 +76,7 @@ public class VersionTest extends TestJars {
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
         int checked = 0;
-        for (int i = 0; i < children.length; i++) {
-            File child = children[i];
+        for (File child : children) {
             String name = child.getName();
             // assume directory if not file
             if (child.isFile()) {

@@ -94,8 +94,6 @@ public class BREETest extends TestJars {
         createReportWriter(outputFilename);
         File inputdir = new File(getBundleDirectory());
 
-        boolean failuresOccured;
-
         return checkBundleBREE(inputdir);
     }
 
@@ -243,8 +241,7 @@ public class BREETest extends TestJars {
             reportWriter.writeln("    Java Bundles without a BREE: " + javaWithoutBree.size());
             reportWriter.writeln();
             Collections.sort(javaWithoutBree);
-            for (Iterator iterator = javaWithoutBree.iterator(); iterator.hasNext();) {
-                Object object = iterator.next();
+            for (Object object : javaWithoutBree) {
                 reportWriter.writeln("       " + object);
             }
             reportWriter.writeln();
@@ -253,8 +250,7 @@ public class BREETest extends TestJars {
             Collections.sort(nonjavaWithBree);
             BREEFileData breefiledata = null;
 
-            for (Iterator iterator = nonjavaWithBree.iterator(); iterator.hasNext();) {
-                Object object = iterator.next();
+            for (Object object : nonjavaWithBree) {
                 if (object instanceof BREEFileData) {
                     breefiledata = (BREEFileData) object;
                     reportWriter.printf("%24s\t%s\n", breefiledata.breeValue, breefiledata.filename);

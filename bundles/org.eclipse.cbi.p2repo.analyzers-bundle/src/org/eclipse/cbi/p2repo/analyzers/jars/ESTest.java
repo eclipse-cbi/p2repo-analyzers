@@ -64,7 +64,6 @@ public class ESTest extends TestJars {
 
         File inputdir = new File(getBundleDirectory());
 
-        boolean failuresOccured;
         createReportWriter(outputFilename);
         return checkBundleES(inputdir);
     }
@@ -229,9 +228,7 @@ public class ESTest extends TestJars {
         try {
             Map attributes = ManifestElement.parseBundleManifest(input, null);
             es = (String) attributes.get(PROPERTY_ECLIPSE_SOURCEREFERENCES);
-        } catch (BundleException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (BundleException | IOException e) {
             e.printStackTrace();
         } finally {
             if (input != null) {
