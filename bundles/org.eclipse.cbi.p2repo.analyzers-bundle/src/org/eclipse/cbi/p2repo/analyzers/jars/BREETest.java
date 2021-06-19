@@ -302,7 +302,7 @@ public class BREETest extends TestJars {
     private void incrementCounts(Map breeMap, String bree) {
         Integer count = (Integer) breeMap.get(bree);
         if (count == null) {
-            breeMap.put(bree, new Integer(1));
+            breeMap.put(bree, Integer.valueOf(1));
         } else {
             breeMap.put(bree, increment(count));
         }
@@ -310,7 +310,7 @@ public class BREETest extends TestJars {
     }
 
     private Integer increment(Integer count) {
-        return new Integer(count.intValue() + 1);
+        return Integer.valueOf(count.intValue() + 1);
     }
 
     private String getBundleName(String fullname) {

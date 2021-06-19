@@ -77,7 +77,7 @@ public class FeatureNameLengths extends TestRepo {
             println(outfileWriter, "<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             println(outfileWriter, "<br /><br />Distribution of Feature Directory Lengths:" + SPACER);
 
-            Integer total = new Integer(0);
+            Integer total = Integer.valueOf(0);
             Set keys = distribution.keySet();
             List<Integer> list = asSortedList(keys);
             for (Iterator iterator = list.iterator(); iterator.hasNext();) {
@@ -115,11 +115,11 @@ public class FeatureNameLengths extends TestRepo {
     }
 
     private void tabulate(int length) {
-        Integer category = new Integer(length);
+        Integer category = Integer.valueOf(length);
         Integer count = (Integer) distribution.get(category);
         if (count == null) {
             // our first occurance
-            count = new Integer(1);
+            count = Integer.valueOf(1);
         } else {
             count = count + 1;
         }

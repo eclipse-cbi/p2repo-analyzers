@@ -199,7 +199,7 @@ public class ESTest extends TestJars {
     private void incrementCounts(Map esMap, String es) {
         Integer count = (Integer) esMap.get(es);
         if (count == null) {
-            esMap.put(es, new Integer(1));
+            esMap.put(es, Integer.valueOf(1));
         } else {
             esMap.put(es, increment(count));
         }
@@ -207,7 +207,7 @@ public class ESTest extends TestJars {
     }
 
     private Integer increment(Integer count) {
-        return new Integer(count.intValue() + 1);
+        return Integer.valueOf(count.intValue() + 1);
     }
 
     private String getBundleName(String fullname) {
