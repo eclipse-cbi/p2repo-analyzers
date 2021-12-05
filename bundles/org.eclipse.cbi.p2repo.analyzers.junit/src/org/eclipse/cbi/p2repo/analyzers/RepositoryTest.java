@@ -126,11 +126,9 @@ public class RepositoryTest {
 	public void testIUVersionCheckToReference()
 			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		IUVersionCheckToReference checker = new IUVersionCheckToReference(CONF_FROM_SYSTEM_PROPERTIES);
-		if (configureChecker(checker)) {
-			if (refRepoDir != null) {
-				assertTrue("Correct version changes", !checker.checkIUVersionsToReference());
-				assertTrue("Correct version changes for features", !checker.checkIUVersionsToReferenceForFeatures());
-			}
+		if (configureChecker(checker) && refRepoDir != null) {
+			assertFalse("Correct version changes", !checker.checkIUVersionsToReference());
+			assertTrue("Correct version changes for features", !checker.checkIUVersionsToReferenceForFeatures());
 		}
 	}
 
@@ -183,7 +181,7 @@ public class RepositoryTest {
 	}
 
 	private boolean skipChecker(BuildRepoTests checker) {
-		if (SKIPPED_CHECKER.size() > 0) {
+		if (!SKIPPED_CHECKER.isEmpty()) {
 			return SKIPPED_CHECKER.contains(checker.getClass().getSimpleName());
 		}
 		return false;
