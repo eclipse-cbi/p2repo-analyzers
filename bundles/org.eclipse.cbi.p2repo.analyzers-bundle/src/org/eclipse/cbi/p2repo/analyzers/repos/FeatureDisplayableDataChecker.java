@@ -26,8 +26,9 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         super(configurations);
     }
 
-    private static String STANDARD_LICENSES_PROPERTIES_FILE = "standardLicenses.properties";
+    private static final String STANDARD_LICENSES_PROPERTIES_FILE = "standardLicenses.properties";
     private String        previousPackageHeader             = null;
+    private static final String SPACER = "<br />=======================";
 
     public static void main(String[] args) {
         _testFeatureDisplayableDataChecer();
@@ -85,7 +86,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                 license2010, badLicense, noLicense, extraLicense);
 
         printReportLicense(license2017, license2014, license2011, license2010, badLicense, noLicense, extraLicense);
-        return ((badLicense.size() > 0) || (extraLicense.size() > 0) || (noLicense.size() > 0));
+        return (!badLicense.isEmpty() || !extraLicense.isEmpty() || !noLicense.isEmpty());
     }
 
     private void checkLicenses(ILicense platformLicense2017, ILicense platformLicense2014, ILicense platformLicense2011, ILicense platformLicense2010,
@@ -141,12 +142,9 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             List<IInstallableUnit> license2010, List<IInstallableUnit> badLicense, List<IInstallableUnit> noLicense,
             List<IInstallableUnit> extraLicense) {
 
-        FileWriter outfileWriter = null;
-        File outfile = null;
         String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "licenseConsistency.html");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(testDirName, "licenseConsistency.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)){
             printparagraph(outfileWriter, "Repository ('repoURLToTest'): " + getRepoURLToTest());
             printparagraph(outfileWriter, "\toutput: " + outfile.getAbsolutePath());
             printHeader(outfileWriter, 2, "License Consistency Summary");
@@ -188,21 +186,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
             printUnits(outfileWriter, license2017);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // weirdness
-                    e.printStackTrace();
-                }
-            }
         }
-        // if ((badLicense.size() > 0) || (extraLicense.size() > 0) ||
-        // (noLicense.size() > 0)) {
-        // fail("Errors in license consistency. For list, see " +
-        // outfile.getAbsolutePath());
-        // }
     }
 
     private void printUnits(FileWriter outfileWriter, List<IInstallableUnit> listOfUnits) throws IOException {
@@ -259,8 +243,8 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         boolean result = false;
         IQueryResult<IInstallableUnit> allIUs = getAllGroupIUs();
         result = checkLicenseConsistency(allIUs);
-        result = result | checkCopyrights(allIUs);
-        return result | checkDescriptions(allIUs);
+        result = result || checkCopyrights(allIUs);
+        return result || checkDescriptions(allIUs);
     }
 
     private boolean checkCopyrights(IQueryResult<IInstallableUnit> allFeatures) {
@@ -298,7 +282,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         }
 
         printReportCopyrights(okCopyright, noOrBadCopyright, indeterminateCopyright);
-        return ((noOrBadCopyright.size() > 0));
+        return !noOrBadCopyright.isEmpty();
     }
 
     private boolean checkDescriptions(IQueryResult<IInstallableUnit> allFeatures) {
@@ -319,18 +303,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         }
 
         printReportDescription(ok, noneOrBad);
-        return ((noneOrBad.size() > 0));
+        return !noneOrBad.isEmpty();
     }
 
     private void printReportDescription(List<IInstallableUnit> ok, List<IInstallableUnit> noneOrBad) {
-        String SPACER = "<br />=======================";
-
-        FileWriter outfileWriter = null;
-        File outfile = null;
         String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "descriptions.html");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(testDirName, "descriptions.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)){
             System.out.println("output: " + outfile.getAbsolutePath());
             println(outfileWriter, "<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             println(outfileWriter, "<br /><br />Description Report:" + SPACER);
@@ -354,32 +333,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // weirdness
-                    e.printStackTrace();
-                }
-            }
         }
-        // if ((badLicense.size() > 0) || (extraLicense.size() > 0) ||
-        // (noLicense.size() > 0)) {
-        // fail("Errors in license consistency. For list, see " +
-        // outfile.getAbsolutePath());
-        // }
     }
 
     private void printReportCopyrights(List<IInstallableUnit> good, List<IInstallableUnit> bad, List<IInstallableUnit> maybe) {
-        String SPACER = "<br />=======================";
-
-        FileWriter outfileWriter = null;
-        File outfile = null;
         String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "copyrights.html");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(testDirName, "copyrights.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)){
             System.out.println("output: " + outfile.getAbsolutePath());
             println(outfileWriter, "<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             println(outfileWriter, "<br /><br />Copyright Report:" + SPACER);
@@ -412,21 +372,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // weirdness
-                    e.printStackTrace();
-                }
-            }
         }
-        // if ((badLicense.size() > 0) || (extraLicense.size() > 0) ||
-        // (noLicense.size() > 0)) {
-        // fail("Errors in license consistency. For list, see " +
-        // outfile.getAbsolutePath());
-        // }
     }
 
     private void printLineCopyright(FileWriter outfileWriter, IInstallableUnit iu) throws IOException {
