@@ -26,8 +26,8 @@ public class IUVersionCheckToReference extends TestRepo {
     }
 
     public boolean checkIUVersionsToReference() throws IOException, ProvisionException, URISyntaxException {
-        FileWriter outfileWriter = null;
-        File outfile = null;
+        String testDirName = getReportOutputDirectory();
+        File outfile = new File(testDirName, "versionChecks.html");
         List<IInstallableUnit> referenceOnly = new ArrayList<>();
         List<IInstallableUnit> newIUs = new ArrayList<>();
         List<IInstallableUnit> decreasingVersions = new ArrayList<>();
@@ -39,10 +39,7 @@ public class IUVersionCheckToReference extends TestRepo {
         Set<String> refinboth = new TreeSet<>();
         Set<String> curinboth = new TreeSet<>();
 
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "versionChecks.html");
-            outfileWriter = new FileWriter(outfile);
+        try (FileWriter outfileWriter = new FileWriter(outfile)){
             System.out.println("output: " + outfile.getAbsolutePath());
 
             outfileWriter.write("<h1>All IUs</h1>" + EOL + "<p>(except groups, and categories)</p>");
@@ -100,15 +97,6 @@ public class IUVersionCheckToReference extends TestRepo {
             printTableIUs(outfileWriter, matchingVersions, getAllReferenceIUs());
 
             return true;
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
 
     }
@@ -122,8 +110,7 @@ public class IUVersionCheckToReference extends TestRepo {
         Set allCurrent = allIUs.toUnmodifiableSet();
         Set allRef = allReferenceIUs.toUnmodifiableSet();
 
-        for (Iterator iterator = curinboth.iterator(); iterator.hasNext();) {
-            String iuname = (String) iterator.next();
+        for (String iuname : curinboth) {
             IInstallableUnit current = getIU(iuname, allCurrent);
             IInstallableUnit reference = getIU(iuname, allRef);
             if (reference != null) {
@@ -172,10 +159,9 @@ public class IUVersionCheckToReference extends TestRepo {
 
     }
 
-    private IInstallableUnit getIU(String iuname, Set allIUs) {
+    private IInstallableUnit getIU(String iuname, Set<IInstallableUnit> allIUs) {
         IInstallableUnit result = null;
-        for (Iterator iterator = allIUs.iterator(); iterator.hasNext();) {
-            IInstallableUnit iu = (IInstallableUnit) iterator.next();
+        for (IInstallableUnit iu : allIUs) {
             if (iuname.equals(iu.getId())) {
                 result = iu;
                 break;
@@ -187,8 +173,7 @@ public class IUVersionCheckToReference extends TestRepo {
     private int rawcount(IQueryResult<IInstallableUnit> refs) {
         int count = 0;
         if (refs != null) {
-            for (Iterator iterator = refs.iterator(); iterator.hasNext();) {
-                IInstallableUnit iiu = (IInstallableUnit) iterator.next();
+            for (IInstallableUnit iiu : refs) {
                 if (iiu.getId() == null || iiu.getId().isEmpty()) {
                     throw new RuntimeException("IIU had no (or empty) ID string: " + iiu);
                 }
@@ -201,32 +186,20 @@ public class IUVersionCheckToReference extends TestRepo {
 
     private void dump(List<IInstallableUnit> refinboth, String filename) throws IOException {
         Collections.sort(refinboth);
-        FileWriter outfile = null;
-        try {
-            File out = new File(getReportOutputDirectory(), filename);
-            outfile = new FileWriter(out);
+        File out = new File(getReportOutputDirectory(), filename);
+        try (FileWriter outfile = new FileWriter(out)){
             for (IInstallableUnit iInstallableUnit : refinboth) {
                 outfile.write(iInstallableUnit.toString() + EOL);
-            }
-        } finally {
-            if (outfile != null) {
-                outfile.close();
             }
         }
 
     }
 
     private void dump(Set<String> inboth, String filename) throws IOException {
-        FileWriter outfile = null;
-        try {
-            File out = new File(getReportOutputDirectory(), filename);
-            outfile = new FileWriter(out);
+        File out = new File(getReportOutputDirectory(), filename);
+        try (FileWriter outfile = new FileWriter(out)) {
             for (String iInstallableUnit : inboth) {
                 outfile.write(iInstallableUnit.toString() + EOL);
-            }
-        } finally {
-            if (outfile != null) {
-                outfile.close();
             }
         }
 
@@ -247,7 +220,7 @@ public class IUVersionCheckToReference extends TestRepo {
         }
     }
 
-    private void processForExtraReferences(List<IInstallableUnit> referenceOnly, Set refinboth) throws ProvisionException,
+    private void processForExtraReferences(List<IInstallableUnit> referenceOnly, Set<String> refinboth) throws ProvisionException,
             URISyntaxException {
         if (getAllReferenceIUs() != null) {
             for (IInstallableUnit refiu : getAllReferenceIUs().toSet()) {
@@ -334,7 +307,7 @@ public class IUVersionCheckToReference extends TestRepo {
             throws IOException {
 
         out.write("<p>Count: " + iuListCur.size() + EOL);
-        if (iuListCur.size() > 0) {
+        if (!iuListCur.isEmpty()) {
             Collections.sort(iuListCur);
             printStartTable(out, "");
             printRowln(out, "<th>" + "IU id" + "</th><th>" + "Reference (old) version" + "</th><th>" + "Current (new) version"
@@ -348,33 +321,9 @@ public class IUVersionCheckToReference extends TestRepo {
         }
     }
 
-    // private void printTableIUs(FileWriter out, Set<String> iuIds,
-    // IQueryResult<IInstallableUnit> iuList,
-    // IQueryResult<IInstallableUnit> iuListRefs) throws IOException {
-    // // Comparator<? super IInstallableUnit> comparatorBundleName = new
-    // // IUNameAndIdComparator();
-    // // Comparator<? super IInstallableUnit> comparatorBundleName = new
-    // // IUIdComparator();
-    // List<String> iuIdList = new ArrayList<String>(iuIds);
-    // Collections.sort(iuIdList);
-    // out.write("<p>Count: " + iuIdList.size() + EOL);
-    // printStartTable(out, "");
-    // printRowln(out, "<th>" + "IU id" + "</th><th>" +
-    // "Reference (old) version" + "</th><th>" + "Current (new) version"
-    // + "</th>");
-    //
-    // for (String iuId : iuIdList) {
-    // IInstallableUnit iu = getIUNamed(iuList, iuId);
-    // IInstallableUnit iuRef = getIUNamed(iuListRefs, iuId);
-    // printLineRowItem(out, iu, iuRef);
-    // }
-    // printEndTable(out);
-    // }
-
     private IInstallableUnit getIUNamed(IQueryResult<IInstallableUnit> iuListRefs, String id) {
         IInstallableUnit result = null;
-        for (Iterator iterator = iuListRefs.iterator(); iterator.hasNext();) {
-            IInstallableUnit iInstallableUnit = (IInstallableUnit) iterator.next();
+        for (IInstallableUnit iInstallableUnit : iuListRefs) {
             if (iInstallableUnit.getId().equals(id)) {
                 result = iInstallableUnit;
                 break;
@@ -384,8 +333,8 @@ public class IUVersionCheckToReference extends TestRepo {
     }
 
     public boolean checkIUVersionsToReferenceForFeatures() throws IOException, ProvisionException, URISyntaxException {
-        FileWriter outfileWriter = null;
-        File outfile = null;
+        String testDirName = getReportOutputDirectory();
+        File outfile = new File(testDirName, "versionChecksFeatures.html");
         List<IInstallableUnit> inreferenceOnly = new ArrayList<>();
         List<IInstallableUnit> newIUs = new ArrayList<>();
         List<IInstallableUnit> decreasingVersions = new ArrayList<>();
@@ -397,10 +346,7 @@ public class IUVersionCheckToReference extends TestRepo {
         Set<String> refinboth = new TreeSet<>();
         Set<String> curinboth = new TreeSet<>();
 
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "versionChecksFeatures.html");
-            outfileWriter = new FileWriter(outfile);
+        try (FileWriter outfileWriter = new FileWriter(outfile)){
             System.out.println("output: " + outfile.getAbsolutePath());
 
             System.out.println("all feature groups IUs");
@@ -461,15 +407,6 @@ public class IUVersionCheckToReference extends TestRepo {
             // printTableIUs(outfileWriter, curinboth, getAllGroupIUs(),
             // getAllReferenceGroupIUs());
             return true;
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
 
     }
