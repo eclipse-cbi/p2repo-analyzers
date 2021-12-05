@@ -199,7 +199,7 @@ public class IUVersionCheckToReference extends TestRepo {
         File out = new File(getReportOutputDirectory(), filename);
         try (FileWriter outfile = new FileWriter(out)) {
             for (String iInstallableUnit : inboth) {
-                outfile.write(iInstallableUnit.toString() + EOL);
+                outfile.write(iInstallableUnit + EOL);
             }
         }
 
