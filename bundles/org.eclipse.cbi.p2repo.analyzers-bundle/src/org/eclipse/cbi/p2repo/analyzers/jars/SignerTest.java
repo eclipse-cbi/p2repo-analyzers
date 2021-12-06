@@ -28,19 +28,19 @@ import org.eclipse.cbi.p2repo.analyzers.utils.PlainCheckReport;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
 import org.eclipse.cbi.p2repo.analyzers.utils.VerifyStep;
 
-class SignerTest extends TestJars {
+public class SignerTest extends TestJars {
     static final String UNSIGNED_FILENAME = "unsigned8.txt";
     static final String SIGNED_FILENAME = "verified8.txt";
     static final String KNOWN_UNSIGNED = "knownunsigned8.txt";
 
-    SignerTest(RepoTestsConfiguration configurations) {
+    public SignerTest(RepoTestsConfiguration configurations) {
         super(configurations);
     }
 
     /**
      * @return <code>true</code> if errors were found 
      */
-    boolean verifySignatures() throws IOException {
+    public boolean verifySignatures() throws IOException {
         Set<PlainCheckReport> checkReports = new CopyOnWriteArraySet<>();
         if (!VerifyStep.canVerify()) {
             System.err.println("jarsigner is not available. Can not check.");
