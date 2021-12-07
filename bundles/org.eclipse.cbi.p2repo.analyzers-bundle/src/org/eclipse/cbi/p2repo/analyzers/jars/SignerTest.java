@@ -52,7 +52,7 @@ public class SignerTest extends TestJars {
                 synchronized (this) {
                     if (repo == null) {
                         try {
-                            repo = TestRepo.getAgent().getService(IArtifactRepositoryManager.class).loadRepository(new File(getReportOutputDirectory()).toURI(), new NullProgressMonitor());
+                            repo = TestRepo.getAgent().getService(IArtifactRepositoryManager.class).loadRepository(new File(configurations.getReportRepoDir()).toURI(), new NullProgressMonitor());
                         } catch (ProvisionException e) {
                             e.printStackTrace();
                         }
