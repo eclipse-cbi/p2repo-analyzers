@@ -252,7 +252,7 @@ public class TestRepo extends BuildRepoTests {
         return (IMetadataRepositoryManager) getAgent().getService(IMetadataRepositoryManager.SERVICE_NAME);
     }
 
-    protected static IProvisioningAgent getAgent() {
+    public static IProvisioningAgent getAgent() {
         // get the global agent for the currently running system
         return (IProvisioningAgent) ServiceHelper.getService(TestActivator.getContext(), IProvisioningAgent.SERVICE_NAME);
     }

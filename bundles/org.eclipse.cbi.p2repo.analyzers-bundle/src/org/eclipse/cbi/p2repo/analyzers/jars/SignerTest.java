@@ -18,23 +18,49 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
+import org.eclipse.cbi.p2repo.analyzers.repos.TestRepo;
 import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
 import org.eclipse.cbi.p2repo.analyzers.utils.PlainCheckReport;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
 import org.eclipse.cbi.p2repo.analyzers.utils.VerifyStep;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.repository.artifact.IArtifactRepository;
+import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 
 public class SignerTest extends TestJars {
     static final String UNSIGNED_FILENAME = "unsigned8.txt";
     static final String SIGNED_FILENAME = "verified8.txt";
     static final String KNOWN_UNSIGNED = "knownunsigned8.txt";
-
+    final Supplier<IArtifactRepository> artifactRepo;
+    
     public SignerTest(RepoTestsConfiguration configurations) {
         super(configurations);
+        artifactRepo = new Supplier<>() {
+            IArtifactRepository repo = null;
+            @Override
+            public IArtifactRepository get() {
+                if (repo != null) {
+                    return repo;
+                }
+                synchronized (this) {
+                    if (repo == null) {
+                        try {
+                            repo = TestRepo.getAgent().getService(IArtifactRepositoryManager.class).loadRepository(new File(getReportOutputDirectory()).toURI(), new NullProgressMonitor());
+                        } catch (ProvisionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return repo;
+            }
+        }; 
     }
 
     /**
@@ -92,7 +118,7 @@ public class SignerTest extends TestJars {
         return new ReportWriter(getReportOutputDirectory() + "/" + filename);
     }
 
-    final static class SignerCheck implements Consumer<File> {
+    final class SignerCheck implements Consumer<File> {
         final Collection<PlainCheckReport> reports;
         final String iuTypeName;
 
@@ -110,28 +136,34 @@ public class SignerTest extends TestJars {
             File fileToCheck = file;
             // signing disabled: jarprocessor.exclude.sign = true
             Properties eclipseInf = BundleJarUtils.getEclipseInf(fileToCheck);
-            if (Boolean.valueOf(eclipseInf.getProperty("jarprocessor.exclude.sign", "false"))) {
+            if (Boolean.parseBoolean(eclipseInf.getProperty("jarprocessor.exclude.sign", "false"))) {
                 // skip check
                 checkReport.setType(ReportType.BAD_GUY);
                 checkReport.setCheckResult("Jar was excluded from signing using the eclipse.inf entry.");
             } else {
                 StringBuilder errorOut = new StringBuilder();
                 StringBuilder warningOut = new StringBuilder();
-                boolean verified = VerifyStep.verify(fileToCheck, errorOut, warningOut);
-                if (!verified) {
-                    checkReport.setType(ReportType.NOT_IN_TRAIN);
-                    checkReport.setCheckResult(errorOut.toString());
-                } else {
-                    String message = "jar verified";
+                boolean jarsignerVerified = VerifyStep.verify(fileToCheck, errorOut, warningOut);
+                if (jarsignerVerified) {
+                    String message = "jar verified (jarsigner)";
                     if (warningOut.length() > 0) {
                         checkReport.setType(ReportType.INFO);
                         message = warningOut.toString();
                     }
                     checkReport.setCheckResult(message);
+                } else if (PGPVerifier.verify(fileToCheck, artifactRepo.get(), errorOut, warningOut)) {
+                    String message = "artifact verified (pgp signatures)";
+                    if (warningOut.length() > 0) {
+                        checkReport.setType(ReportType.INFO);
+                        message = warningOut.toString();
+                    }
+                    checkReport.setCheckResult(message);
+                } else {
+                    checkReport.setType(ReportType.NOT_IN_TRAIN);
+                    checkReport.setCheckResult(errorOut.toString());
                 }
             }
             reports.add(checkReport);
         }
-
     }
 }
