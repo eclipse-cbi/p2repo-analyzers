@@ -319,13 +319,13 @@ public class FeatureDisplayableDataChecker extends TestRepo {
 
             println(outfileWriter, "<br /><br />Details:" + SPACER);
 
-            println(outfileWriter, "Features with no or dubious descripiton:" + SPACER);
+            println(outfileWriter, "Features with no or dubious description:" + SPACER);
             Collections.sort(noneOrBad, new IUIdComparator());
             for (IInstallableUnit unit : noneOrBad) {
                 printLineDescription(outfileWriter, unit);
             }
 
-            println(outfileWriter, "<br /><br />Features with descripitons:" + SPACER);
+            println(outfileWriter, "<br /><br />Features with descriptions:" + SPACER);
             Collections.sort(ok, new IUIdComparator());
             for (IInstallableUnit unit : ok) {
                 printLineDescription(outfileWriter, unit);
