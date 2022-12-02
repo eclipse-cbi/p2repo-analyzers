@@ -53,14 +53,11 @@ public class PGPVerifier {
                 errorOut.append(e.getMessage());
                 return false;
             }
-            if (!checkVerifierStatus(verifier, warningOut, errorOut)) {
-                return false;
-            }
         }
         return true;
     }
     
-    private static boolean checkVerifierStatus(PGPSignatureVerifier verifier, StringBuilder warningOut, StringBuilder errorOut) {
+    private static boolean checkVerifierStatus(PGPSignatureVerifier verifier, StringBuilder warningOut, StringBuilder errorOut) throws IOException {
         if (verifier.getStatus().getSeverity() == IStatus.WARNING) {
             warningOut.append(verifier.getStatus().getMessage());
         }

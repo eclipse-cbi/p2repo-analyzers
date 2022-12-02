@@ -94,7 +94,10 @@
       <unit
         id="org.eclipse.platform.feature.group"
         version="0.0.0" />
-      <repository location="https://download.eclipse.org/eclipse/updates/4.22/R-4.22-202111241800/" />
+      <unit
+        id="org.apache.commons.commons-io"
+        version="0.0.0" />
+      <repository location="https://download.eclipse.org/eclipse/updates/4.25/R-4.25-202208311800/" />
     </location>
     <location
       includeAllPlatforms="false"
