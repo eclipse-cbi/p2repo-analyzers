@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.internal.p2.artifact.processors.pgp.PGPSignatureVerifier;
 import org.eclipse.equinox.internal.p2.metadata.ArtifactKey;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.metadata.IArtifactKey;
 import org.eclipse.equinox.p2.metadata.Version;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactDescriptor;
@@ -35,6 +36,7 @@ public class PGPVerifier {
         if (artifactDescriptors.length > 1) {
             warningOut.append("Multiple descriptors found for " + artifactKey + System.lineSeparator());
         }
+        IProvisioningAgent agent = repository.getProvisioningAgent();
         for (IArtifactDescriptor artifactDescriptor : artifactDescriptors) {
             PGPSignatureVerifier verifier = new PGPSignatureVerifier();
             try {
@@ -43,7 +45,7 @@ public class PGPVerifier {
                     verifier.close();
                     return false;
                 }
-                verifier.initialize(null, null, artifactDescriptor);
+                verifier.initialize(agent, null, artifactDescriptor);
                 if (!checkVerifierStatus(verifier, warningOut, errorOut)) {
                     return false;
                 }
