@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Configuration
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    label="p2 Repository Analyzer">
+  <annotation
+      source="http://www.eclipse.org/oomph/setup/BrandingInfo">
+    <detail
+        key="imageURI">
+      <value>https://raw.githubusercontent.com/eclipse-cbi/p2repo-analyzers/main/plugins/org.eclipse.cbi.p2repo.analyzer.editor/icons/full/wizban/NewAnalyzer.png</value>
+    </detail>
+    <detail
+        key="siteURI">
+      <value>https://github.com/eclipse-cbi/p2repo-analyzers</value>
+    </detail>
+    <detail
+        key="badgeLabel">
+      <value>p2 Analyzer</value>
+    </detail>
+  </annotation>
+  <installation
+      name="p2.repository.analyzer.installation"
+      label="p2 Repository Analyzer Installation">
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="installation.id.default"
+        value="cbi-p2-analyzer"/>
+    <productVersion
+        href="index:/org.eclipse.setup#//@productCatalogs[name='org.eclipse.products']/@products[name='epp.package.committers']/@versions[name='latest']"/>
+    <description>The p2 Repository Analyzer installation installs the necessary tools for working with the  &lt;a href=&quot;https://github.com/eclipse-cbi/p2repo-analyzers&quot;>eclipse-cbi/p2repo-analyzers&lt;/a>'s projects. </description>
+  </installation>
+  <workspace
+      name="p2.repository.analyzer.workspace"
+      label="p2 Repository Analyzer Workspace">
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="User Preferences">
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.ui.ide">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
+            value="p2 Analyzer"/>
+      </setupTask>
+    </setupTask>
+    <stream
+        href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']/@projects[name='cbi']/@projects[name='p2repo-analyzer']/@streams[name='main']"/>
+    <description>The p2 Repository Analyzer workspace provides access to the &lt;a href=&quot;https://github.com/eclipse-cbi/p2repo-analyzers&quot;>eclipse-cbi/p2repo-analyzers&lt;/a>'s projects. </description>
+  </workspace>
+  <description>
+    &lt;p>
+    The p2 Repository Analyzer configuration provides a specialized development environment for contributing to the  &lt;a href=&quot;https://github.com/eclipse-cbi/p2repo-analyzers&quot;>eclipse-cbi/p2repo-analyzers&lt;/a> project.
+    &lt;/p>
+    &lt;p>
+    The installation is based the latest committers package and includes the development  tools for working with the &lt;a href=&quot;https://github.com/eclipse-cbi/p2repo-analyzers&quot; target=&quot;p2-analyzer_git&quot;>eclipse-cbi/p2repo-analyzers&lt;/a> projects.
+    The workspace includes the  projects from the &lt;a href=&quot;https://github.com/eclipse-cbi/p2repo-analyzers&quot; target=&quot;p2-analyzer_git&quot;>eclipse-cbi/p2repo-analyzers&lt;/a>'s clone.
+    &lt;/p>
+
+  </description>
+</setup:Configuration>

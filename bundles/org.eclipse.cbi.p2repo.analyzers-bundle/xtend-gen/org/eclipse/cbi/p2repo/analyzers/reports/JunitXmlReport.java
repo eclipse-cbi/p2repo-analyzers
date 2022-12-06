@@ -7,6 +7,7 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
+import com.google.common.base.Objects;
 import com.google.common.xml.XmlEscapers;
 import java.io.File;
 import java.io.PrintWriter;
@@ -14,7 +15,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
@@ -117,16 +117,16 @@ public class JunitXmlReport implements ICheckReporter {
                   _builder_1.newLineIfNotEmpty();
                   {
                     String _checkResult = report.getCheckResult();
-                    boolean _notEquals = (!Objects.equals(_checkResult, null));
-                    if (_notEquals) {
+                    boolean _tripleNotEquals = (_checkResult != null);
+                    if (_tripleNotEquals) {
                       _builder_1.append("\t");
                       _builder_1.append("\t");
                       String _escape = XmlEscapers.xmlAttributeEscaper().escape(report.getCheckResult());
                       _builder_1.append(_escape, "\t\t");
                       {
                         String _additionalData = report.getAdditionalData();
-                        boolean _notEquals_1 = (!Objects.equals(_additionalData, null));
-                        if (_notEquals_1) {
+                        boolean _tripleNotEquals_1 = (_additionalData != null);
+                        if (_tripleNotEquals_1) {
                           _builder_1.append(" - ");
                           String _escape_1 = XmlEscapers.xmlAttributeEscaper().escape(report.getAdditionalData());
                           _builder_1.append(_escape_1, "\t\t");
@@ -165,7 +165,7 @@ public class JunitXmlReport implements ICheckReporter {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public String toTimeFormat(final Integer testsCount) {
     if (((testsCount).intValue() <= 0)) {
       return "0.000";
@@ -178,9 +178,9 @@ public class JunitXmlReport implements ICheckReporter {
     final DecimalFormat customFormat = new DecimalFormat("0.000", decimalFormatSymbol);
     return customFormat.format((0.001d * (testsCount).intValue()));
   }
-  
+
   public String asTag(final ReportType type) {
-    boolean _equals = Objects.equals(type, ReportType.NOT_IN_TRAIN);
+    boolean _equals = Objects.equal(type, ReportType.NOT_IN_TRAIN);
     if (_equals) {
       return "failure";
     } else {

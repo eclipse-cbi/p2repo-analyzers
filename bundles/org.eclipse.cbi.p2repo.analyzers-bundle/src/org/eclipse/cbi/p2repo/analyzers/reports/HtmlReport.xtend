@@ -185,7 +185,7 @@ class HtmlReport implements ICheckReporter {
 	}
 
 	def asCssClass(CheckReport report) {
-		if (report == null)
+		if (report === null)
 			return 'skipped_check'
 		asCssClass(report.type)
 	}
@@ -234,16 +234,16 @@ class HtmlReport implements ICheckReporter {
 	}
 
 	def asDescription(CheckReport report) {
-		if (report == null) {
+		if (report === null) {
 			return 'any reports'
 		} else {
-			val result = if(report.checkResult == null) 'null' else report.checkResult
+			val result = if(report.checkResult === null) 'null' else report.checkResult
 			return '''«result»«if(!report.additionalData.nullOrEmpty)' - '+report.additionalData»'''
 		}
 	}
 
 	def asStatus(CheckReport report) {
-		if (report == null) {
+		if (report === null) {
 			return '&nbsp;'
 		}
 		switch (report.type) {

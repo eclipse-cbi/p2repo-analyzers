@@ -7,11 +7,11 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
+import com.google.common.base.Objects;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
@@ -31,13 +31,13 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 @SuppressWarnings("all")
 public class HtmlReport implements ICheckReporter {
   private final String cssFileName = "html-report.css";
-  
+
   private final String jsFileName = "html-report.js";
-  
+
   private final String errorsFileName = "errors-and-moderate_warnings.html";
-  
+
   private final String warningsFileName = "warnings.html";
-  
+
   @Override
   public void createReport(final CheckReportsManager manager, final IP2RepositoryAnalyserConfiguration configs) {
     try {
@@ -136,7 +136,7 @@ public class HtmlReport implements ICheckReporter {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public String errorsHtmlLocation(final IP2RepositoryAnalyserConfiguration configs) {
     StringConcatenation _builder = new StringConcatenation();
     String _reportOutputDir = configs.getReportOutputDir();
@@ -145,7 +145,7 @@ public class HtmlReport implements ICheckReporter {
     _builder.append(this.errorsFileName);
     return _builder.toString();
   }
-  
+
   public String warningsHtmlLocation(final IP2RepositoryAnalyserConfiguration configs) {
     StringConcatenation _builder = new StringConcatenation();
     String _reportOutputDir = configs.getReportOutputDir();
@@ -154,7 +154,7 @@ public class HtmlReport implements ICheckReporter {
     _builder.append(this.warningsFileName);
     return _builder.toString();
   }
-  
+
   public CharSequence summary(final IP2RepositoryAnalyserConfiguration conf) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("<h3>Check results for the repository: ");
@@ -164,11 +164,11 @@ public class HtmlReport implements ICheckReporter {
     _builder.newLineIfNotEmpty();
     return _builder;
   }
-  
+
   public String htmlTable(final ReportType reportType, final Iterable<CheckReport> allreports) {
     final Function1<CheckReport, Boolean> _function = (CheckReport it) -> {
       ReportType _type = it.getType();
-      return Boolean.valueOf(Objects.equals(_type, reportType));
+      return Boolean.valueOf(Objects.equal(_type, reportType));
     };
     final Iterable<CheckReport> reports = IterableExtensions.<CheckReport>filter(allreports, _function);
     final Function1<CheckReport, IInstallableUnit> _function_1 = (CheckReport it) -> {
@@ -253,7 +253,7 @@ public class HtmlReport implements ICheckReporter {
         _builder.append("\t");
         final Function1<CheckReport, Boolean> _function_4 = (CheckReport it) -> {
           IInstallableUnit _iU = it.getIU();
-          return Boolean.valueOf(Objects.equals(_iU, iu));
+          return Boolean.valueOf(Objects.equal(_iU, iu));
         };
         final Iterable<CheckReport> iuReports = IterableExtensions.<CheckReport>filter(allreports, _function_4);
         _builder.newLineIfNotEmpty();
@@ -286,7 +286,7 @@ public class HtmlReport implements ICheckReporter {
             _builder.append("\t");
             final Function1<CheckReport, Boolean> _function_5 = (CheckReport it) -> {
               String _checkerId = it.getCheckerId();
-              return Boolean.valueOf(Objects.equals(_checkerId, checker_1));
+              return Boolean.valueOf(Objects.equal(_checkerId, checker_1));
             };
             final CheckReport report = IterableExtensions.<CheckReport>head(IterableExtensions.<CheckReport>filter(iuReports, _function_5));
             _builder.newLineIfNotEmpty();
@@ -330,7 +330,7 @@ public class HtmlReport implements ICheckReporter {
     final String html = _builder.toString();
     return html;
   }
-  
+
   public void addJsFile(final IP2RepositoryAnalyserConfiguration configs) {
     try {
       StringConcatenation _builder = new StringConcatenation();
@@ -386,7 +386,7 @@ public class HtmlReport implements ICheckReporter {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public void addCssFile(final IP2RepositoryAnalyserConfiguration configs) {
     try {
       StringConcatenation _builder = new StringConcatenation();
@@ -447,7 +447,7 @@ public class HtmlReport implements ICheckReporter {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public String asBgColor(final ReportType type) {
     String _switchResult = null;
     if (type != null) {
@@ -470,19 +470,18 @@ public class HtmlReport implements ICheckReporter {
     }
     return _switchResult;
   }
-  
+
   public String asCssClass(final CheckReport report) {
     String _xblockexpression = null;
     {
-      boolean _equals = Objects.equals(report, null);
-      if (_equals) {
+      if ((report == null)) {
         return "skipped_check";
       }
       _xblockexpression = this.asCssClass(report.getType());
     }
     return _xblockexpression;
   }
-  
+
   public String asCssClass(final ReportType type) {
     String _switchResult = null;
     if (type != null) {
@@ -505,7 +504,7 @@ public class HtmlReport implements ICheckReporter {
     }
     return _switchResult;
   }
-  
+
   public String asHeaderTitle(final ReportType type) {
     String _switchResult = null;
     if (type != null) {
@@ -528,7 +527,7 @@ public class HtmlReport implements ICheckReporter {
     }
     return _switchResult;
   }
-  
+
   public String abbreviation(final String string) {
     String simpleName = string;
     final int dotIndex = string.lastIndexOf(".");
@@ -537,16 +536,15 @@ public class HtmlReport implements ICheckReporter {
     }
     return simpleName.replaceAll("([A-Z]+)((?![A-Z])\\w)+", "$1");
   }
-  
+
   public String asDescription(final CheckReport report) {
-    boolean _equals = Objects.equals(report, null);
-    if (_equals) {
+    if ((report == null)) {
       return "any reports";
     } else {
       String _xifexpression = null;
       String _checkResult = report.getCheckResult();
-      boolean _equals_1 = Objects.equals(_checkResult, null);
-      if (_equals_1) {
+      boolean _tripleEquals = (_checkResult == null);
+      if (_tripleEquals) {
         _xifexpression = "null";
       } else {
         _xifexpression = report.getCheckResult();
@@ -565,12 +563,11 @@ public class HtmlReport implements ICheckReporter {
       return _builder.toString();
     }
   }
-  
+
   public String asStatus(final CheckReport report) {
     String _xblockexpression = null;
     {
-      boolean _equals = Objects.equals(report, null);
-      if (_equals) {
+      if ((report == null)) {
         return "&nbsp;";
       }
       String _switchResult = null;

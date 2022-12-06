@@ -42,8 +42,8 @@ class JunitXmlReport implements ICheckReporter {
 							«FOR report: reportsForIU»
 									<«report.type.asTag»>
 									«report.versionedId»
-									«IF report.checkResult!=null»
-										«xmlAttributeEscaper.escape(report.checkResult)»«IF report.additionalData!=null» - «xmlAttributeEscaper.escape(report.additionalData)»«ENDIF»
+									«IF report.checkResult!==null»
+										«xmlAttributeEscaper.escape(report.checkResult)»«IF report.additionalData!==null» - «xmlAttributeEscaper.escape(report.additionalData)»«ENDIF»
 									«ENDIF»
 									</«report.type.asTag»>
 								«ENDFOR»
