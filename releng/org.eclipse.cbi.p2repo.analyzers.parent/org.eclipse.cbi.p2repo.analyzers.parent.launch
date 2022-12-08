@@ -7,7 +7,6 @@
     <booleanAttribute key="M2_OFFLINE" value="false"/>
     <stringAttribute key="M2_PROFILES" value="promote"/>
     <listAttribute key="M2_PROPERTIES">
-        <listEntry value="justj.tools.repo=file:/D:/Users/merks/justj/git/justj.tools/releng/org.eclipse.justj.tools.parent/promotion/target/justj-sync/tools-test/updates/nightly/latest"/>
         <listEntry value="org.eclipse.justj.p2.manager.args=-remote localhost:${container_loc:/org.eclipse.cbi.p2repo.analyzers.parent/promotion}/promo-repo"/>
         <listEntry value="build.type=nightly"/>
         <listEntry value="build.id=unknown"/>
