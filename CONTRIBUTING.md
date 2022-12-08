@@ -42,6 +42,12 @@ Contributor Agreement (ECA) on file.
 For more information, please see the Eclipse Committer Handbook:
 https://www.eclipse.org/projects/handbook/#resources-commit
 
+## Setting Up a Development Environment
+
+You can set up a pre-configured IDE for the development of the p2 Repository Analyzer projects using the following link.
+
+[![Create Eclipse Development Environment for the p2 Repository Analyzer](https://download.eclipse.org/oomph/www/setups/svg/p2_Analyzer.svg)](https://www.eclipse.org/setups/installer/?url=https://raw.githubusercontent.com/eclipse-cbi/p2repo-analyzers/main/releng/org.eclipse.cbi.p2repo.analyzers.parent/setup/P2RepositoryAnalyzerConfiguration.setup&show=true "Click to open Eclipse-Installer Auto Launch or drag onto your running installer's title area")
+
 ## Contact
 
 Contact the project developers via the project's *dev* list.
