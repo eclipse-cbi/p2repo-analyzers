@@ -29,7 +29,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Should this go in "repository pom"? Where modules defined -->
-    <tycho.scmUrl>scm:git:git://git.eclipse.org:29418/cbi/org.eclipse.cbi.p2repo.analyzers.git</tycho.scmUrl>
+    <tycho.scmUrl>scm:git:https://github.com/eclipse-cbi/p2repo-analyzers.git</tycho.scmUrl>
     <!--
       Default to error, but may need to override if doing local builds on local working tree.
       such as -DdirtyworkingTree=warning.
