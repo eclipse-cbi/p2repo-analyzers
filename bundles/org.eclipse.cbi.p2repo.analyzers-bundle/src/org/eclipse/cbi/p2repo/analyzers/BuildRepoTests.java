@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 import org.eclipse.cbi.p2repo.analyzers.jars.BREETest;
 import org.eclipse.cbi.p2repo.analyzers.jars.ESTest;
@@ -256,12 +257,12 @@ public class BuildRepoTests {
     }
 
     private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException, URISyntaxException {
-        String repoToTest = "file://" + getDirectoryToCheck();
+        String repoToTest = Path.of(getDirectoryToCheck()).toUri().toString();
         String referenceRepoToTest = null;
         if (getDirectoryToCheckForReference() != null) {
             File refRepoToCheck = new File(getDirectoryToCheckForReference());
             if (refRepoToCheck.exists()) {
-                referenceRepoToTest = "file://" + getDirectoryToCheckForReference();
+                referenceRepoToTest =  refRepoToCheck.toURI().toString();
             } else {
                 System.out.println("WARNING: the reference repository was found not to exist. No check done.");
                 System.out.println("         referenceRepo: " + getDirectoryToCheckForReference());

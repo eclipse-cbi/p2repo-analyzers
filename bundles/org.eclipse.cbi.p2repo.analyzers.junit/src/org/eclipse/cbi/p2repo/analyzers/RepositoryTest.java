@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class RepositoryTest {
 				System.out.println(entry.getKey() + "=" + entry.getValue());
 		}
 		dirToTest = directoryToCheck;
-		repoToTest = "file://" + directoryToCheck;
+		repoToTest = Path.of(directoryToCheck).toUri().toString();
 		refRepoDir = tests.getDirectoryToCheckForReference();
 
 		String skipCheckerProp = System.getProperty(SKIP_CHECKER_PROP_NAME);

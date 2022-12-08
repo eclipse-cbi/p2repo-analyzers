@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2020 Eclipse contributors and others.
+
+This program and the accompanying materials
+are made available under the terms of the Eclipse Public License 2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-2.0/
+
+SPDX-License-Identifier: EPL-2.0
+-->
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.eclipse.cbi</groupId>
+    <artifactId>org.eclipse.cbi.p2repo.analyzers.parent</artifactId>
+    <version>2.1.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <groupId>org.eclipse.cbi</groupId>
+  <artifactId>org.eclipse.cbi.p2repo.analyzers.promote</artifactId>
+  <version>2.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <eclipse.repo>https://download.eclipse.org/releases/2022-09</eclipse.repo>
+    <justj.tools.repo>https://download.eclipse.org/justj/tools/updates/nightly/latest</justj.tools.repo>
+    <org.eclipse.download.location.relative>cbi/updates/p2-analyzer</org.eclipse.download.location.relative>
+    <org.eclipse.storage.user>genie.cbi</org.eclipse.storage.user>
+    <org.eclipse.justj.p2.manager.args>-remote ${org.eclipse.storage.user}@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/${org.eclipse.download.location.relative}</org.eclipse.justj.p2.manager.args>
+    <org.eclipse.justj.p2.manager.relative>test/</org.eclipse.justj.p2.manager.relative>
+    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+    <org.eclipse.justj.p2.manager.build.url>http://www.example.com/</org.eclipse.justj.p2.manager.build.url>
+    <git.commit>unknown</git.commit>
+    <build.type>nightly</build.type>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-eclipserun-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <executionEnvironment>JavaSE-11</executionEnvironment>
+          <dependencies>
+            <dependency>
+              <artifactId>org.eclipse.justj.p2</artifactId>
+              <type>eclipse-plugin</type>
+            </dependency>
+            <dependency>
+              <artifactId>org.apache.felix.scr</artifactId>
+              <type>eclipse-plugin</type>
+            </dependency>
+          </dependencies>
+          <repositories>
+            <repository>
+              <id>eclipse.repo</id>
+              <layout>p2</layout>
+              <url>${eclipse.repo}</url>
+            </repository>
+            <repository>
+              <id>justj.tools.repo</id>
+              <layout>p2</layout>
+              <url>${justj.tools.repo}</url>
+            </repository>
+          </repositories>
+        </configuration>
+        <executions>
+          <execution>
+            <id>promote-tools</id>
+            <goals>
+              <goal>eclipse-run</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <applicationsArgs>
+<!--
+-consolelog,
+-application,
+org.eclipse.justj.p2.manager,
+-data,
+@None,
+-nosplash,
+${org.eclipse.justj.p2.manager.args},
+-retain,
+5,
+-label,
+CBI p2 Analyzer Tools,
+-build-url,
+${org.eclipse.justj.p2.manager.build.url},
+-root,
+${project.build.directory}/cbi-p2-sync,
+-relative,
+${org.eclipse.justj.p2.manager.relative}tools,
+-target-url,
+https://download.eclipse.org/${org.eclipse.download.location.relative},
+-promote,
+${project.basedir}/../../org.eclipse.cbi.p2repo.analyzers.repository/target/repository,
+-timestamp,
+${build.timestamp},
+-type,
+${build.type},
+-version-iu,
+org.eclipse.cbi.p2repo.analyzers.feature,
+-iu-filter-pattern,
+org\.eclipse\.cbi\.p2repo\.analyzers\.?.*,
+-commit,
+https://github.com/eclipse-cbi/p2repo-analyzers/commit/${git.commit},
+-breadcrumb,
+CBI p2 Analyzer https://projects.eclipse.org/projects/technology.cbi,
+-favicon,
+https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/favicon.ico,
+-title-image,
+https://www.eclipse.org/org/workinggroups/assets/images/wg_eclipse_ide.svg,
+-body-image,
+https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/cbi.svg
+-->
+                <arg>-consoleLog</arg>
+                <arg>-application</arg>
+                <arg>org.eclipse.justj.p2.manager</arg>
+                <arg>-data</arg>
+                <arg>@None</arg>
+                <arg>-nosplash</arg>
+                <arg>${org.eclipse.justj.p2.manager.args}</arg>
+                <arg>-retain</arg>
+                <arg>5</arg>
+                <arg>-label</arg>
+                <arg>CBI p2 Analyzer Tools</arg>
+                <arg>-build-url</arg>
+                <arg>${org.eclipse.justj.p2.manager.build.url}</arg>
+                <arg>-root</arg>
+                <arg>${project.build.directory}/cbi-p2-sync</arg>
+                <arg>-relative</arg>
+                <arg>${org.eclipse.justj.p2.manager.relative}tools</arg>
+                <arg>-target-url</arg>
+                <arg>https://download.eclipse.org/${org.eclipse.download.location.relative}</arg>
+                <arg>-promote</arg>
+                <arg>${project.basedir}/../../org.eclipse.cbi.p2repo.analyzers.repository/target/repository</arg>
+                <arg>-timestamp</arg>
+                <arg>${build.timestamp}</arg>
+                <arg>-type</arg>
+                <arg>${build.type}</arg>
+                <arg>-version-iu</arg>
+                <arg>org.eclipse.cbi.p2repo.analyzers.feature</arg>
+                <arg>-iu-filter-pattern</arg>
+                <arg>org\.eclipse\.cbi\.p2repo\.analyzers\.?.*</arg>
+                <arg>-commit</arg>
+                <arg>https://github.com/eclipse-cbi/p2repo-analyzers/commit/${git.commit}</arg>
+                <arg>-breadcrumb</arg>
+                <arg>CBI p2 Analyzer https://projects.eclipse.org/projects/technology.cbi</arg>
+                <arg>-favicon</arg>
+                <arg>https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/favicon.ico</arg>
+                <arg>-title-image</arg>
+                <arg>https://www.eclipse.org/org/workinggroups/assets/images/wg_eclipse_ide.svg</arg>
+                <arg>-body-image</arg>
+                <arg>https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/cbi.svg</arg>
+              </applicationsArgs>
+              <jvmArgs>
+                <arg>-Dorg.eclipse.justj.p2.P2Manager.Application.dump=false</arg>
+              </jvmArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>promote-products</id>
+            <goals>
+              <goal>eclipse-run</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <applicationsArgs>
+                <arg>-consoleLog</arg>
+                <arg>-application</arg>
+                <arg>org.eclipse.justj.p2.manager</arg>
+                <arg>-data</arg>
+                <arg>@None</arg>
+                <arg>-nosplash</arg>
+                <arg>${org.eclipse.justj.p2.manager.args}</arg>
+                <arg>-retain</arg>
+                <arg>5</arg>
+                <arg>-label</arg>
+                <arg>CBI p2 Analyzer Products</arg>
+                <arg>-build-url</arg>
+                <arg>${org.eclipse.justj.p2.manager.build.url}</arg>
+                <arg>-root</arg>
+                <arg>${project.build.directory}/cbi-p2-sync</arg>
+                <arg>-relative</arg>
+                <arg>${org.eclipse.justj.p2.manager.relative}products</arg>
+                <arg>-target-url</arg>
+                <arg>https://download.eclipse.org/${org.eclipse.download.location.relative}</arg>
+                <arg>-promote</arg>
+                <arg>${project.basedir}/../../org.eclipse.cbi.p2repo.analyzers.product/target/repository</arg>
+                <arg>-promote-products</arg>
+                <arg>${project.basedir}/../../org.eclipse.cbi.p2repo.analyzers.product/target/products</arg>
+                <arg>-timestamp</arg>
+                <arg>${build.timestamp}</arg>
+                <arg>-type</arg>
+                <arg>${build.type}</arg>
+                <arg>-version-iu</arg>
+                <arg>org.eclipse.cbi.p2repo.analyzer.product.feature</arg>
+                <arg>-iu-filter-pattern</arg>
+                <arg>org\.eclipse\.cbi\.p2repo\.analyzers\.?.*</arg>
+                <arg>-commit</arg>
+                <arg>https://github.com/eclipse-cbi/p2repo-analyzers/commit/${git.commit}</arg>
+                <arg>-breadcrumb</arg>
+                <arg>CBI p2 Analyzer https://projects.eclipse.org/projects/technology.cbi</arg>
+                <arg>-favicon</arg>
+                <arg>https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/favicon.ico</arg>
+                <arg>-title-image</arg>
+                <arg>https://www.eclipse.org/org/workinggroups/assets/images/wg_eclipse_ide.svg</arg>
+                <arg>-body-image</arg>
+                <arg>https://raw.githubusercontent.com/eclipse-cbi/p2repo-aggregator/main/cbi.svg</arg>
+              </applicationsArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

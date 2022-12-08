@@ -181,7 +181,7 @@
           source="http:/www.eclipse.org/oomph/targlets/TargetDefinitionGenerator">
         <detail
             key="location">
-          <value>${git.clone.cbi.p2repo-analyzer.location/releng/org.eclipse.cbi.p2repo.releng.target/org.eclipse.cbi.p2repo.analyzer.prereqs.target}</value>
+          <value>${git.clone.cbi.p2repo-analyzer.location/releng/org.eclipse.cbi.p2repo.analyzers.prereqs/org.eclipse.cbi.p2repo.analyzers.prereqs.target}</value>
         </detail>
         <detail
             key="extraUnits">
@@ -216,8 +216,6 @@
             url="https://download.eclipse.org/releases/${eclipse.target.platform.latest}"/>
         <repository
             url="https://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="https://download.eclipse.org/nebula/releases/2.6.0"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -262,36 +260,6 @@
       </predicate>
     </workingSet>
     <description>The dynamic working sets for CBI P2 Repository Analyzer</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:StringSubstitutionTask"
-      name="maven.build.java.home"
-      value="${jre.location-11}">
-    <description>The location used to specify JAVA_HOME in the External Tools Configurations.</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:VariableTask"
-      filter="(osgi.os=win32)"
-      type="FILE"
-      name="maven.build.command"
-      defaultValue="mvn.cmd"
-      label="Maven Command">
-    <description>The absolute path location of the mvn command that will execute mvn on your operating system; it is used in the External Tools Configurations. You may leave the default if you don't intend to do Maven builds.</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:VariableTask"
-      filter="(!(osgi.os=win32))"
-      type="FILE"
-      name="maven.build.command"
-      defaultValue="mvn"
-      label="Maven Command">
-    <description>The absolute path location of the mvn command that will execute mvn on your operating system; it is used in the External Tools Configurations. You may leave the default if you don't intend to do Maven builds.</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup:StringSubstitutionTask"
-      name="maven.build.command"
-      value="${maven.build.command}">
-    <description>The location of the mvn command that will execute mvn on your operating system; it is used in the External Tools Configurations.</description>
   </setupTask>
   <stream name="main"
       label="Main">

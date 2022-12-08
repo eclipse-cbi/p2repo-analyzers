@@ -15,8 +15,8 @@
     <buildType>I</buildType>
     <buildId>${buildType}${buildTimestamp}</buildId>
     <comparator.repo>http://download.eclipse.org/cbi/updates/analyzers/4.7/</comparator.repo>
-    <tycho-version>3.0.0</tycho-version>
-    <cbi-plugins.version>1.3.1</cbi-plugins.version>
+    <tycho-version>3.0.1</tycho-version>
+    <cbi-plugins.version>1.3.2</cbi-plugins.version>
     <code.ignoredWarnings>-warn:-deprecation,raw,unchecked,discouraged</code.ignoredWarnings>
     <!--
       repo for released versions of CBI. Note, we intentionally use as specific a repo as possible.
@@ -51,7 +51,6 @@
       reference repo needs to be absolute file location of simple repository.
     -->
     <referenceRepo>/home/data/httpd/download.eclipse.org/cbi/updates/analyzers/4.7/I20170727-1641</referenceRepo>
-
   </properties>
 
   <profiles>
@@ -231,6 +230,31 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>promote</id>
+      <modules>
+        <module>promotion</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>about-mappings</id>
+      <activation>
+        <file>
+          <exists>about.mappings</exists>
+        </file>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>.</directory>
+            <filtering>true</filtering>
+            <includes>
+              <include>about.mappings</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
   </profiles>
   <pluginRepositories>
     <pluginRepository>
@@ -322,7 +346,7 @@
             <environment>
               <os>linux</os>
               <ws>gtk</ws>
-              <arch>ppc64le</arch>
+              <arch>aarch64</arch>
             </environment>
             <environment>
               <os>win32</os>
@@ -333,6 +357,11 @@
               <os>macosx</os>
               <ws>cocoa</ws>
               <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>aarch64</arch>
             </environment>
           </environments>
         </configuration>
