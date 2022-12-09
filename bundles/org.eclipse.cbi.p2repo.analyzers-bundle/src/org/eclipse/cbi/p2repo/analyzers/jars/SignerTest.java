@@ -29,6 +29,7 @@ import org.eclipse.cbi.p2repo.analyzers.repos.TestRepo;
 import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
 import org.eclipse.cbi.p2repo.analyzers.utils.PlainCheckReport;
 import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
+import org.eclipse.cbi.p2repo.analyzers.utils.VerifyStep;
 // import org.eclipse.cbi.p2repo.analyzers.utils.VerifyStep;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
@@ -43,12 +44,15 @@ public class SignerTest extends TestJars {
     static final String           UNSIGNED_FILENAME = "unsigned8.txt";
     static final String           SIGNED_FILENAME   = "verified8.txt";
     static final String           KNOWN_UNSIGNED    = "knownunsigned8.txt";
+
     final SignedContentFactory    verifierFactory   = ServiceHelper.getService(TestActivator.getContext(),
             SignedContentFactory.class);
     final IFileArtifactRepository artifactRepository;
+    boolean                       useJarsigner;
 
     public SignerTest(RepoTestsConfiguration configurations) {
         super(configurations);
+        useJarsigner = "true".equals(System.getProperty("useJarsigner"));
         try {
             artifactRepository = (IFileArtifactRepository) TestRepo.getAgent().getService(IArtifactRepositoryManager.class)
                     .loadRepository(new File(configurations.getReportRepoDir()).toURI(), new NullProgressMonitor());
@@ -62,6 +66,10 @@ public class SignerTest extends TestJars {
      */
     public boolean verifySignatures() throws IOException {
         Set<PlainCheckReport> checkReports = new CopyOnWriteArraySet<>();
+        if (useJarsigner && !VerifyStep.canVerify()) {
+            System.err.println("jarsigner is not available. Can not check.");
+            return true;
+        }
         var artifactKeys = artifactRepository.query(ArtifactKeyQuery.ALL_KEYS, null);
         var descriptors = StreamSupport.stream(artifactKeys.spliterator(), false).map(artifactRepository::getArtifactDescriptors)
                 .map(Arrays::asList).flatMap(Collection::stream).collect(Collectors.toList());
@@ -78,21 +86,37 @@ public class SignerTest extends TestJars {
         ReportWriter error = createNewReportWriter(UNSIGNED_FILENAME);
         try {
             long featuresCount = reports.stream().filter(report -> report.getIuType().equals("feature")).count();
-            info.writeln("Jars checked: " + reports.size() + ". " + featuresCount + " features and " + (reports.size() -featuresCount) + " plugins.");
-            info.writeln("Valid signatures: " + reports.stream().filter(report -> report.getType() == ReportType.INFO).count() + ".");
-            info.writeln("Explicitly excluded from signing: " + reports.stream().filter(report -> report.getType() == ReportType.BAD_GUY).count() + ". See " + KNOWN_UNSIGNED + " for more details.");
-            info.writeln("Invalid or missing signature: " + reports.stream().filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count() + ". See " + UNSIGNED_FILENAME + " for more details.");
+            info.writeln("Jars checked: " + reports.size() + ". " + featuresCount + " features and "
+                    + (reports.size() - featuresCount) + " plugins.");
+            info.writeln(
+                    "Valid signatures: " + reports.stream().filter(report -> report.getType() == ReportType.INFO).count() + ".");
+            info.writeln("Explicitly excluded from signing: "
+                    + reports.stream().filter(report -> report.getType() == ReportType.BAD_GUY).count() + ". See " + KNOWN_UNSIGNED
+                    + " for more details.");
+            info.writeln("Invalid or missing signature: "
+                    + reports.stream().filter(report -> report.getType() == ReportType.NOT_IN_TRAIN).count() + ". See "
+                    + UNSIGNED_FILENAME + " for more details.");
 
             int longestFileName = reports.stream().mapToInt(report -> report.getFileName().length()).max().orElse(0);
-            for (PlainCheckReport report : reports.stream().sorted(Comparator.comparing(PlainCheckReport::getFileName)).toArray(PlainCheckReport[]::new)) {
+            for (PlainCheckReport report : reports.stream().sorted(Comparator.comparing(PlainCheckReport::getFileName))
+                    .toArray(PlainCheckReport[]::new)) {
                 String indent = " ".repeat(longestFileName - report.getFileName().length());
                 String trailing = " ".repeat(10 - report.getIuType().length());
-                String line = report.getFileName() + indent + "    " + report.getIuType() + trailing + "   " + report.getCheckResult();
+                String line = report.getFileName() + indent + "    " + report.getIuType() + trailing + "   "
+                        + report.getCheckResult();
                 switch (report.getType()) {
-                    case INFO: info.writeln(line); break;
-                    case WARNING: info.writeln(line); break;
-                    case NOT_IN_TRAIN: error.writeln(line); break;
-                    case BAD_GUY: warn.writeln(line); break;
+                case INFO:
+                    info.writeln(line);
+                    break;
+                case WARNING:
+                    info.writeln(line);
+                    break;
+                case NOT_IN_TRAIN:
+                    error.writeln(line);
+                    break;
+                case BAD_GUY:
+                    warn.writeln(line);
+                    break;
                 }
             }
         } finally {
@@ -144,11 +168,15 @@ public class SignerTest extends TestJars {
                 StringBuilder errorOut = new StringBuilder();
                 StringBuilder warningOut = new StringBuilder();
                 boolean signed;
-                try {
-                    signed = verifierFactory.getSignedContent(file).isSigned();
-                } catch (Exception ex) {
-                    errorOut.append(ex.getMessage());
-                    signed = false;
+                if (useJarsigner) {
+                    signed = VerifyStep.verify(file, errorOut, warningOut);
+                } else {
+                    try {
+                        signed = verifierFactory.getSignedContent(file).isSigned();
+                    } catch (Exception ex) {
+                        errorOut.append(ex.getMessage());
+                        signed = false;
+                    }
                 }
                 if (signed) {
                     String message = "jar verified (jarsigner)";
