@@ -183,27 +183,6 @@ public class IUVersionCheckToReference extends TestRepo {
         return count;
     }
 
-    private void dump(List<IInstallableUnit> refinboth, String filename) throws IOException {
-        Collections.sort(refinboth);
-        File out = new File(getReportOutputDirectory(), filename);
-        try (FileWriter outfile = new FileWriter(out)){
-            for (IInstallableUnit iInstallableUnit : refinboth) {
-                outfile.write(iInstallableUnit.toString() + EOL);
-            }
-        }
-
-    }
-
-    private void dump(Set<String> inboth, String filename) throws IOException {
-        File out = new File(getReportOutputDirectory(), filename);
-        try (FileWriter outfile = new FileWriter(out)) {
-            for (String iInstallableUnit : inboth) {
-                outfile.write(iInstallableUnit + EOL);
-            }
-        }
-
-    }
-
     private void processForNewBundles(List<IInstallableUnit> newIUs, Set<String> curinboth) throws ProvisionException,
             URISyntaxException {
         for (IInstallableUnit curiu : getAllIUs().toSet()) {
@@ -328,110 +307,6 @@ public class IUVersionCheckToReference extends TestRepo {
             }
         }
         return result;
-    }
-
-    public boolean checkIUVersionsToReferenceForFeatures() throws IOException, ProvisionException, URISyntaxException {
-        String testDirName = getReportOutputDirectory();
-        File outfile = new File(testDirName, "versionChecksFeatures.html");
-        List<IInstallableUnit> inreferenceOnly = new ArrayList<>();
-        List<IInstallableUnit> newIUs = new ArrayList<>();
-        List<IInstallableUnit> decreasingVersions = new ArrayList<>();
-        List<IInstallableUnit> matchingVersions = new ArrayList<>();
-        List<IInstallableUnit> increaseVersionsMajor = new ArrayList<>();
-        List<IInstallableUnit> increaseVersionsMinor = new ArrayList<>();
-        List<IInstallableUnit> increaseVersionsService = new ArrayList<>();
-        List<IInstallableUnit> increaseVersionsQualifierOnly = new ArrayList<>();
-        Set<String> refinboth = new TreeSet<>();
-        Set<String> curinboth = new TreeSet<>();
-
-        try (FileWriter outfileWriter = new FileWriter(outfile)){
-            System.out.println("output: " + outfile.getAbsolutePath());
-
-            System.out.println("all feature groups IUs");
-            System.out.println("Number in reference from raw count:" + rawcount(getAllReferenceGroupIUs()));
-            if (getAllReferenceGroupIUs() != null) {
-                System.out.println("Number in reference from set: " + getAllReferenceGroupIUs().toSet().size());
-            }
-            System.out.println("Number in current from raw count:" + rawcount(getAllGroupIUs()));
-            System.out.println("Number in current from set: " + getAllGroupIUs().toSet().size());
-
-            processForExtraReferencesFeatures(inreferenceOnly, refinboth);
-
-            System.out.println("Number in reference missing from current: " + inreferenceOnly.size());
-            System.out.println("Number in common in reference and current: " + refinboth.size());
-            dump(inreferenceOnly, "inRefererenceOnly.txt");
-            dump(refinboth, "inBothRefFeatures.txt");
-
-            processForNewFeatures(newIUs, curinboth);
-
-            System.out.println("Number in current missing from reference: " + newIUs.size());
-            System.out.println("Number in common in reference and current: " + curinboth.size());
-
-            dump(newIUs, "newInCurrent.txt");
-            dump(curinboth, "inBothCurrentFeatures.txt");
-
-            outfileWriter.write("<h1>feature.group IU changes</h1>" + EOL);
-            outfileWriter.write("<p>Current Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
-            if (!getRepoURLForReference().isEmpty()) {
-                outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
-                        + EOL);
-            }
-            outfileWriter.write("<h2>IUs in reference repo, but not current repo</h2>" + EOL);
-            printLinesIUs(outfileWriter, inreferenceOnly);
-            outfileWriter.write("<h2>IUs in current repo, but not reference repo</h2>" + EOL);
-            printLinesIUs(outfileWriter, newIUs);
-
-            processForDifferences(curinboth, getAllGroupIUs(), getAllReferenceGroupIUs(), decreasingVersions, matchingVersions,
-                    increaseVersionsMajor, increaseVersionsMinor, increaseVersionsService, increaseVersionsQualifierOnly);
-
-            outfileWriter.write("<h2>IUs in current repo that decrease versions</h2>" + EOL);
-            printTableIUs(outfileWriter, decreasingVersions, getAllReferenceIUs());
-
-            outfileWriter.write("<h2>IUs in current repo that increase major versions</h2>" + EOL);
-            printTableIUs(outfileWriter, increaseVersionsMajor, getAllReferenceIUs());
-
-            outfileWriter.write("<h2>IUs in current repo that increase minor versions</h2>" + EOL);
-            printTableIUs(outfileWriter, increaseVersionsMinor, getAllReferenceIUs());
-
-            outfileWriter.write("<h2>IUs in current repo that increase versions but with qualifier only</h2>" + EOL);
-            printTableIUs(outfileWriter, increaseVersionsQualifierOnly, getAllReferenceIUs());
-
-            outfileWriter.write("<h2>IUs in current repo that increase service versions</h2>" + EOL);
-            printTableIUs(outfileWriter, increaseVersionsService, getAllReferenceIUs());
-
-            outfileWriter.write("<h2>IUs in current repo that have matching versions in reference repo</h2>" + EOL);
-            printTableIUs(outfileWriter, matchingVersions, getAllReferenceIUs());
-
-            // printTableIUs(outfileWriter, curinboth, getAllGroupIUs(),
-            // getAllReferenceGroupIUs());
-            return true;
-        }
-
-    }
-
-    private void processForExtraReferencesFeatures(List<IInstallableUnit> referenceOnly, Set<String> refinboth)
-            throws ProvisionException, URISyntaxException {
-        if (getAllReferenceIUs() != null) {
-            for (IInstallableUnit refiu : getAllReferenceIUs().toSet()) {
-                if (isGroup(refiu)) {
-                    // should not be any, going from major release to
-                    // service release
-                    checkforExtraReferences(refiu, referenceOnly, refinboth);
-                }
-            }
-        }
-    }
-
-    private void processForNewFeatures(List<IInstallableUnit> newIUs, Set<String> curinboth) throws ProvisionException,
-            URISyntaxException {
-        for (IInstallableUnit curiu : getAllGroupIUs().toSet()) {
-
-            if (isGroup(curiu)) {
-                checkforNewInCurrent(curiu, newIUs, curinboth);
-            } else {
-                throw new RuntimeException("Feature group (from get groupIUs) does not end with feature.group: " + curiu);
-            }
-        }
     }
 
 }

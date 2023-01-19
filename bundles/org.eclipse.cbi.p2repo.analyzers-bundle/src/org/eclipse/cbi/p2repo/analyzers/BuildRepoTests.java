@@ -313,7 +313,6 @@ public class BuildRepoTests {
 
         if (referenceRepoToTest != null) {
             iuVersioncheck.checkIUVersionsToReference();
-            iuVersioncheck.checkIUVersionsToReferenceForFeatures();
         }
 
         if (featureNameFailures || bundleNameFailures || providerNamesFailure || licenseConsistencyFailure || greedyCheck) {

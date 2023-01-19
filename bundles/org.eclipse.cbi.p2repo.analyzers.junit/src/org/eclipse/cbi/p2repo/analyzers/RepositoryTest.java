@@ -129,7 +129,6 @@ public class RepositoryTest {
 		IUVersionCheckToReference checker = new IUVersionCheckToReference(CONF_FROM_SYSTEM_PROPERTIES);
 		if (configureChecker(checker) && refRepoDir != null) {
 			assertFalse("Correct version changes", !checker.checkIUVersionsToReference());
-			assertTrue("Correct version changes for features", !checker.checkIUVersionsToReferenceForFeatures());
 		}
 	}
 
