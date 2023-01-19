@@ -104,7 +104,6 @@ public class TestRunner {
 
 	private Stream<CheckReport> reportsByCheckerId(final String checkerId) {
 		Stream<CheckReport> stream = reporter.getReports().parallelStream();
-		Stream<CheckReport> featureReports = stream.filter(report -> report.getCheckerId().equals(checkerId));
-		return featureReports;
+		return stream.filter(report -> report.getCheckerId().equals(checkerId));
 	}
 }
