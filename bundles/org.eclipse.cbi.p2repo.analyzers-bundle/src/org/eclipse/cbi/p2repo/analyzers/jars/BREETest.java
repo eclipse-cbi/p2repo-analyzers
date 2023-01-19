@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -50,7 +49,7 @@ public class BREETest extends TestJars {
         super(configurations);
     }
 
-    static class BREEFileData implements Comparable {
+    static class BREEFileData implements Comparable<Object> {
         String filename;
         String breeValue;
 
@@ -99,10 +98,9 @@ public class BREETest extends TestJars {
 
     private boolean checkBundleBREE(File inputdir) throws IOException {
         // reset/initialize errors
-        InputStream propertyStream = this.getClass().getResourceAsStream("exceptions.properties");
         Properties breeExceptionProperties = new Properties();
         String breeExceptions = "";
-        try {
+        try (InputStream propertyStream = this.getClass().getResourceAsStream("exceptions.properties")) {
             breeExceptionProperties.load(propertyStream);
             breeExceptions = breeExceptionProperties.getProperty("breeExceptions");
             if (breeExceptions == null) {
@@ -110,21 +108,12 @@ public class BREETest extends TestJars {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (propertyStream != null) {
-                try {
-                    propertyStream.close();
-                } catch (IOException e) {
-                    // would be unusual to get here?
-                    e.printStackTrace();
-                }
-            }
         }
-        Map javaWithBree = new HashMap();
-        List invalidJars = new ArrayList();
-        List nonjavaWithBree = new ArrayList();
-        Map plugins = new HashMap();
-        List javaWithoutBree = new ArrayList();
+        Map<String, Integer> javaWithBree = new HashMap<>();
+        List<String> invalidJars = new ArrayList<>();
+        List<BREEFileData> nonjavaWithBree = new ArrayList<>();
+        Map<String, String> plugins = new HashMap<>();
+        List<String> javaWithoutBree = new ArrayList<>();
         int nonJavaNoBREE = 0;
         boolean failuresOccured = false;
         File[] children = inputdir.listFiles(new JARFileNameFilter());
@@ -208,7 +197,7 @@ public class BREETest extends TestJars {
         return false;
     }
 
-    private void printreport(List invalidJars, Map javaWithBree, List nonjavaWithBree, List javaWithoutBree, Map<String, String> plugins, int nonJavaNoBREE,
+    private void printreport(List<String> invalidJars, Map<String, Integer> javaWithBree, List<BREEFileData> nonjavaWithBree, List<String> javaWithoutBree, Map<String, String> plugins, int nonJavaNoBREE,
             int totalsize, int checked) throws IOException {
 
         ReportWriter reportWriter = getReportWriter();
@@ -228,12 +217,12 @@ public class BREETest extends TestJars {
             reportWriter.writeln();
             reportWriter.writeln("   Distribution of BREEs in Java Bundles ");
             reportWriter.writeln();
-            Set allBREEs = javaWithBree.keySet();
-            List allBREEList = new ArrayList(allBREEs);
+            Set<String> allBREEs = javaWithBree.keySet();
+            List<String> allBREEList = new ArrayList<>(allBREEs);
             Collections.sort(allBREEList);
-            for (Object object : allBREEList) {
-                Integer count = (Integer) javaWithBree.get(object);
-                reportWriter.printf("\t\t%5d\t%s\n", count.intValue(), object);
+            for (String object : allBREEList) {
+                Integer count = javaWithBree.get(object);
+                reportWriter.printf("\t\t%5d\t%s\n", count, object);
             }
             reportWriter.writeln();
             reportWriter.writeln("  Bundles with questionable absence or presence of BREE");
@@ -241,22 +230,16 @@ public class BREETest extends TestJars {
             reportWriter.writeln("    Java Bundles without a BREE: " + javaWithoutBree.size());
             reportWriter.writeln();
             Collections.sort(javaWithoutBree);
-            for (Object object : javaWithoutBree) {
+            for (String object : javaWithoutBree) {
                 reportWriter.writeln("       " + object);
             }
             reportWriter.writeln();
             reportWriter.writeln("    Non Java Bundles with a BREE: " + nonjavaWithBree.size());
             reportWriter.writeln();
             Collections.sort(nonjavaWithBree);
-            BREEFileData breefiledata = null;
 
-            for (Object object : nonjavaWithBree) {
-                if (object instanceof BREEFileData) {
-                    breefiledata = (BREEFileData) object;
-                    reportWriter.printf("%24s\t%s\n", breefiledata.breeValue, breefiledata.filename);
-                } else {
-                    throw new Error("Programming error.");
-                }
+            for (BREEFileData breefiledata : nonjavaWithBree) {
+                reportWriter.printf("%24s\t%s\n", breefiledata.breeValue, breefiledata.filename);
             }
 
             reportWriter.writeln();
@@ -278,29 +261,28 @@ public class BREETest extends TestJars {
         }
     }
 
-    private int totalCount(Map javaWithBree) {
+    private int totalCount(Map<String, Integer> javaWithBree) {
 
-        Collection allCounts = javaWithBree.values();
+        Collection<Integer> allCounts = javaWithBree.values();
         int total = 0;
-        for (Iterator iterator = allCounts.iterator(); iterator.hasNext();) {
-            Integer count = (Integer) iterator.next();
+        for (Integer count : allCounts) {
             total = total + count.intValue();
         }
         return total;
     }
 
-    private void trackOmissions(List javaWithoutBree, File child) {
+    private void trackOmissions(List<String> javaWithoutBree, File child) {
         javaWithoutBree.add(child.getName());
 
     }
 
-    private void trackFalseInclusions(List list, File child, String bree) {
+    private void trackFalseInclusions(List<BREEFileData> list, File child, String bree) {
         list.add(new BREEFileData(child.getName(), bree));
 
     }
 
-    private void incrementCounts(Map breeMap, String bree) {
-        Integer count = (Integer) breeMap.get(bree);
+    private void incrementCounts(Map<String, Integer> breeMap, String bree) {
+        Integer count = breeMap.get(bree);
         if (count == null) {
             breeMap.put(bree, Integer.valueOf(1));
         } else {
@@ -325,9 +307,7 @@ public class BREETest extends TestJars {
     private boolean containsJava(File jarfile) {
         // We assume the file is a 'jar' file.
         boolean containsJava = false;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(jarfile, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(jarfile, false, ZipFile.OPEN_READ)) {
             Enumeration<JarEntry> entries = jar.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
@@ -346,14 +326,6 @@ public class BREETest extends TestJars {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
         return containsJava;
     }
@@ -371,9 +343,7 @@ public class BREETest extends TestJars {
     private boolean containsJava(InputStream input) {
         // We assume the file is a 'jar' file.
         boolean containsJava = false;
-        JarInputStream jarInputStream = null;
-        try {
-            jarInputStream = new JarInputStream(input);
+        try (input; JarInputStream jarInputStream = new JarInputStream(input)) {
             while (jarInputStream.available() > 0) {
                 ZipEntry entry = jarInputStream.getNextEntry();
                 if (entry != null) {
@@ -383,25 +353,8 @@ public class BREETest extends TestJars {
                     }
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jarInputStream != null) {
-                try {
-                    jarInputStream.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-
         }
         return containsJava;
     }

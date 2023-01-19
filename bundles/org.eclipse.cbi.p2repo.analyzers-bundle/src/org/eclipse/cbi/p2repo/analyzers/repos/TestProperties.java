@@ -2,6 +2,7 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -14,7 +15,7 @@ public class TestProperties {
 
     public static void main(String[] args) {
         try {
-            ArrayList<String> testnames = new TestProperties().getKnownProviderNames();
+            List<String> testnames = new TestProperties().getKnownProviderNames();
             for (String testname : testnames) {
                 System.out.println(testname);
             }
@@ -23,7 +24,7 @@ public class TestProperties {
         }
     }
 
-    public ArrayList<String> getKnownProviderNames() throws Exception {
+    public List<String> getKnownProviderNames() throws Exception {
         if (EXPECTED_PROVIDER_NAMES == null) {
             ArrayList<String> namesAsList = new ArrayList<>();
             // first try system properties, to allow override.

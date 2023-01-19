@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -92,9 +91,9 @@ public class ESTest extends TestJars {
             }
         }
 
-        Map withEs = new HashMap();
-        List invalidJars = new ArrayList();
-        List withoutEs = new ArrayList();
+        Map<String, Integer> withEs = new HashMap<>();
+        List<String> invalidJars = new ArrayList<>();
+        List<String> withoutEs = new ArrayList<>();
         boolean failuresOccured = false;
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
@@ -138,7 +137,8 @@ public class ESTest extends TestJars {
         return failuresOccured;
     }
 
-    private void printreport(List invalidJars, Map withEs, List withoutESs, int totalsize, int checked, int nProjectTags,
+    private void printreport(List<String> invalidJars, Map<String, Integer> withEs, List<String> withoutESs, int totalsize,
+            int checked, int nProjectTags,
             int nSourceBundles, int nInExceptionList) throws FileNotFoundException {
 
         ReportWriter reportWriter = getReportWriter();
@@ -158,8 +158,8 @@ public class ESTest extends TestJars {
             reportWriter.writeln("  Bundles with Eclipse-SourceReferences (total: " + totalCount(withEs) + ")");
             reportWriter.writeln();
             printInvalidJars(invalidJars, reportWriter);
-            Collection allESs = withEs.keySet();
-            List allESList = new ArrayList(allESs);
+            Collection<String> allESs = withEs.keySet();
+            List<String> allESList = new ArrayList<>(allESs);
             Collections.sort(allESList);
             for (Object object : allESList) {
                 // Integer count = (Integer) withEs.get(object);
@@ -180,24 +180,23 @@ public class ESTest extends TestJars {
         }
     }
 
-    private int totalCount(Map bundlesWithEs) {
+    private int totalCount(Map<String, Integer> bundlesWithEs) {
 
-        Collection allCounts = bundlesWithEs.values();
+        Collection<Integer> allCounts = bundlesWithEs.values();
         int total = 0;
-        for (Iterator iterator = allCounts.iterator(); iterator.hasNext();) {
-            Integer count = (Integer) iterator.next();
+        for (Integer count : allCounts) {
             total = total + count.intValue();
         }
         return total;
     }
 
-    private void trackOmissions(List bundlesWithoutEs, File child) {
+    private void trackOmissions(List<String> bundlesWithoutEs, File child) {
         bundlesWithoutEs.add(child.getName());
 
     }
 
-    private void incrementCounts(Map esMap, String es) {
-        Integer count = (Integer) esMap.get(es);
+    private void incrementCounts(Map<String, Integer> esMap, String es) {
+        Integer count = esMap.get(es);
         if (count == null) {
             esMap.put(es, Integer.valueOf(1));
         } else {
@@ -223,11 +222,11 @@ public class ESTest extends TestJars {
      * Return the bundle id from the manifest pointed to by the given input
      * stream.
      */
-    private String getESFromManifest(InputStream input, String path) {
+    private String getESFromManifest(InputStream input) {
         String es = null;
         try {
-            Map attributes = ManifestElement.parseBundleManifest(input, null);
-            es = (String) attributes.get(PROPERTY_ECLIPSE_SOURCEREFERENCES);
+            Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
+            es = attributes.get(PROPERTY_ECLIPSE_SOURCEREFERENCES);
         } catch (BundleException | IOException e) {
             e.printStackTrace();
         } finally {
@@ -249,9 +248,7 @@ public class ESTest extends TestJars {
      */
     private String getESFromJAR(File file) {
         InputStream input = null;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(file, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
             if (entry == null) {
                 // addError("Bundle does not contain a MANIFEST.MF file: " +
@@ -259,7 +256,7 @@ public class ESTest extends TestJars {
                 return null;
             }
             input = jar.getInputStream(entry);
-            return getESFromManifest(input, file.getAbsolutePath());
+            return getESFromManifest(input);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             // addError(e.getMessage());
@@ -268,13 +265,6 @@ public class ESTest extends TestJars {
             if (input != null) {
                 try {
                     input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jar != null) {
-                try {
-                    jar.close();
                 } catch (IOException e) {
                     // ignore
                 }

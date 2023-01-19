@@ -111,7 +111,7 @@ public class VersionChecking extends TestRepo {
 
     private List<String> collectQualifiers(IQueryResult<IInstallableUnit> allIUs, FileWriter outfileWriter) throws IOException,
             Error {
-        List<String> allQualifiers = new ArrayList();
+        List<String> allQualifiers = new ArrayList<>();
         int nonOSGiCompatible = 0;
         int nLessThanFour = 0;
         int nMoreThanFour = 0;
@@ -131,7 +131,7 @@ public class VersionChecking extends TestRepo {
                 Version bundleVersion = iu.getVersion();
                 if (bundleVersion.isOSGiCompatible()) {
                     if (bundleVersion.getSegmentCount() == 4) {
-                        Comparable qualifier = bundleVersion.getSegment(3);
+                        Comparable<?> qualifier = bundleVersion.getSegment(3);
                         if (qualifier instanceof String) {
                             String qString = (String) qualifier;
                             if (qString.isEmpty()) {
@@ -175,7 +175,7 @@ public class VersionChecking extends TestRepo {
     }
 
     private boolean analyzeNonUniqueVersions(IQueryResult<IInstallableUnit> allIUs) throws IOException {
-        Map bundles = tabulateNonUniqueIDs(allIUs);
+        Map<String, Set<Version>> bundles = tabulateNonUniqueIDs(allIUs);
         FileWriter outfileWriter = null;
         File outfile = null;
         String testDirName = getReportOutputDirectory();
@@ -188,13 +188,13 @@ public class VersionChecking extends TestRepo {
             outfileWriter.write("Repository ('repoURLToTest'): " + getRepoURLToTest() + EOL + EOL);
 
             int nUnique = 0;
-            for (Object bundleId : bundles.keySet()) {
-                Set versionSet = (Set) bundles.get(bundleId);
+            for (Map.Entry<String, Set<Version>> entry : bundles.entrySet()) {
+                Set<Version> versionSet = entry.getValue();
                 if (versionSet.size() == 1) {
                     nUnique++;
                 } else {
-                    printId(outfileWriter, bundleId);
-                    for (Object version : versionSet) {
+                    printId(outfileWriter, entry.getKey());
+                    for (Version version : versionSet) {
                         printVersion(outfileWriter, version);
                     }
                 }
@@ -219,8 +219,8 @@ public class VersionChecking extends TestRepo {
         }
     }
 
-    private Map tabulateNonUniqueIDs(IQueryResult<IInstallableUnit> allIUs) {
-        Map bundles = new HashMap();
+    private Map<String, Set<Version>> tabulateNonUniqueIDs(IQueryResult<IInstallableUnit> allIUs) {
+        Map<String, Set<Version>> bundles = new HashMap<>();
         for (IInstallableUnit iu : allIUs.toUnmodifiableSet()) {
             try {
                 // exclude categories, since they are (often) intended to work
@@ -238,12 +238,12 @@ public class VersionChecking extends TestRepo {
                     // if bundle ID is already in map, we must have already
                     // found at least one
                     if (bundles.containsKey(bundleId)) {
-                        Set versionSet = (Set) bundles.get(bundleId);
+                        Set<Version> versionSet = bundles.get(bundleId);
                         versionSet.add(bundleVersion);
                     } else {
                         // haven't found one yet, so add it, with initial set of
                         // its (one) version
-                        Set versionSet = new HashSet();
+                        Set<Version> versionSet = new HashSet<>();
                         versionSet.add(bundleVersion);
                         bundles.put(bundleId, versionSet);
                     }

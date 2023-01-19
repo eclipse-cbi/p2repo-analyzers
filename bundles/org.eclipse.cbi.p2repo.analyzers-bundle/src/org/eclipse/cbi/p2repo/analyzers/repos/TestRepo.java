@@ -159,7 +159,7 @@ public class TestRepo extends BuildRepoTests {
      */
     protected void printAllProperties(FileWriter outFileWriter, IInstallableUnit iu) throws IOException {
         Map<String, String> properties = iu.getProperties();
-        Set keys = properties.keySet();
+        Set<String> keys = properties.keySet();
         for (Object key : keys) {
             String value = properties.get(key);
             println(outFileWriter, key + " : " + value);

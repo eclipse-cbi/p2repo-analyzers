@@ -89,7 +89,7 @@ public class IUNameChecker extends TestRepo {
             // fail("Errors in naming or localization. For list, see " +
             // outfile.getName());
             // }
-            return incorrectBundleName.size() > 0;
+            return !incorrectBundleName.isEmpty();
         } finally {
             if (outfileWriter != null) {
                 try {
@@ -160,7 +160,7 @@ public class IUNameChecker extends TestRepo {
             // fail("Errors in naming or localization. For list, see " +
             // outfile.getName());
             // }
-            return incorrectBundleName.size() > 0;
+            return !incorrectBundleName.isEmpty();
         } finally {
             if (outfileWriter != null) {
                 try {

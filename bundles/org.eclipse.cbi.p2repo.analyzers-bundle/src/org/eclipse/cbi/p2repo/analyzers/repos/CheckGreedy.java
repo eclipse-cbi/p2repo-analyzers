@@ -116,7 +116,7 @@ public class CheckGreedy extends TestRepo {
         return characterStream;
     }
 
-    private String createLocalFile(ZipInputStream zipStream, ZipEntry zipEntry) throws FileNotFoundException, IOException {
+    private String createLocalFile(ZipInputStream zipStream, ZipEntry zipEntry) throws IOException {
         // Once we get the entry from the stream, the stream is
         // positioned read to read the raw data, and we keep
         // reading until read returns 0 or less.
@@ -168,7 +168,7 @@ public class CheckGreedy extends TestRepo {
             List<String> intenionallyImpliedTrueOptionals = new ArrayList<>();
             List<String> intenionallyFalseOptionals = new ArrayList<>();
             // List will be list of parent IU Nodes that contain the optional
-            Map<String, List> blameIU = new HashMap<>();
+            Map<String, List<String>> blameIU = new HashMap<>();
             NodeList iuElements = document.getElementsByTagName("required");
             int nUnits = iuElements.getLength();
             // System.out.println("Number of total required elements found: "
@@ -234,16 +234,16 @@ public class CheckGreedy extends TestRepo {
         return result;
     }
 
-    private void addBlameIU(Map<String, List> blameIU, Node iuNode, String name) {
+    private void addBlameIU(Map<String, List<String>> blameIU, Node iuNode, String name) {
 
         // Walk "up" the tree to get parent element named "unit".
         Node iuelement = walkbackToUnit(iuNode);
         String unitID = getID(iuelement);
         // first see if there is one already, if not create array, else just add
         // to array
-        List anodeList = blameIU.get(name);
+        List<String> anodeList = blameIU.get(name);
         if (anodeList == null) {
-            anodeList = new ArrayList<String>();
+            anodeList = new ArrayList<>();
             anodeList.add(unitID);
             blameIU.put(name, anodeList);
         } else {
@@ -270,7 +270,7 @@ public class CheckGreedy extends TestRepo {
     }
 
     private void printHTMLReport(int nUnits, List<String> intenionallyTrueOptionals, List<String> intenionallyImpliedTrueOptionals,
-            List<String> intenionallyFalseOptionals, Map<String, List> blameIUs) throws IOException {
+            List<String> intenionallyFalseOptionals, Map<String, List<String>> blameIUs) throws IOException {
 
         FileWriter outfile = createOutputFile();
         try (outfile) {
@@ -351,7 +351,7 @@ public class CheckGreedy extends TestRepo {
         out.write("</ol>" + EOL);
     }
 
-    private void printLinesProvider(FileWriter out, List<String> names, Map<String, List> blameIUs) throws IOException {
+    private void printLinesProvider(FileWriter out, List<String> names, Map<String, List<String>> blameIUs) throws IOException {
 
         Set<String> namesSet = new HashSet<>(names);
         out.write("<p>Total Count: " + names.size() + EOL);
@@ -369,16 +369,16 @@ public class CheckGreedy extends TestRepo {
         out.write("</ol>" + EOL);
     }
 
-    private void printInnerList(FileWriter out, String name, Map<String, List> blameIUs) throws IOException {
-        List toblame = blameIUs.get(name);
+    private void printInnerList(FileWriter out, String name, Map<String, List<String>> blameIUs) throws IOException {
+        List<String> toblame = blameIUs.get(name);
         if ((toblame == null)) {
             return;
         }
         Collections.sort(toblame);
         out.write("<p>Number of IUs using optional, but greedy for this case: " + toblame.size() + EOL);
         out.write("<ol>" + EOL);
-        for (Object iu : toblame) {
-            printLineListItem(out, (String) iu);
+        for (String iu : toblame) {
+            printLineListItem(out, iu);
         }
         out.write("</ol></p>" + EOL);
     }

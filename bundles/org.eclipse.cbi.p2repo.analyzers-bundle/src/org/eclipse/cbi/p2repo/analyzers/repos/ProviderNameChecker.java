@@ -117,7 +117,7 @@ public class ProviderNameChecker extends TestRepo {
             // fail("Errors in naming or localization. For list, see " +
             // outfile.getName());
             // }
-            return incorrectProviderName.size() > 0;
+            return !incorrectProviderName.isEmpty();
         } finally {
             if (outfileWriter != null) {
                 try {

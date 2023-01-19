@@ -79,11 +79,11 @@ public abstract class TestJars extends BuildRepoTests {
         return featureDirectory;
     }
 
-    protected void printInvalidJars(List invalidJars, ReportWriter reportWriter) throws FileNotFoundException {
-        if (invalidJars.size() > 0) {
+    protected void printInvalidJars(List<String> invalidJars, ReportWriter reportWriter) throws FileNotFoundException {
+        if (!invalidJars.isEmpty()) {
             reportWriter.writeln("The following jars could not be read, perhaps invalid signatures led to security exceptions?");
             Collections.sort(invalidJars);
-            for (Object bundle : invalidJars) {
+            for (String bundle : invalidJars) {
                 reportWriter.writeln("       " + bundle);
             }
         }
