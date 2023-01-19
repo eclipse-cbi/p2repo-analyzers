@@ -25,11 +25,9 @@ public class P2AnalyzerAction implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
-		if (this.selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) this.selection;
+		if (this.selection instanceof IStructuredSelection structuredSelection) {
 			Object first = structuredSelection.getFirstElement();
-			if (first instanceof IFolder) {
-				IFolder iFolder = (IFolder) first;
+			if (first instanceof IFolder iFolder) {
 				String reportRepoDir = iFolder.getLocation().toOSString();
 				IFolder outputFolder = iFolder.getParent().getFolder(new Path("p2-report")); //$NON-NLS-1$
 				RepoTestsConfiguration configurations = new RepoTestsConfiguration(reportRepoDir,

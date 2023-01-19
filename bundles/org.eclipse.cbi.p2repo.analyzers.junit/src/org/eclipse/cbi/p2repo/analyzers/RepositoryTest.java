@@ -174,8 +174,8 @@ public class RepositoryTest {
 
 	private boolean configureChecker(BuildRepoTests checker) {
 		checker.setDirectoryToCheck(dirToTest);
-		if (checker instanceof TestRepo) {
-			((TestRepo) checker).setRepoURLToTest(repoToTest);
+		if (checker instanceof TestRepo repo) {
+			repo.setRepoURLToTest(repoToTest);
 		}
 		return !skipChecker(checker);
 	}

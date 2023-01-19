@@ -132,8 +132,7 @@ public class VersionChecking extends TestRepo {
                 if (bundleVersion.isOSGiCompatible()) {
                     if (bundleVersion.getSegmentCount() == 4) {
                         Comparable<?> qualifier = bundleVersion.getSegment(3);
-                        if (qualifier instanceof String) {
-                            String qString = (String) qualifier;
+                        if (qualifier instanceof String qString) {
                             if (qString.isEmpty()) {
                                 outfileWriter.write("zero length 4th segment: " + iu.getId() + EOL);
                             }

@@ -558,8 +558,8 @@ public class TestLayoutTest extends TestJars {
             Element featureElement = null;
             if (featureElements.getLength() > 0) {
                 Node featureNode = featureElements.item(0);
-                if (featureNode instanceof Element) {
-                    featureElement = (Element) featureNode;
+                if (featureNode instanceof Element node) {
+                    featureElement = node;
                 }
             }
             if (featureElement != null) {

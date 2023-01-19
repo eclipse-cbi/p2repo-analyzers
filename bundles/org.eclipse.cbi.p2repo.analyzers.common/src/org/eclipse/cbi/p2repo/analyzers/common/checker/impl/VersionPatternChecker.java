@@ -30,7 +30,7 @@ public class VersionPatternChecker implements IInstalationUnitChecker {
 			if (version.isOSGiCompatible()) {
 				if (version.getSegmentCount() == 4) {
 					Comparable<?> qualifier = version.getSegment(3);
-					if (!(qualifier instanceof String) || ((String) qualifier).isEmpty()) {
+					if (!(qualifier instanceof String s) || s.isEmpty()) {
 						report.setType(ReportType.BAD_GUY);
 						report.setCheckResult("Empty qualifier segment.");
 					}
