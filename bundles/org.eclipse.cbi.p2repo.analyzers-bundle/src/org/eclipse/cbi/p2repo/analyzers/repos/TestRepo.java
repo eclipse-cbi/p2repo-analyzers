@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.eclipse.cbi.p2repo.analyzers.BuildRepoTests;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.TestActivator;
 import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.core.ProvisionException;
@@ -28,6 +27,7 @@ import org.eclipse.equinox.p2.query.IQueryResult;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Tests that licenses in the repository are consistent with the platform
@@ -249,12 +249,12 @@ public class TestRepo extends BuildRepoTests {
     }
 
     protected static IMetadataRepositoryManager getMetadataRepositoryManager() {
-        return (IMetadataRepositoryManager) getAgent().getService(IMetadataRepositoryManager.SERVICE_NAME);
+        return getAgent().getService(IMetadataRepositoryManager.class);
     }
 
     public static IProvisioningAgent getAgent() {
         // get the global agent for the currently running system
-        return (IProvisioningAgent) ServiceHelper.getService(TestActivator.getContext(), IProvisioningAgent.SERVICE_NAME);
+        return ServiceHelper.getService(FrameworkUtil.getBundle(TestRepo.class).getBundleContext(), IProvisioningAgent.class);
     }
 
     public String getRepoURLToTest() {

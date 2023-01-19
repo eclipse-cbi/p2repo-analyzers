@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
-import org.eclipse.cbi.p2repo.analyzers.TestActivator;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
 import org.eclipse.cbi.p2repo.analyzers.repos.TestRepo;
 import org.eclipse.cbi.p2repo.analyzers.utils.BundleJarUtils;
@@ -39,14 +38,15 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactDescriptor;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.artifact.IFileArtifactRepository;
 import org.eclipse.osgi.signedcontent.SignedContentFactory;
+import org.osgi.framework.FrameworkUtil;
 
 public class SignerTest extends TestJars {
     static final String           UNSIGNED_FILENAME = "unsigned8.txt";
     static final String           SIGNED_FILENAME   = "verified8.txt";
     static final String           KNOWN_UNSIGNED    = "knownunsigned8.txt";
 
-    final SignedContentFactory    verifierFactory   = ServiceHelper.getService(TestActivator.getContext(),
-            SignedContentFactory.class);
+    final SignedContentFactory    verifierFactory   = ServiceHelper
+            .getService(FrameworkUtil.getBundle(SignerTest.class).getBundleContext(), SignedContentFactory.class);
     final IFileArtifactRepository artifactRepository;
     boolean                       useJarsigner;
 
