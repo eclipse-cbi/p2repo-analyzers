@@ -42,7 +42,7 @@ public class TestRepo extends BuildRepoTests {
     }
 
     protected static final boolean         DEBUG = false;
-    protected static final String          EOL   = System.getProperty("line.separator", "\n");
+    protected static final String          EOL   = System.lineSeparator();
     protected static final String          NBSP  = " &nbsp; ";
     protected static final String          BR    = "<br/>" + EOL;
     private IQueryResult<IInstallableUnit> allCurrentIUs;
