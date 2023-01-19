@@ -22,7 +22,7 @@ Import-Package: javax.xml,
  org.eclipse.osgi.util;version="1.1.0",
  org.osgi.framework;version="1.8.0",
  org.osgi.service.packageadmin;version="1.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.cbi.p2repo.analyzers,
  org.eclipse.cbi.p2repo.analyzers.jars,

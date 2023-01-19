@@ -19,7 +19,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
@@ -72,7 +71,7 @@ public class SignerTest extends TestJars {
         }
         var artifactKeys = artifactRepository.query(ArtifactKeyQuery.ALL_KEYS, null);
         var descriptors = StreamSupport.stream(artifactKeys.spliterator(), false).map(artifactRepository::getArtifactDescriptors)
-                .map(Arrays::asList).flatMap(Collection::stream).collect(Collectors.toList());
+                .map(Arrays::asList).flatMap(Collection::stream).toList();
         descriptors.parallelStream().forEach(new SignerCheck(checkReports));
 
         boolean containsErrors = checkReports.stream().anyMatch(report -> report.getType() == ReportType.NOT_IN_TRAIN);
