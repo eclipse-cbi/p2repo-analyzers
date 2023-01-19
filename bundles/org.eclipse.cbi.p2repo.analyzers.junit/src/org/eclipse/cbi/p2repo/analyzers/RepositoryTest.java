@@ -39,7 +39,7 @@ public class RepositoryTest {
 	private static final RepoTestsConfiguration CONF_FROM_SYSTEM_PROPERTIES = RepoTestsConfiguration
 			.createFromSystemProperties();
 	private static final String SKIP_CHECKER_PROP_NAME = "skipChecker";
-	private static final Set<String> SKIPPED_CHECKER = new HashSet<String>();
+	private static final Set<String> SKIPPED_CHECKER = new HashSet<>();
 	private static String dirToTest;
 	private static String repoToTest;
 	private static String refRepoDir;
