@@ -8,7 +8,7 @@ public class ReportWriter {
         this.outputFilename = outputFilename;
     }
 
-    private static final String EOL = System.getProperty("line.separator", "\n");
+    private static final String EOL = System.lineSeparator();
     private String              outputFilename;
 
     private PrintWriter         outfilewriter;
