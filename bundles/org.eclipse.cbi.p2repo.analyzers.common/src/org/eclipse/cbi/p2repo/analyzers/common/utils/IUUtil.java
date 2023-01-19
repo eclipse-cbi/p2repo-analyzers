@@ -19,16 +19,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
+import org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryDescription;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepository;
+import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.artifact.IFileArtifactRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
+import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.osgi.util.ManifestElement;
-import org.eclipse.cbi.p2repo.analyzers.common.P2RepositoryDescription;
-import org.eclipse.cbi.p2repo.analyzers.common.internal.Activator;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.FrameworkUtil;
 
 public class IUUtil {
 
@@ -40,17 +44,22 @@ public class IUUtil {
 			throws ProvisionException, OperationCanceledException {
 		P2RepositoryDescription description = new P2RepositoryDescription();
 		description.setRepoURL(p2RepoURL);
-		IMetadataRepository repo = Activator.getMetadataRepositoryManager().loadRepository(p2RepoURL, null);
+		IMetadataRepository repo = getService(IMetadataRepositoryManager.class).loadRepository(p2RepoURL, null);
 		if (repo == null) {
 			handleFatalError("no metadata repository found at " + p2RepoURL.toString());
 		}
 		description.setMetadataRepository(repo);
-		IArtifactRepository artRepo = Activator.getArtifactRepositoryManager().loadRepository(p2RepoURL, null);
+		IArtifactRepository artRepo = getService(IArtifactRepositoryManager.class).loadRepository(p2RepoURL, null);
 		if (artRepo == null) {
 			handleFatalError("no artifact repository found at " + p2RepoURL.toString());
 		}
 		description.setArtifactRepository((IFileArtifactRepository) artRepo);
 		return description;
+	}
+	
+	private static <T> T getService(Class<T> service) {
+		return ServiceHelper.getService(FrameworkUtil.getBundle(IUUtil.class).getBundleContext(), IProvisioningAgent.class)
+				.getService(service);
 	}
 
 	private static void handleFatalError(final String string) {
