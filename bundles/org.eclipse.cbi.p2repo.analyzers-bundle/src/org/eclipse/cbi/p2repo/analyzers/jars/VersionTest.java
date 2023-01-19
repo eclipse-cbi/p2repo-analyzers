@@ -71,7 +71,7 @@ public class VersionTest extends TestJars {
 
     private boolean checkFilesVersions(File inputdir) throws IOException {
         // reset/initialize errors
-        List errors = new ArrayList();
+        List<String> errors = new ArrayList<>();
         boolean failuresOccured = false;
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
@@ -102,9 +102,9 @@ public class VersionTest extends TestJars {
         getReportWriter().writeln("   Checked " + checked + " of " + totalsize + ".");
         getReportWriter().writeln("   Errors found: " + errors.size());
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             Collections.sort(errors);
-            for (Iterator iter = errors.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = errors.iterator(); iter.hasNext();) {
                 getReportWriter().writeln(iter.next());
             }
             failuresOccured = true;

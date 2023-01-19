@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -69,7 +68,7 @@ public class TestLayoutTest extends TestJars {
     private static final String KEY_DFT_SRC_JAR      = "default.source.jar";
     private static final String KEY_DFT_FEATURE      = "default.feature";
     private Properties          config;
-    private List                errors               = new ArrayList();
+    private List<String>        errors             = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -104,7 +103,7 @@ public class TestLayoutTest extends TestJars {
 
     private boolean testBundleLayout() throws IOException {
 
-        errors = new ArrayList();
+        errors = new ArrayList<>();
         boolean failuresOccured = false;
 
         File inputdir = new File(getBundleDirectory());
@@ -126,10 +125,10 @@ public class TestLayoutTest extends TestJars {
         getReportWriter().writeln("   Checked " + checked + " of " + totalsize + ".");
         getReportWriter().writeln("   Errors found: " + errors.size());
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             Collections.sort(errors);
-            for (Iterator iter = errors.iterator(); iter.hasNext();) {
-                getReportWriter().writeln(iter.next());
+            for (Object error : errors) {
+                getReportWriter().writeln(error);
             }
             failuresOccured = true;
         }
@@ -146,11 +145,11 @@ public class TestLayoutTest extends TestJars {
      * Check the configuration file and return a set of regular expressions
      * which match the list of files that are expected to be in the bundle.
      */
-    private Set getExpected(String id, boolean source) {
+    private Set<String> getExpected(String id, boolean source) {
         return findConfiguration(id, source, false);
     }
 
-    private Set getFeatureExpected(String id, boolean source, boolean zip) {
+    private Set<String> getFeatureExpected(String id, boolean source) {
         return findConfiguration(id, source, true);
     }
 
@@ -219,9 +218,9 @@ public class TestLayoutTest extends TestJars {
      * Process the bundle at the specified location, with the given set of
      * expected results.
      */
-    private void processBundle(File file, Set expected) {
+    private void processBundle(File file, Set<String> expected) {
         if (file.isDirectory()) {
-            String[] array = (String[]) expected.toArray(new String[expected.size()]);
+            String[] array = expected.toArray(new String[expected.size()]);
             processDir("", file, array);
             for (String element : array) {
                 if (element != null) {
@@ -229,13 +228,13 @@ public class TestLayoutTest extends TestJars {
                 }
             }
         } else {
-            processArchive(file, (String[]) expected.toArray(new String[expected.size()]));
+            processArchive(file, expected.toArray(new String[expected.size()]));
         }
     }
 
-    private void processFeature(File file, Set expected) {
+    private void processFeature(File file, Set<String> expected) {
         if (file.isDirectory()) {
-            String[] array = (String[]) expected.toArray(new String[expected.size()]);
+            String[] array = expected.toArray(new String[expected.size()]);
             processDir("", file, array);
             for (String element : array) {
                 if (element != null) {
@@ -243,7 +242,7 @@ public class TestLayoutTest extends TestJars {
                 }
             }
         } else {
-            processArchive(file, (String[]) expected.toArray(new String[expected.size()]));
+            processArchive(file, expected.toArray(new String[expected.size()]));
         }
     }
 
@@ -251,10 +250,9 @@ public class TestLayoutTest extends TestJars {
      * The bundle is an archive. Make sure it has the right contents.
      */
     private void processArchive(File file, String[] expected) {
-        ZipFile zip = null;
-        try {
-            zip = new ZipFile(file, ZipFile.OPEN_READ);
-            for (Enumeration e = zip.entries(); e.hasMoreElements();) {
+        try (ZipFile zip = new ZipFile(file, ZipFile.OPEN_READ)){
+            
+            for (Enumeration<?> e = zip.entries(); e.hasMoreElements();) {
                 ZipEntry entry = (ZipEntry) e.nextElement();
                 String name = entry.getName();
                 for (int i = 0; i < expected.length; i++) {
@@ -278,14 +276,6 @@ public class TestLayoutTest extends TestJars {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (zip != null) {
-                try {
-                    zip.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 
@@ -312,7 +302,6 @@ public class TestLayoutTest extends TestJars {
                 } catch (PatternSyntaxException ex) {
                     // ex.printStackTrace();
                     addError(ex.getMessage());
-                    continue;
                 }
             }
         }
@@ -325,8 +314,8 @@ public class TestLayoutTest extends TestJars {
     private String getBundleIdFromManifest(InputStream input, String path) {
         String id = null;
         try {
-            Map attributes = ManifestElement.parseBundleManifest(input, null);
-            id = (String) attributes.get(PROPERTY_BUNDLE_ID);
+            Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
+            id = attributes.get(PROPERTY_BUNDLE_ID);
             if ((id == null) || (id.isEmpty())) {
                 addError("BundleSymbolicName header not set in manifest for bundle: " + path);
             } else {
@@ -374,7 +363,7 @@ public class TestLayoutTest extends TestJars {
         ZipFile zip = null;
         try {
             zip = new ZipFile(file);
-            for (Enumeration e = zip.entries(); e.hasMoreElements();) {
+            for (Enumeration<?> e = zip.entries(); e.hasMoreElements();) {
                 ZipEntry entry = (ZipEntry) e.nextElement();
                 if (entry.getName().matches("^.*/" + JarFile.MANIFEST_NAME)) {
                     InputStream input = zip.getInputStream(entry);
@@ -473,7 +462,7 @@ public class TestLayoutTest extends TestJars {
 
     private boolean testFeatureLayout() throws IOException {
 
-        errors = new ArrayList();
+        errors = new ArrayList<>();
         boolean failuresOccurred = false;
         File inputdir = new File(getFeatureDirectory());
         File[] children = inputdir.listFiles(new JARFileNameFilter());
@@ -483,7 +472,7 @@ public class TestLayoutTest extends TestJars {
             if (child != null) {
                 String id = getFeatureId(child);
                 if (id != null) {
-                    processFeature(child, getFeatureExpected(id, true, child.getName().endsWith(EXTENSION_ZIP)));
+                    processFeature(child, getFeatureExpected(id, true));
                     checked++;
                 }
             }
@@ -492,10 +481,10 @@ public class TestLayoutTest extends TestJars {
         getReportWriter().writeln("   Checking: " + getFeatureDirectory());
         getReportWriter().writeln("   Checked " + checked + " of " + totalsize + ".");
         getReportWriter().writeln("   Errors found: " + errors.size());
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             Collections.sort(errors);
-            for (Iterator iter = errors.iterator(); iter.hasNext();) {
-                getReportWriter().writeln(iter.next());
+            for (String error : errors) {
+                getReportWriter().writeln(error);
             }
             failuresOccurred = true;
         }
@@ -590,23 +579,13 @@ public class TestLayoutTest extends TestJars {
     private Document getDOM(File file) {
 
         Document aDocument = null;
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             InputSource inputSource = new InputSource(reader);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             aDocument = builder.parse(inputSource);
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // ignore this one
-                }
-            }
         }
 
         if (aDocument == null) {

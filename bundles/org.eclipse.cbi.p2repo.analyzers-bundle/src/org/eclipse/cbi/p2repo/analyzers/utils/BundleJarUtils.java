@@ -30,8 +30,8 @@ public class BundleJarUtils {
     public static String getJarManifestEntry(InputStream input, String key) {
         String manifestEntry = null;
         try {
-            Map attributes = ManifestElement.parseBundleManifest(input, null);
-            manifestEntry = (String) attributes.get(key);
+            Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
+            manifestEntry = attributes.get(key);
         } catch (BundleException | IOException e) {
             e.printStackTrace();
         } finally {
@@ -52,9 +52,7 @@ public class BundleJarUtils {
      */
     public static String getJarManifestEntry(File file, String key) {
         InputStream input = null;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(file, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
             if (entry == null) {
                 // addError("Bundle does not contain a MANIFEST.MF file: " +
@@ -75,21 +73,12 @@ public class BundleJarUtils {
                     // ignore
                 }
             }
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 
     public static Properties getEclipseInf(File jarfile) {
-        JarFile jar = null;
         Properties properties = new Properties();
-        try {
-            jar = new JarFile(jarfile, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(jarfile, false, ZipFile.OPEN_READ)) {
             JarEntry eclipseInf = jar.getJarEntry("META-INF/eclipse.inf");
             if (eclipseInf != null) {
                 properties.load(jar.getInputStream(eclipseInf));
@@ -98,14 +87,6 @@ public class BundleJarUtils {
             System.out.println("Failed to open jar file (zip exception): " + jarfile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
         return properties;
     }

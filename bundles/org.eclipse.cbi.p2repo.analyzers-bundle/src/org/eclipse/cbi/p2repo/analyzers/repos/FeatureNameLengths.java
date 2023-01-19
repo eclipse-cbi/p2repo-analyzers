@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,9 +24,9 @@ public class FeatureNameLengths extends TestRepo {
         super(configurations);
     }
 
-    private Map  distribution = null;
-    public final static int  MAX_CRITERIA  = 100;
-    private List longestNames = new ArrayList();
+    private Map<Integer, Integer> distribution = null;
+    public static final int       MAX_CRITERIA = 100;
+    private List<String>          longestNames = new ArrayList<>();
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
         List<T> list = new ArrayList<>(c);
@@ -47,7 +46,7 @@ public class FeatureNameLengths extends TestRepo {
     }
 
     private void analyze(IQueryResult<IInstallableUnit> allIUs) {
-        distribution = new HashMap<Integer, Integer>();
+        distribution = new HashMap<>();
         for (IInstallableUnit iu : allIUs.toUnmodifiableSet()) {
             // simulate what directory name would be, when installed
             String featureName = iu.getId();
@@ -78,23 +77,21 @@ public class FeatureNameLengths extends TestRepo {
             println(outfileWriter, "<br /><br />Distribution of Feature Directory Lengths:" + SPACER);
 
             int total = 0;
-            Set keys = distribution.keySet();
+            Set<Integer> keys = distribution.keySet();
             List<Integer> list = asSortedList(keys);
-            for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-                Integer category = (Integer) iterator.next();
-                Integer count = (Integer) distribution.get(category);
+            for (Integer category : list) {
+                Integer count = distribution.get(category);
                 println(outfileWriter, NBSP + category + NBSP + count);
                 total = total + count;
             }
             println(outfileWriter, "=======================" + EOL);
             println(outfileWriter, NBSP + "Total features directory names: " + total + EOL);
             println(outfileWriter, "=======================" + EOL);
-            if (longestNames.size() > 0) {
+            if (!longestNames.isEmpty()) {
 
                 println(outfileWriter, NBSP + "Features directory names with lengths above " + MAX_CRITERIA + EOL);
                 Collections.sort(longestNames, new StringLengthComparator());
-                for (Object longestName : longestNames) {
-                    String line = (String) longestName;
+                for (String line : longestNames) {
                     println(outfileWriter, line.length() + NBSP + line + EOL);
                 }
             } else {
@@ -116,7 +113,7 @@ public class FeatureNameLengths extends TestRepo {
 
     private void tabulate(int length) {
         Integer category = Integer.valueOf(length);
-        Integer count = (Integer) distribution.get(category);
+        Integer count = distribution.get(category);
         if (count == null) {
             // our first occurance
             count = Integer.valueOf(1);

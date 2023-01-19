@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -107,8 +106,8 @@ public class IUVersionCheckToReference extends TestRepo {
             List<IInstallableUnit> increaseVersionsMinor, List<IInstallableUnit> increaseVersionsService,
             List<IInstallableUnit> increaseVersionsQualifierOnly) {
 
-        Set allCurrent = allIUs.toUnmodifiableSet();
-        Set allRef = allReferenceIUs.toUnmodifiableSet();
+        Set<IInstallableUnit> allCurrent = allIUs.toUnmodifiableSet();
+        Set<IInstallableUnit> allRef = allReferenceIUs.toUnmodifiableSet();
 
         for (String iuname : curinboth) {
             IInstallableUnit current = getIU(iuname, allCurrent);
@@ -312,8 +311,7 @@ public class IUVersionCheckToReference extends TestRepo {
             printStartTable(out, "");
             printRowln(out, "<th>" + "IU id" + "</th><th>" + "Reference (old) version" + "</th><th>" + "Current (new) version"
                     + "</th>");
-            for (Iterator iterator = iuListCur.iterator(); iterator.hasNext();) {
-                IInstallableUnit curInstallableUnit = (IInstallableUnit) iterator.next();
+            for (IInstallableUnit curInstallableUnit : iuListCur) {
                 IInstallableUnit refIInstallableUnit = getIUNamed(iuListRefs, curInstallableUnit.getId());
                 printLineRowItem(out, curInstallableUnit, refIInstallableUnit);
             }
