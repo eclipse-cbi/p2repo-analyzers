@@ -1,5 +1,5 @@
 instructions.configure=\
-  setProgramProperty(propName:osgi.requiredJavaVersion,propValue:11.0);
+  setProgramProperty(propName:osgi.requiredJavaVersion,propValue:17.0);
 
 instructions.unconfigure=\
   setProgramProperty(propName:osgi.requiredJavaVersion,propValue:);
