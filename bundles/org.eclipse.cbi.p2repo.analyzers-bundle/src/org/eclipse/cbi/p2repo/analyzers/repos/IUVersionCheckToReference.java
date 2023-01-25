@@ -118,34 +118,30 @@ public class IUVersionCheckToReference extends TestRepo {
                 if (curVersion.equals(refVersion)) {
                     matchingVersions.add(current);
                 } else {
-                    Comparable curMajor = curVersion.getSegment(0);
-                    Comparable refMajor = refVersion.getSegment(0);
-                    if (curMajor.compareTo(refMajor) < 0) {
+                    int compareMajor = compareSegment(curVersion, refVersion, 0);
+                    if (compareMajor < 0) {
                         decreasingVersions.add(current);
-                    } else if (curMajor.compareTo(refMajor) > 0) {
+                    } else if (compareMajor > 0) {
                         increaseVersionsMajor.add(current);
-                    } else if (curMajor.compareTo(refMajor) == 0) {
-                        Comparable curMinor = curVersion.getSegment(1);
-                        Comparable refMinor = refVersion.getSegment(1);
-                        if (curMinor.compareTo(refMinor) < 0) {
+                    } else if (compareMajor == 0) {
+                        int compareMinor = compareSegment(curVersion, refVersion, 1);
+                        if (compareMinor < 0) {
                             decreasingVersions.add(current);
-                        } else if (curMinor.compareTo(refMinor) > 0) {
+                        } else if (compareMinor > 0) {
                             increaseVersionsMinor.add(current);
-                        } else if (curMinor.compareTo(refMinor) == 0) {
-                            Comparable curService = curVersion.getSegment(2);
-                            Comparable refService = refVersion.getSegment(2);
-                            if (curService.compareTo(refService) < 0) {
+                        } else if (compareMinor == 0) {
+                            int compareService = compareSegment(curVersion, refVersion, 2);
+                            if (compareService < 0) {
                                 decreasingVersions.add(current);
-                            } else if (curService.compareTo(refService) > 0) {
+                            } else if (compareService > 0) {
                                 increaseVersionsService.add(current);
-                            } else if (curService.compareTo(refService) == 0) {
-                                Comparable curQualifier = curVersion.getSegment(3);
-                                Comparable refQualifier = refVersion.getSegment(3);
-                                if (curQualifier.compareTo(refQualifier) < 0) {
+                            } else if (compareService == 0) {
+                                int compareQualifier = compareSegment(curVersion, refVersion, 3);
+                                if (compareQualifier < 0) {
                                     decreasingVersions.add(current);
-                                } else if (curQualifier.compareTo(refQualifier) > 0) {
+                                } else if (compareQualifier > 0) {
                                     increaseVersionsQualifierOnly.add(current);
-                                } else if (curQualifier.compareTo(refQualifier) == 0) {
+                                } else if (compareQualifier == 0) {
                                     System.out.print("Surprising we'd get here, since already checked for equality");
                                     matchingVersions.add(current);
                                 }
@@ -155,7 +151,14 @@ public class IUVersionCheckToReference extends TestRepo {
                 }
             }
         }
+    }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private int compareSegment(Version curVersion, Version refVersion, int segment) {
+        // Corresponding segments necessarily have the same type.
+        Comparable curSegment = curVersion.getSegment(segment);
+        Comparable refSegment = refVersion.getSegment(segment);
+        return curSegment.compareTo(refSegment);
     }
 
     private IInstallableUnit getIU(String iuname, Set<IInstallableUnit> allIUs) {
