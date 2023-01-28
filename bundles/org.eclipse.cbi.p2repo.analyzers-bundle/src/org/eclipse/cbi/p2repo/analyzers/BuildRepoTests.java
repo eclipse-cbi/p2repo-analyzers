@@ -13,7 +13,6 @@ import org.eclipse.cbi.p2repo.analyzers.jars.ESTest;
 import org.eclipse.cbi.p2repo.analyzers.jars.SignerTest;
 import org.eclipse.cbi.p2repo.analyzers.jars.TestLayoutTest;
 import org.eclipse.cbi.p2repo.analyzers.jars.VersionTest;
-//import org.eclipse.cbi.p2repo.analyzers.repos.CheckGreedy;
 import org.eclipse.cbi.p2repo.analyzers.repos.FeatureDisplayableDataChecker;
 import org.eclipse.cbi.p2repo.analyzers.repos.FeatureNameLengths;
 import org.eclipse.cbi.p2repo.analyzers.repos.IUNameChecker;
@@ -274,7 +273,6 @@ public class BuildRepoTests {
         boolean bundleNameFailures = false;
         boolean providerNamesFailure = false;
         boolean licenseConsistencyFailure = false;
-        boolean greedyCheck = false;
 
         VersionChecking uniquenessChecker = new VersionChecking(getConfigurations());
         uniquenessChecker.setRepoURLToTest(repoToTest);
@@ -287,12 +285,6 @@ public class BuildRepoTests {
         iuNames.setRepoURLToTest(repoToTest);
         featureNameFailures = iuNames.testFeatureNames();
         bundleNameFailures = iuNames.testBundleNames();
-
-        // Bug 424376 - repo reports fails to run on latest staging contents
-        // CheckGreedy checkGreedy = new CheckGreedy();
-        // checkGreedy.setRepoURLToTest(repoToTest);
-        // checkGreedy.setDirectoryToCheck(getDirectoryToCheck());
-        // greedyCheck = checkGreedy.testGreedyOptionals();
 
         ProviderNameChecker providerNameChecker = new ProviderNameChecker(getConfigurations());
         providerNameChecker.setRepoURLToTest(repoToTest);
@@ -315,7 +307,7 @@ public class BuildRepoTests {
             iuVersioncheck.checkIUVersionsToReference();
         }
 
-        if (featureNameFailures || bundleNameFailures || providerNamesFailure || licenseConsistencyFailure || greedyCheck) {
+        if (featureNameFailures || bundleNameFailures || providerNamesFailure || licenseConsistencyFailure) {
             setFailuresOccurred(true);
         }
     }
