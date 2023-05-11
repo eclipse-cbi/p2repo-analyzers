@@ -16,7 +16,7 @@
     <buildId>${buildType}${buildTimestamp}</buildId>
     <comparator.repo>http://download.eclipse.org/cbi/updates/analyzers/4.7/</comparator.repo>
     <tycho-version>3.0.1</tycho-version>
-    <cbi-plugins.version>1.3.5</cbi-plugins.version>
+    <cbi-plugins.version>1.4.2</cbi-plugins.version>
     <code.ignoredWarnings>-warn:-deprecation,raw,unchecked,discouraged</code.ignoredWarnings>
     <!--
       repo for released versions of CBI. Note, we intentionally use as specific a repo as possible.
