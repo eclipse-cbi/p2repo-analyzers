@@ -72,9 +72,7 @@ public class LayoutChecker implements IArtifactChecker {
 	}
 
 	private void processArchive(File file, List<String> expected, CheckReport report) {
-		ZipFile zip = null;
-		try {
-			zip = new ZipFile(file, ZipFile.OPEN_READ);
+		try (ZipFile zip = new ZipFile(file, ZipFile.OPEN_READ);){
 			Map<String, String> found = new HashMap<>();
 			for (String string : expected) {
 				found.put(string, null);
@@ -103,14 +101,6 @@ public class LayoutChecker implements IArtifactChecker {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (zip != null) {
-				try {
-					zip.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 	}
 }
