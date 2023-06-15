@@ -6,8 +6,5 @@
    <feature id="org.eclipse.cbi.p2repo.analyzers.feature.source" version="0.0.0">
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
-   <bundle id="org.eclipse.cbi.p2repo.analyzers.ui" version="0.0.0">
-      <category name="CBI p2 Repository Analyzers"/>
-   </bundle>
    <category-def name="CBI p2 Repository Analyzers" label="CBI p2 Repository Analyzers"/>
 </site>
