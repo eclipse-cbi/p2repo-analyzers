@@ -272,7 +272,6 @@
     <module>../../bundles/org.eclipse.cbi.p2repo.analyzers-bundle</module>
     <module>../../bundles/org.eclipse.cbi.p2repo.analyzers.common</module>
     <module>../../bundles/org.eclipse.cbi.p2repo.analyzers.junit</module>
-    <module>../../bundles/org.eclipse.cbi.p2repo.analyzers.ui</module>
     <module>../../tests/org.eclipse.cbi.p2repo.analyzers.tests</module>
     <module>../../features/org.eclipse.cbi.p2repo.analyzers.feature</module>
     <module>../org.eclipse.cbi.p2repo.analyzers.prereqs</module>
