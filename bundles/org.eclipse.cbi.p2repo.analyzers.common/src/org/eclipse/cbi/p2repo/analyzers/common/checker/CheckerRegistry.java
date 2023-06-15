@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.BREEChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.EclipseSourceChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.FeatureNameChecker;
 import org.eclipse.cbi.p2repo.analyzers.common.checker.impl.IUNameChecker;
@@ -35,7 +34,6 @@ public class CheckerRegistry {
 		this.checkers.add(new VersionPatternChecker());
 		this.checkers.add(new IUNameChecker());
 		this.checkers = Collections.unmodifiableSet(this.checkers);
-		this.artifactCheckers.add(new BREEChecker());
 		this.artifactCheckers.add(new SignatureChecker());
 		this.artifactCheckers.add(new EclipseSourceChecker());
 		this.artifactCheckers = Collections.unmodifiableSet(this.artifactCheckers);
