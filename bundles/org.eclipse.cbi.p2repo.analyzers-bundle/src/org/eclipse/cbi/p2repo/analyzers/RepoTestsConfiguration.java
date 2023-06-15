@@ -20,7 +20,6 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     public static final String REFERENCE_REPO_PARAM     = "referenceRepo";
     public static final String REPO_URL_PARAM           = "repoURLToTest";
     public static final String REFERENCE_REPO_URL_PARAM = "repoURLForReference";
-    public static final String USE_NEW_API              = "useNewApi";
 
     private String  referenceRepoDir;
     private String  reportOutputDir;
@@ -28,7 +27,6 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     private String  tempWorkingDir;
     private String  repoURLToTest;
     private String  repoURLForReference;
-    private Boolean useNewApi;
 
     /**
      * @param reportRepoDir
@@ -104,30 +102,9 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
         if (outDir == null || outDir.isEmpty()) {
             outDir = System.getenv(REPORT_OUTPUT_DIR_PARAM);
         }
-        String usenew = System.getProperty(USE_NEW_API, null);
-        if (usenew == null || outDir.isEmpty()) {
-            usenew = System.getenv(USE_NEW_API);
-        }
         String tmpDir = System.getProperty("java.io.tmpdir");
         String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
-        RepoTestsConfiguration configuration = new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
-        configuration.setUseNewImpl(Boolean.valueOf(usenew));
-        return configuration;
-    }
-
-    /**
-     * @return <code>true</code> if new common impl should be used
-     */
-    public Boolean getUseNewApi() {
-        return useNewApi;
-    }
-
-    /**
-     * @param useNewImpl
-     *            use new common impl
-     */
-    public void setUseNewImpl(Boolean useNewImpl) {
-        this.useNewApi = useNewImpl;
+        return new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
     }
 
     @Override
