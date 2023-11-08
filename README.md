@@ -13,9 +13,9 @@ The p2RepoAnalyzers are a collection of automated quality (legal, version rules.
 
 **The main goal is that all projects can perform these tests themselves, early in development cycle, every time they build a p2 repository.**
 
-So far, the main user of these reports is SimRel Build: the reports for the simultaneous release repository are simply a final sanity check. They are ran against the latest successful [Simultaneous Release aggregator build on Jenkins](https://ci.eclipse.org/simrel/job/simrel.runaggregator.pipeline/), so can always be viewed there. There is a link on the [SimRel CI instance main page](https://ci.eclipse.org/simrel/) that links to the [latest report](https://ci.eclipse.org/simrel/job/simrel.runaggregator.pipeline/lastSuccessfulBuild/artifact/target/repository/final/buildInfo/reporeports/index.html). In that case, the report is also copied, along with the repository, so it ends up on staging area too, so it can be viewed under a URL such as for the [staging repository](http://download.eclipse.org/staging/2018-12/buildInfo/reporeports/).
+So far, the main user of these reports is the SimRel Build: the reports for the simultaneous release repository are simply a final sanity check. They are ran against the latest successful Simultaneous Release aggregator build in [this job](https://ci.eclipse.org/simrel/job/simrel.reporeports.pipeline/). There are links on the [SimRel CI instance main page](https://ci.eclipse.org/simrel/) to the report for the latest release (e.g. [2023-09](https://download.eclipse.org/releases/2023-09/202309131000/buildInfo/reporeports/)) and also the latest staging build (e.g. [2023-12](https://download.eclipse.org/staging/2023-12/buildInfo/reporeports/)). 
 
-While several projects have their own, similar tests (which have one way or another have provided the starting point for all these tests) it is worth some effort to collect some common tests in a common place to encourage reuse and improvements. So if you've set up some similar checks for your project, you should highly consider contributing them to this common place.
+While several projects have their own, similar tests (which by one way or another have provided the starting point for all these tests) it is worth some effort to collect some common tests in a common place to encourage reuse and improvements. So if you've set up some similar checks for your project, you should highly consider contributing them to this common place.
 
 The reports can be ran locally from your workbench or adopted for your own production builds.
 
@@ -25,7 +25,7 @@ There are some tests, that look at jars specifically, that require the jars to b
 
 Another class of tests, read the content.jar/xml meta-data and reports on the data or relationships in that meta data.
 
-Yet another, small class of tests, verify that the jars are signed. These tests are not really "Java" or "workspace" related, but use Java's "exec" method to invoke `jarsigner -verify` on multiple threads, on a directory of jars. (There is actually a faster heuristic in the code that simply looks for the presence of the Eclipse signature file, but that is a heuristic and might not always be accurate, so it not used by default).
+Yet another, small class of tests, verify that the jars are signed. These tests are not really "Java" or "workspace" related, but use Java's "exec" method to invoke `jarsigner -verify` on multiple threads, on a directory of jars. (There is actually a faster heuristic in the code that simply looks for the presence of the Eclipse signature file, but that is a heuristic and might not always be accurate, so it is not used by default).
 
 The code and scripts, as of right now, are oriented towards simply producing reports. If you browse the code, you'll see some commented-out code in places that can cause failed flags to be set, which would be appropriate for most projects and, eventually, even the Simultaneous Release repository. But more recently Dennis Huebner has contributed the framework to run as JUnit tests but that still needs to be documented. See also the `-useNewApi` flag which produces reports based on passed, failed, or warning (which is a variant of passed more than a variant of failed). Follow [bug 487409](https://bugs.eclipse.org/bugs/show_bug.cgi?id=487409) for updating the documentation.
 
@@ -123,7 +123,7 @@ However, the application can already be used in a Tycho build, typically as a `v
 
 ## Notes
 
-On a large repository, it can take 5 or 10 minutes to complete. The results can be viewed with a web browser starting with the `index.html` at the location you specified in 'reportOutputDir' property.
+On a large repository, it can take 5 or 10 minutes to complete. The results can be viewed with a web browser starting with the `index.html` at the location you specified in the 'reportOutputDir' property.
 
 ## Get support
 
