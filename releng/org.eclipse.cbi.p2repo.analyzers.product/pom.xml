@@ -4,7 +4,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <packaging>eclipse-repository</packaging>
-  <groupId>org.eclipse.cbi</groupId>
   <artifactId>org.eclipse.cbi.p2repo.analyzers.product</artifactId>
 
   <parent>
@@ -74,7 +73,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-repository-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <includeAllDependencies>true</includeAllDependencies>
         </configuration>
@@ -82,7 +80,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
-        <version>${tycho-version}</version>
         <executions>
           <execution>
             <id>materialize-products</id>
