@@ -3,8 +3,5 @@
    <feature id="org.eclipse.cbi.p2repo.analyzers.feature" version="0.0.0">
       <category name="CBI p2 Repository Analyzers"/>
    </feature>
-   <feature id="org.eclipse.cbi.p2repo.analyzers.feature.source" version="0.0.0">
-      <category name="CBI p2 Repository Analyzers"/>
-   </feature>
    <category-def name="CBI p2 Repository Analyzers" label="CBI p2 Repository Analyzers"/>
 </site>
