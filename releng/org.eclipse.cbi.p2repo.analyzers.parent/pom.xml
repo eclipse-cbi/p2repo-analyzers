@@ -295,17 +295,6 @@
           <artifactId>tycho-p2-repository-plugin</artifactId>
           <version>${tycho-version}</version>
         </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho.extras</groupId>
-          <artifactId>tycho-source-feature-plugin</artifactId>
-          <version>${tycho-version}</version>
-          <configuration>
-            <archive>
-              <addMavenDescriptor>false</addMavenDescriptor>
-            </archive>
-            <reuseBrandingPlugin>false</reuseBrandingPlugin>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
