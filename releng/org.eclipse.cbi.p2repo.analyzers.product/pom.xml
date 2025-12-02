@@ -88,6 +88,7 @@
             </goals>
             <configuration>
               <profile>p2analyzeProfile</profile>
+              <productRepository>https://download.eclipse.org/justj/jres/${justj-version}/updates/release/latest</productRepository>
               <products>
                 <product>
                   <id>org.eclipse.cbi.p2repo.analyzers.product</id>
@@ -117,7 +118,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
         <executions>
           <execution>
             <id>saveproperties</id>

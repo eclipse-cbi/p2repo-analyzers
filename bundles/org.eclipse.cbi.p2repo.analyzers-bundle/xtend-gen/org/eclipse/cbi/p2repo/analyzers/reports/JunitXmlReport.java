@@ -7,7 +7,6 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
-import com.google.common.base.Objects;
 import com.google.common.xml.XmlEscapers;
 import java.io.File;
 import java.io.PrintWriter;
@@ -15,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
@@ -71,7 +71,7 @@ public class JunitXmlReport implements ICheckReporter {
           _builder_1.newLineIfNotEmpty();
           _builder_1.append("\t");
           _builder_1.append("<testsuite name=\"");
-          String _last = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(check.split("\\."))));
+          String _last = ((List<String>)Conversions.doWrapArray(check.split("\\."))).getLast();
           _builder_1.append(_last, "\t");
           _builder_1.append("\" time=\"");
           String _timeFormat = this.toTimeFormat(Integer.valueOf(checkedIUsById.size()));
@@ -180,7 +180,7 @@ public class JunitXmlReport implements ICheckReporter {
   }
 
   public String asTag(final ReportType type) {
-    boolean _equals = Objects.equal(type, ReportType.NOT_IN_TRAIN);
+    boolean _equals = Objects.equals(type, ReportType.NOT_IN_TRAIN);
     if (_equals) {
       return "failure";
     } else {

@@ -15,8 +15,10 @@
     <buildType>I</buildType>
     <buildId>${buildType}${buildTimestamp}</buildId>
     <comparator.repo>http://download.eclipse.org/cbi/updates/analyzers/4.7/</comparator.repo>
-    <tycho-version>4.0.13</tycho-version>
-    <cbi-plugins.version>1.5.2</cbi-plugins.version>
+    <tycho-version>5.0.1</tycho-version>
+    <cbi-plugins.version>1.5.3</cbi-plugins.version>
+    <maven-resources-plugin-version>3.4.0</maven-resources-plugin-version>
+    <justj-version>21</justj-version>
     <code.ignoredWarnings>-warn:-deprecation,raw,unchecked,discouraged</code.ignoredWarnings>
     <!--
       repo for released versions of CBI. Note, we intentionally use as specific a repo as possible.
@@ -175,7 +177,6 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-resources-plugin</artifactId>
-              <version>3.3.1</version>
             </plugin>
           </plugins>
         </pluginManagement>
@@ -294,6 +295,11 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-repository-plugin</artifactId>
           <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin-version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
