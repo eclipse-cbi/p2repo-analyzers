@@ -7,11 +7,11 @@
  */
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
-import com.google.common.base.Objects;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.eclipse.cbi.p2repo.analyzers.common.CheckReport;
 import org.eclipse.cbi.p2repo.analyzers.common.ReportType;
@@ -168,7 +168,7 @@ public class HtmlReport implements ICheckReporter {
   public String htmlTable(final ReportType reportType, final Iterable<CheckReport> allreports) {
     final Function1<CheckReport, Boolean> _function = (CheckReport it) -> {
       ReportType _type = it.getType();
-      return Boolean.valueOf(Objects.equal(_type, reportType));
+      return Boolean.valueOf(Objects.equals(_type, reportType));
     };
     final Iterable<CheckReport> reports = IterableExtensions.<CheckReport>filter(allreports, _function);
     final Function1<CheckReport, IInstallableUnit> _function_1 = (CheckReport it) -> {
@@ -253,7 +253,7 @@ public class HtmlReport implements ICheckReporter {
         _builder.append("\t");
         final Function1<CheckReport, Boolean> _function_4 = (CheckReport it) -> {
           IInstallableUnit _iU = it.getIU();
-          return Boolean.valueOf(Objects.equal(_iU, iu));
+          return Boolean.valueOf(Objects.equals(_iU, iu));
         };
         final Iterable<CheckReport> iuReports = IterableExtensions.<CheckReport>filter(allreports, _function_4);
         _builder.newLineIfNotEmpty();
@@ -286,7 +286,7 @@ public class HtmlReport implements ICheckReporter {
             _builder.append("\t");
             final Function1<CheckReport, Boolean> _function_5 = (CheckReport it) -> {
               String _checkerId = it.getCheckerId();
-              return Boolean.valueOf(Objects.equal(_checkerId, checker_1));
+              return Boolean.valueOf(Objects.equals(_checkerId, checker_1));
             };
             final CheckReport report = IterableExtensions.<CheckReport>head(IterableExtensions.<CheckReport>filter(iuReports, _function_5));
             _builder.newLineIfNotEmpty();

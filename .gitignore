@@ -12,3 +12,4 @@ Snap.*
 *.xtendbin
 *.java._trace
 promo-repo/
+build.log

@@ -1,5 +1,6 @@
 package org.eclipse.cbi.p2repo.analyzers.reports;
 
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,11 +21,11 @@ public class ReportTest {
 	@BeforeClass
 	public static void download() {
 		try {
-			URL self = FileLocator.resolve(new URL("platform:/plugin/org.eclipse.cbi.p2repo.analyzers.tests"));
+			URL self = FileLocator.resolve(new URI("platform:/plugin/org.eclipse.cbi.p2repo.analyzers.tests").toURL());
 			data = "file".equals(self.getProtocol()) ? Path.of(self.toURI()).resolve("data")
 					: Files.createTempDirectory("report-test");
 
-			URL sampleSite = new URL("https://download.eclipse.org/oomph/updates/latest/org.eclipse.oomph.site.zip");
+			URL sampleSite = new URI("https://download.eclipse.org/oomph/updates/latest/org.eclipse.oomph.site.zip").toURL();
 			try (ZipInputStream in = new ZipInputStream(sampleSite.openStream())) {
 				ZipEntry entry;
 				while ((entry = in.getNextEntry()) != null) {
