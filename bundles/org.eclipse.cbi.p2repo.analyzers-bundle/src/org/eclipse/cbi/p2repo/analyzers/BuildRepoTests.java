@@ -63,7 +63,7 @@ public class BuildRepoTests {
      */
     private static boolean               outputDirectoryInitialized;
     private Path                         directoryToCheck;
-    private Path                         referenceDirectoryToCheck;
+    private URI                          referenceRepositoryToCheck;
     private Path                         tempWorkingDir;
     private boolean                      failuresOccurred = false;
     private ReportWriter                 reportWriter;
@@ -257,14 +257,14 @@ public class BuildRepoTests {
 
     private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException {
         URI repoToTest = getDirectoryToCheck().toUri();
-        URI referenceRepoToTest = null;
-        if (getDirectoryToCheckForReference() != null) {
-            Path refRepoToCheck = getDirectoryToCheckForReference();
-            if (Files.exists(refRepoToCheck)) {
-                referenceRepoToTest = refRepoToCheck.toUri();
-            } else {
+        URI referenceRepoToTest = getRepositoryToCheckForReference();
+        if (referenceRepoToTest != null) {
+            try (InputStream in = referenceRepoToTest.toURL().openStream()) {
+                // Just check if URL target exists
+            } catch (Exception e) {
+                referenceRepoToTest = null;
                 System.out.println("WARNING: the reference repository was found not to exist. No check done.");
-                System.out.println("         referenceRepo: " + getDirectoryToCheckForReference());
+                System.out.println("         referenceRepo: " + getRepositoryToCheckForReference());
             }
         }
 
@@ -357,15 +357,15 @@ public class BuildRepoTests {
         // this.failuresOccurred = failuresOccurred;
     }
 
-    public Path getDirectoryToCheckForReference() {
-        if (referenceDirectoryToCheck == null) {
-            referenceDirectoryToCheck = configurations.getReferenceRepoDir();
+    public URI getRepositoryToCheckForReference() {
+        if (referenceRepositoryToCheck == null) {
+            referenceRepositoryToCheck = configurations.getReferenceRepo();
         }
-        return referenceDirectoryToCheck;
+        return referenceRepositoryToCheck;
     }
 
-    public void setDirectoryToCheckForReference(Path referenceDirectoryToCheck) {
-        this.referenceDirectoryToCheck = referenceDirectoryToCheck;
+    public void setRepositoryToCheckForReference(URI referenceRepositoryToCheck) {
+        this.referenceRepositoryToCheck = referenceRepositoryToCheck;
     }
 
     public boolean copyTemplateForIndexFile(String filename) throws IOException {

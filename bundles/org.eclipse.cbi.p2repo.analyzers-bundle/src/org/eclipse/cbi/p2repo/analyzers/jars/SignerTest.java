@@ -54,7 +54,7 @@ public class SignerTest extends TestJars {
         useJarsigner = "true".equals(System.getProperty("useJarsigner"));
         try {
             artifactRepository = (IFileArtifactRepository) TestRepo.getAgent().getService(IArtifactRepositoryManager.class)
-                    .loadRepository(configurations.getReportRepoDir().toUri(), new NullProgressMonitor());
+                    .loadRepository(configurations.getReportRepoURI(), new NullProgressMonitor());
         } catch (ProvisionException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -5,8 +5,10 @@ package org.eclipse.cbi.p2repo.analyzers;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.eclipse.cbi.p2repo.analyzers.common.reporter.IP2RepositoryAnalyserConfiguration;
 
@@ -23,7 +25,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     public static final String REPO_URL_PARAM           = "repoURLToTest";
     public static final String REFERENCE_REPO_URL_PARAM = "repoURLForReference";
 
-    private final Path         referenceRepoDir;
+    private final URI          referenceRepo;
     private final Path         reportOutputDir;
     private final Path         reportRepoDir;
     private final Path         tempWorkingDir;
@@ -33,13 +35,13 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     /**
      * @param reportRepoDir
      * @param reportOutputDir
-     * @param referenceRepoDir
+     * @param referenceRepo
      * @param tempWorkingDir
      */
-    public RepoTestsConfiguration(Path reportRepoDir, Path reportOutputDir, Path referenceRepoDir, Path tempWorkingDir) {
+    public RepoTestsConfiguration(Path reportRepoDir, Path reportOutputDir, URI referenceRepo, Path tempWorkingDir) {
         this.reportRepoDir = reportRepoDir;
         this.reportOutputDir = reportOutputDir;
-        this.referenceRepoDir = referenceRepoDir;
+        this.referenceRepo = referenceRepo;
         this.tempWorkingDir = tempWorkingDir;
     }
 
@@ -73,8 +75,8 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
         this.repoURLForReference = repoURLForReference;
     }
 
-    public Path getReferenceRepoDir() {
-        return referenceRepoDir;
+    public URI getReferenceRepo() {
+        return referenceRepo;
     }
 
     @Override
@@ -96,17 +98,30 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     }
 
     public static RepoTestsConfiguration createFromSystemProperties() {
-        String repoDir = System.getProperty(REPORT_REPO_DIR_PARAM, null);
-        if (repoDir == null || repoDir.isEmpty()) {
-            repoDir = System.getenv(REPORT_REPO_DIR_PARAM);
+        Path repoDir = getSystemOrEnvValue(REPORT_REPO_DIR_PARAM).orElse(null);
+        Path outDir = getSystemOrEnvValue(REPORT_OUTPUT_DIR_PARAM).orElse(null);
+        Path tmpDir = Path.of(System.getProperty("java.io.tmpdir"));
+        URI referenceRepo = parsePathToURI(System.getProperty(REFERENCE_REPO_PARAM, null));
+        return new RepoTestsConfiguration(repoDir, outDir, referenceRepo, tmpDir);
+    }
+
+    private static Optional<Path> getSystemOrEnvValue(String key) {
+        String value = System.getProperty(key);
+        if (value == null || value.isEmpty()) {
+            value = System.getenv(key);
         }
-        String outDir = System.getProperty(REPORT_OUTPUT_DIR_PARAM, null);
-        if (outDir == null || outDir.isEmpty()) {
-            outDir = System.getenv(REPORT_OUTPUT_DIR_PARAM);
+        return Optional.ofNullable(value).map(Path::of);
+    }
+
+    private static URI parsePathToURI(String refRepoDir) {
+        try {
+            URI referenceRepo = new URI(refRepoDir);
+            if (referenceRepo.getScheme() != null) {
+                return referenceRepo;
+            } // a null scheme was probably a UNIX path
+        } catch (URISyntaxException e) { // assume file path
         }
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
-        return new RepoTestsConfiguration(Path.of(repoDir), Path.of(outDir), Path.of(refRepoDir), Path.of(tmpDir));
+        return Path.of(refRepoDir).toUri();
     }
 
     @Override

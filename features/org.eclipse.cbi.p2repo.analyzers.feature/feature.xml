@@ -20,6 +20,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.equinox.p2.core.feature" version="1.7" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="org.eclipse.cbi.p2repo.analyzers"
          version="0.0.0"/>
