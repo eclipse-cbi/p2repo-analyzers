@@ -16,6 +16,7 @@ import org.junit.Test;
 public class ReportTest {
 
 	static Path data;
+	static URI repo;
 
 	@BeforeClass
 	public static void download() throws Exception {
@@ -24,6 +25,7 @@ public class ReportTest {
 			data = "file".equals(self.getProtocol()) ? Path.of(self.toURI()).resolve("data")
 					: Files.createTempDirectory("report-test");
 
+			repo = URI.create("https://download.eclipse.org/oomph/updates/latest");
 			URL sampleSite = new URI("https://download.eclipse.org/oomph/updates/latest/org.eclipse.oomph.site.zip").toURL();
 			try (ZipInputStream in = new ZipInputStream(sampleSite.openStream())) {
 				ZipEntry entry;
@@ -45,7 +47,7 @@ public class ReportTest {
 
 	@Test
 	public void testReportGenerator() {
-		RepoTestsConfiguration configuration = new RepoTestsConfiguration(data, data.resolve("report"), data, null);
+		RepoTestsConfiguration configuration = new RepoTestsConfiguration(data, data.resolve("report"), repo, null);
 		new BuildRepoTests(configuration).execute();
 	}
 }

@@ -43,7 +43,7 @@ public class RepositoryTest {
 	private static final Set<String> SKIPPED_CHECKER = new HashSet<>();
 	private static Path dirToTest;
 	private static URI repoToTest;
-	private static Path refRepoDir;
+	private static URI refRepo;
 
 	@BeforeClass
 	public static final void beforeClass() {
@@ -59,7 +59,7 @@ public class RepositoryTest {
 		}
 		dirToTest = directoryToCheck;
 		repoToTest = directoryToCheck .toUri();
-		refRepoDir = tests.getDirectoryToCheckForReference();
+		refRepo = tests.getRepositoryToCheckForReference();
 
 		String skipCheckerProp = System.getProperty(SKIP_CHECKER_PROP_NAME);
 		if (skipCheckerProp != null) {
@@ -128,7 +128,7 @@ public class RepositoryTest {
 	public void testIUVersionCheckToReference()
 			throws ProvisionException, OperationCanceledException, URISyntaxException, IOException {
 		IUVersionCheckToReference checker = new IUVersionCheckToReference(CONF_FROM_SYSTEM_PROPERTIES);
-		if (configureChecker(checker) && refRepoDir != null) {
+		if (configureChecker(checker) && refRepo != null) {
 			assertFalse("Correct version changes", !checker.checkIUVersionsToReference());
 		}
 	}
