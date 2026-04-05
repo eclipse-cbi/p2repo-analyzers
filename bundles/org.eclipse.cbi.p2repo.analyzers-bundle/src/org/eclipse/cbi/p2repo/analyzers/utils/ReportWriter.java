@@ -3,7 +3,7 @@ package org.eclipse.cbi.p2repo.analyzers.utils;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-public class ReportWriter {
+public class ReportWriter implements AutoCloseable {
     public ReportWriter(String outputFilename) {
         this.outputFilename = outputFilename;
     }
@@ -29,9 +29,11 @@ public class ReportWriter {
         getOutfilewriter().write(EOL);
     }
 
+    @Override
     public void close() throws FileNotFoundException {
-        if (getOutfilewriter() != null) {
-            getOutfilewriter().close();
+        PrintWriter writer = outfilewriter;
+        if (writer != null) {
+            writer.close();
         }
     }
 

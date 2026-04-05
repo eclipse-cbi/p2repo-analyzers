@@ -29,19 +29,11 @@ public class BundleJarUtils {
      */
     public static String getJarManifestEntry(InputStream input, String key) {
         String manifestEntry = null;
-        try {
+        try (input) {
             Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
             manifestEntry = attributes.get(key);
         } catch (BundleException | IOException e) {
             e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
         return manifestEntry;
     }
@@ -51,7 +43,6 @@ public class BundleJarUtils {
      * bundle manifest file to find the bundle identifier.
      */
     public static String getJarManifestEntry(File file, String key) {
-        InputStream input = null;
         try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
             if (entry == null) {
@@ -59,20 +50,12 @@ public class BundleJarUtils {
                 // file.getAbsolutePath());
                 return null;
             }
-            input = jar.getInputStream(entry);
+            InputStream input = jar.getInputStream(entry);
             return getJarManifestEntry(input, key);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             // addError(e.getMessage());
             return null;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 

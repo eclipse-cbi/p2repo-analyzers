@@ -33,14 +33,10 @@ public class IUNameChecker extends TestRepo {
     }
 
     private boolean checkFeatureNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
-        FileWriter outfileWriter = null;
-        File outfile = null;
         List<IInstallableUnit> incorrectBundleName = new ArrayList<>();
         List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<>();
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "featureNames.html");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(getReportOutputDirectory(), "featureNames.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)) {
             System.out.println("output: " + outfile.getAbsolutePath());
             for (IInstallableUnit iu : allIUs.toUnmodifiableSet()) {
                 try {
@@ -90,27 +86,14 @@ public class IUNameChecker extends TestRepo {
             // outfile.getName());
             // }
             return !incorrectBundleName.isEmpty();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
     private boolean checkBundleNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
-        FileWriter outfileWriter = null;
-        File outfile = null;
         List<IInstallableUnit> incorrectBundleName = new ArrayList<>();
         List<IInstallableUnit> probablyCorrectBundleName = new ArrayList<>();
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "bundleNames.html");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(getReportOutputDirectory(), "bundleNames.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)) {
             System.out.println("output: " + outfile.getAbsolutePath());
             for (IInstallableUnit iu : allIUs.toUnmodifiableSet()) {
                 try {
@@ -161,15 +144,6 @@ public class IUNameChecker extends TestRepo {
             // outfile.getName());
             // }
             return !incorrectBundleName.isEmpty();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

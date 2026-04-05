@@ -1,11 +1,10 @@
 package org.eclipse.cbi.p2repo.analyzers;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.eclipse.cbi.p2repo.analyzers.jars.BREETest;
@@ -369,39 +368,17 @@ public class BuildRepoTests {
     }
 
     public boolean copyTemplateForIndexFile(String filename) throws IOException {
-        boolean success = true;
-        File topdir = null;
-        File indexfile = null;
-        InputStream instream = null;
-        BufferedInputStream inputstream = null;
-        FileWriter indexfileoutput = null;
-        try {
-            // we'll assume, for now, directories for output has been created.
-            topdir = new File(getTopReportOutputDirectory());
-            indexfile = new File(topdir, "index.html");
-            indexfileoutput = new FileWriter(indexfile);
-            instream = this.getClass().getResourceAsStream(filename);
+        Path indexfile = Path.of(getTopReportOutputDirectory(), "index.html");
+        // we'll assume, for now, directories for output has been created.
+        try (InputStream instream = this.getClass().getResourceAsStream(filename);) {
             if (instream != null) {
-                inputstream = new BufferedInputStream(instream);
-                while (inputstream.available() > 0) {
-                    indexfileoutput.write(inputstream.read());
-                }
+                Files.copy(instream, indexfile);
             } else {
                 System.out.println("Program Error: did not find expected resource on classpath: " + filename);
             }
-        } finally {
-            if (indexfileoutput != null) {
-                indexfileoutput.close();
-            }
-            if (instream != null) {
-                instream.close();
-            }
-            if (inputstream != null) {
-                inputstream.close();
-            }
         }
 
-        return success;
+        return true;
     }
 
     protected ReportWriter createReportWriter(String outfilename) {

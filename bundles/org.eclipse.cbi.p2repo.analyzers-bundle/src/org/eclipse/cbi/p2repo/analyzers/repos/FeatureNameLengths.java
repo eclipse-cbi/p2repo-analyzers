@@ -66,13 +66,8 @@ public class FeatureNameLengths extends TestRepo {
 
     private void printReport() throws IOException {
         String SPACER = "<br />=======================";
-        FileWriter outfileWriter = null;
-        File outfile = null;
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "featureDirectoryLengths.html");
-            outfileWriter = new FileWriter(outfile);
-
+        File outfile = new File(getReportOutputDirectory(), "featureDirectoryLengths.html");
+        try (FileWriter outfileWriter = new FileWriter(outfile)) {
             println(outfileWriter, "<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
             println(outfileWriter, "<br /><br />Distribution of Feature Directory Lengths:" + SPACER);
 
@@ -97,15 +92,6 @@ public class FeatureNameLengths extends TestRepo {
             } else {
                 println(outfileWriter, NBSP + " No feature directory names lengths were longer than the maxCriteria, "
                         + MAX_CRITERIA + EOL);
-            }
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
             }
         }
 

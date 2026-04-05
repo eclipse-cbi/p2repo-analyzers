@@ -200,8 +200,7 @@ public class BREETest extends TestJars {
     private void printreport(List<String> invalidJars, Map<String, Integer> javaWithBree, List<BREEFileData> nonjavaWithBree, List<String> javaWithoutBree, Map<String, String> plugins, int nonJavaNoBREE,
             int totalsize, int checked) throws IOException {
 
-        ReportWriter reportWriter = getReportWriter();
-        try {
+        try (ReportWriter reportWriter = getReportWriter();) {
             reportWriter.writeln();
             reportWriter.writeln("   Directory checked: " + getDirectoryToCheck());
             reportWriter.writeln();
@@ -255,9 +254,6 @@ public class BREETest extends TestJars {
                     throw new Error("Programming error in List of all plug-ins with BREE");
                 }
             }); // or any other terminal method
-
-        } finally {
-            reportWriter.close();
         }
     }
 

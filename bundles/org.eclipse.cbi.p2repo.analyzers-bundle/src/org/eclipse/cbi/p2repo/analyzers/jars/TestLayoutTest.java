@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -40,6 +41,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.cbi.p2repo.analyzers.utils.JARFileNameFilter;
+import org.eclipse.cbi.p2repo.analyzers.utils.ReportWriter;
 import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleException;
 import org.w3c.dom.Document;
@@ -89,14 +91,11 @@ public class TestLayoutTest extends TestJars {
 
     public boolean testLayout() throws IOException {
         boolean result = false;
-        try {
-            createReportWriter(outputFilename);
-            getReportWriter().writeln("Check files and layout in bundles and features.");
+        try (ReportWriter reportWriter = createReportWriter(outputFilename)) {
+            reportWriter.writeln("Check files and layout in bundles and features.");
             boolean featureFailures = testFeatureLayout();
             boolean bundleFailures = testBundleLayout();
             result = featureFailures || bundleFailures;
-        } finally {
-            getReportWriter().close();
         }
         return result;
     }
@@ -186,31 +185,18 @@ public class TestLayoutTest extends TestJars {
 
     private void loadConfig() {
         config = new Properties();
-        InputStream input = null;
-        try {
-            // if we can read this file, it's been set by caller
-            File configFile = new File(getConfigFilename());
-            if (configFile.exists()) {
-                input = new FileInputStream(configFile);
-            } else {
+        File configFile = new File(getConfigFilename());
+        try (InputStream input = configFile.exists()
+                // if we can read this file, it's been set by caller
+                ? new FileInputStream(configFile)
                 // else, use the default we "ship"
-                input = this.getClass().getResourceAsStream(getConfigFilename());
-            }
-
+                : this.getClass().getResourceAsStream(getConfigFilename())) {
             if (input == null) {
                 handleFatalError("Unable to load configuration file.");
             }
             config.load(input);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            } catch (IOException e) {
-                // ignore
-            }
         }
     }
 
@@ -250,8 +236,8 @@ public class TestLayoutTest extends TestJars {
      * The bundle is an archive. Make sure it has the right contents.
      */
     private void processArchive(File file, String[] expected) {
-        try (ZipFile zip = new ZipFile(file, ZipFile.OPEN_READ)){
-            
+        try (ZipFile zip = new ZipFile(file, ZipFile.OPEN_READ)) {
+
             for (Enumeration<?> e = zip.entries(); e.hasMoreElements();) {
                 ZipEntry entry = (ZipEntry) e.nextElement();
                 String name = entry.getName();
@@ -313,7 +299,7 @@ public class TestLayoutTest extends TestJars {
      */
     private String getBundleIdFromManifest(InputStream input, String path) {
         String id = null;
-        try {
+        try (input) {
             Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
             id = attributes.get(PROPERTY_BUNDLE_ID);
             if ((id == null) || (id.isEmpty())) {
@@ -330,14 +316,6 @@ public class TestLayoutTest extends TestJars {
         } catch (BundleException | IOException e) {
             // e.printStackTrace();
             addError(e.getMessage());
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
 
         return id;
@@ -359,36 +337,21 @@ public class TestLayoutTest extends TestJars {
         return id;
     }
 
+    private static final Pattern MANIFEST_FILE_NAME = Pattern.compile("^.*/" + JarFile.MANIFEST_NAME);
+
     private String getBundleIdFromZIP(File file) {
-        ZipFile zip = null;
-        try {
-            zip = new ZipFile(file);
+        try (ZipFile zip = new ZipFile(file)) {
             for (Enumeration<?> e = zip.entries(); e.hasMoreElements();) {
                 ZipEntry entry = (ZipEntry) e.nextElement();
-                if (entry.getName().matches("^.*/" + JarFile.MANIFEST_NAME)) {
-                    InputStream input = zip.getInputStream(entry);
-                    try {
+                if (MANIFEST_FILE_NAME.matcher(entry.getName()).matches()) {
+                    try (InputStream input = zip.getInputStream(entry)) {
                         return getBundleIdFromManifest(input, file.getAbsolutePath());
-                    } finally {
-                        try {
-                            input.close();
-                        } catch (IOException ex) {
-                            // ignore
-                        }
                     }
                 }
             }
         } catch (IOException ex) {
             // ex.printStackTrace();
             addError(ex.getMessage());
-        } finally {
-            try {
-                if (zip != null) {
-                    zip.close();
-                }
-            } catch (IOException ex) {
-                // ignore
-            }
         }
         addError("Bundle manifest (MANIFEST.MF) not found in bundle: " + file.getAbsolutePath());
         return null;
@@ -427,36 +390,18 @@ public class TestLayoutTest extends TestJars {
      * bundle manifest file to find the bundle identifier.
      */
     private String getBundleIdFromJAR(File file) {
-        InputStream input = null;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(file, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
             if (entry == null) {
                 addError("Bundle does not contain a MANIFEST.MF file: " + file.getAbsolutePath());
                 return null;
             }
-            input = jar.getInputStream(entry);
+            InputStream input = jar.getInputStream(entry);
             return getBundleIdFromManifest(input, file.getAbsolutePath());
         } catch (IOException e) {
             // e.printStackTrace();
             addError(e.getMessage());
             return null;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 
@@ -503,34 +448,16 @@ public class TestLayoutTest extends TestJars {
     }
 
     private String getFeatureIdFromJAR(File file) {
-        InputStream input = null;
-        JarFile jar = null;
         String id = null;
-        try {
-            jar = new JarFile(file, false, ZipFile.OPEN_READ);
+        try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry("feature.xml");
             if (entry == null) {
                 addError("Feature jar does not contain a feature.xml file: " + file.getAbsolutePath());
             }
-            input = jar.getInputStream(entry);
+            InputStream input = jar.getInputStream(entry);
             id = getFeatureFromFeatureXML(input);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             addError(e.getMessage());
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
         return id;
     }
@@ -579,7 +506,7 @@ public class TestLayoutTest extends TestJars {
     private Document getDOM(File file) {
 
         Document aDocument = null;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             InputSource inputSource = new InputSource(reader);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();

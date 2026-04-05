@@ -25,11 +25,9 @@ public class PGPVerifier {
     public static boolean verify(IArtifactDescriptor artifactDescriptor, File file, IArtifactRepository repository,
             StringBuilder errorOut, StringBuilder warningOut) {
         IProvisioningAgent agent = repository.getProvisioningAgent();
-        PGPSignatureVerifier verifier = new PGPSignatureVerifier();
-        try {
+        try (PGPSignatureVerifier verifier = new PGPSignatureVerifier();) {
             if (artifactDescriptor.getProperty(PGPSignatureVerifier.PGP_SIGNATURES_PROPERTY_NAME) == null) {
                 errorOut.append("No PGP signature found for " + artifactDescriptor.getArtifactKey());
-                verifier.close();
                 return false;
             }
             verifier.initialize(agent, null, artifactDescriptor);
@@ -37,7 +35,6 @@ public class PGPVerifier {
                 return false;
             }
             verifier.write(Files.readAllBytes(file.toPath()));
-            verifier.close();
         } catch (IOException e) {
             errorOut.append(e.getMessage());
             return false;
@@ -45,14 +42,12 @@ public class PGPVerifier {
         return true;
     }
 
-    private static boolean checkVerifierStatus(PGPSignatureVerifier verifier, StringBuilder warningOut, StringBuilder errorOut)
-            throws IOException {
+    private static boolean checkVerifierStatus(PGPSignatureVerifier verifier, StringBuilder warningOut, StringBuilder errorOut) {
         if (verifier.getStatus().getSeverity() == IStatus.WARNING) {
             warningOut.append(verifier.getStatus().getMessage());
         }
         if (verifier.getStatus().getSeverity() == IStatus.ERROR) {
             errorOut.append(verifier.getStatus().getMessage());
-            verifier.close();
             return false;
         }
         return true;

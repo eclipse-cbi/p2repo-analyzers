@@ -30,17 +30,13 @@ public class ProviderNameChecker extends TestRepo {
     private ArrayList<String>   expectedProvidersName       = null;
 
     private boolean checkProviderNames(IQueryResult<IInstallableUnit> allIUs) throws IOException {
-        FileWriter outfileWriter = null;
-        File outfile = null;
+        File outfile = new File(getReportOutputDirectory(), "providerNames.html");
         List<IInstallableUnit> incorrectProviderName = new ArrayList<>();
         List<IInstallableUnit> correctProviderName = new ArrayList<>();
         List<IInstallableUnit> oldProviderName = new ArrayList<>();
         List<IInstallableUnit> unknownProviderName = new ArrayList<>();
         List<IInstallableUnit> suspectProviderName = new ArrayList<>();
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "providerNames.html");
-            outfileWriter = new FileWriter(outfile);
+        try (FileWriter outfileWriter = new FileWriter(outfile)) {
             System.out.println("output: " + outfile.getAbsolutePath());
             for (IInstallableUnit iu : allIUs.toUnmodifiableSet()) {
                 try {
@@ -118,15 +114,6 @@ public class ProviderNameChecker extends TestRepo {
             // outfile.getName());
             // }
             return !incorrectProviderName.isEmpty();
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -172,9 +159,7 @@ public class ProviderNameChecker extends TestRepo {
             if (expectedProviders == null) {
                 // if no system property found, use out built-in list
                 Properties names = new Properties();
-                InputStream inStream = null;
-                try {
-                    inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE);
+                try (InputStream inStream = getClass().getResourceAsStream(KNOWN_PROVIDERS_RESOURCE)) {
                     try {
                         names.load(inStream);
                     } catch (IOException e) {
@@ -189,14 +174,8 @@ public class ProviderNameChecker extends TestRepo {
                         String name = tokenizer.nextToken();
                         namesAsList.add(name.trim());
                     }
-                } finally {
-                    if (inStream != null) {
-                        try {
-                            inStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 expectedProvidersName = namesAsList;
             }

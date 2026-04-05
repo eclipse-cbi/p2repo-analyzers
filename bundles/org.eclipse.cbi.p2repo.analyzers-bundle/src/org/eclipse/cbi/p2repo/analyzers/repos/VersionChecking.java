@@ -40,12 +40,8 @@ public class VersionChecking extends TestRepo {
 
     private void analyzeVersionPatterns(IQueryResult<IInstallableUnit> allIUs) throws IOException {
 
-        FileWriter outfileWriter = null;
-        File outfile = null;
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName + "/" + "versionPatterns.txt");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(getReportOutputDirectory(), "versionPatterns.txt");
+        try (FileWriter outfileWriter = new FileWriter(outfile)) {
             System.out.println("output: " + outfile.getAbsolutePath());
 
             outfileWriter.write("Version qualifer patterns used in repository" + EOL + EOL);
@@ -55,16 +51,6 @@ public class VersionChecking extends TestRepo {
             List<String> allQualifiers = collectQualifiers(allIUs, outfileWriter);
 
             collapseSortedQualifiers(outfileWriter, allQualifiers);
-
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -175,12 +161,8 @@ public class VersionChecking extends TestRepo {
 
     private boolean analyzeNonUniqueVersions(IQueryResult<IInstallableUnit> allIUs) throws IOException {
         Map<String, Set<Version>> bundles = tabulateNonUniqueIDs(allIUs);
-        FileWriter outfileWriter = null;
-        File outfile = null;
-        String testDirName = getReportOutputDirectory();
-        try {
-            outfile = new File(testDirName, "nonUniqueVersions.txt");
-            outfileWriter = new FileWriter(outfile);
+        File outfile = new File(getReportOutputDirectory(), "nonUniqueVersions.txt");
+        try (FileWriter outfileWriter = new FileWriter(outfile);) {
             System.out.println("output: " + outfile.getAbsolutePath());
 
             outfileWriter.write("Non Unique Versions used in repository" + EOL + EOL);
@@ -206,15 +188,6 @@ public class VersionChecking extends TestRepo {
             // figure out some heuristic to return "error", such as if new,
             // non-expected multiple versions
             return false;
-        } finally {
-            if (outfileWriter != null) {
-                try {
-                    outfileWriter.close();
-                } catch (IOException e) {
-                    // would be weird
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
