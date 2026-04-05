@@ -123,14 +123,11 @@ public class VersionTest extends TestJars {
 
     public boolean testVersionsPatterns() throws IOException {
         boolean result = false;
-        createReportWriter(outputFilename);
-        try {
-            getReportWriter().writeln("Check 4-part version patterns");
+        try (ReportWriter writer = createReportWriter(outputFilename)) {
+            writer.writeln("Check 4-part version patterns");
             boolean featureFailures = testFeatureVersions();
             boolean bundleFailures = testBundleVersions();
             result = featureFailures || bundleFailures;
-        } finally {
-            getReportWriter().close();
         }
         return result;
     }

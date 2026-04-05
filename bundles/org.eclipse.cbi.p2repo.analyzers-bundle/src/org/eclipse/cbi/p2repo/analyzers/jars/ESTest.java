@@ -69,10 +69,9 @@ public class ESTest extends TestJars {
 
     private boolean checkBundleES(File inputdir) throws IOException {
         // reset/initialize errors
-        InputStream propertyStream = this.getClass().getResourceAsStream("exceptions.properties");
         Properties esExceptionProperties = new Properties();
         String esExceptions = "";
-        try {
+        try (InputStream propertyStream = this.getClass().getResourceAsStream("exceptions.properties");) {
             esExceptionProperties.load(propertyStream);
             esExceptions = esExceptionProperties.getProperty("esExceptions");
             if (esExceptions == null) {
@@ -80,15 +79,6 @@ public class ESTest extends TestJars {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (propertyStream != null) {
-                try {
-                    propertyStream.close();
-                } catch (IOException e) {
-                    // would be unusual to get here?
-                    e.printStackTrace();
-                }
-            }
         }
 
         Map<String, Integer> withEs = new HashMap<>();
@@ -141,8 +131,7 @@ public class ESTest extends TestJars {
             int checked, int nProjectTags,
             int nSourceBundles, int nInExceptionList) throws FileNotFoundException {
 
-        ReportWriter reportWriter = getReportWriter();
-        try {
+        try (ReportWriter reportWriter = getReportWriter();) {
             reportWriter.writeln();
             reportWriter.writeln("   Directory checked: " + getBundleDirectory());
             reportWriter.writeln("   Number of source bundles (not checked): " + nSourceBundles);
@@ -175,8 +164,6 @@ public class ESTest extends TestJars {
                 reportWriter.writeln("       " + object);
             }
             reportWriter.writeln();
-        } finally {
-            reportWriter.close();
         }
     }
 
@@ -224,19 +211,11 @@ public class ESTest extends TestJars {
      */
     private String getESFromManifest(InputStream input) {
         String es = null;
-        try {
+        try (input) {
             Map<String, String> attributes = ManifestElement.parseBundleManifest(input, null);
             es = attributes.get(PROPERTY_ECLIPSE_SOURCEREFERENCES);
         } catch (BundleException | IOException e) {
             e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
 
         return es;
@@ -247,7 +226,6 @@ public class ESTest extends TestJars {
      * bundle manifest file to find the bundle identifier.
      */
     private String getESFromJAR(File file) {
-        InputStream input = null;
         try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ)) {
             JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
             if (entry == null) {
@@ -255,20 +233,12 @@ public class ESTest extends TestJars {
                 // file.getAbsolutePath());
                 return null;
             }
-            input = jar.getInputStream(entry);
+            InputStream input = jar.getInputStream(entry);
             return getESFromManifest(input);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             // addError(e.getMessage());
             return null;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
     }
 

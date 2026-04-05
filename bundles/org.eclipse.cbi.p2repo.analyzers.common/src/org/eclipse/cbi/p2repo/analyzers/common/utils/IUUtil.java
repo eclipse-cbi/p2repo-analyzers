@@ -56,7 +56,7 @@ public class IUUtil {
 		description.setArtifactRepository((IFileArtifactRepository) artRepo);
 		return description;
 	}
-	
+
 	private static <T> T getService(Class<T> service) {
 		return ServiceHelper.getService(FrameworkUtil.getBundle(IUUtil.class).getBundleContext(), IProvisioningAgent.class)
 				.getService(service);
@@ -102,33 +102,16 @@ public class IUUtil {
 
 	public static <T> T workWithJarEntry(final File file, final String entryName,
 			BiFunction<JarEntry, InputStream, T> function) {
-		JarFile jar = null;
-		InputStream entryStream = null;
 		T result = null;
-		try {
-			jar = new JarFile(file, false, ZipFile.OPEN_READ);
+		try (JarFile jar = new JarFile(file, false, ZipFile.OPEN_READ);) {
 			JarEntry jarEntry = jar.getJarEntry(entryName);
+			InputStream entryStream = null;
 			if (jarEntry != null) {
 				entryStream = jar.getInputStream(jarEntry);
 			}
 			result = function.apply(jarEntry, entryStream);
 		} catch (IOException e) {
 			handleFatalError(e.getMessage());
-		} finally {
-			if (entryStream != null) {
-				try {
-					entryStream.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-			if (jar != null) {
-				try {
-					jar.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 		return result;
 	}

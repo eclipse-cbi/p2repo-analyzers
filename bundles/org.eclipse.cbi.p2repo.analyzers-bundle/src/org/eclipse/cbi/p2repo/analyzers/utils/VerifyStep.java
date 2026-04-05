@@ -58,15 +58,10 @@ public class VerifyStep {
                     return false;
                 }
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(resultProc.getInputStream()));
                 StringBuilder out = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (!line.startsWith("Picked up JAVA_TOOL_OPTIONS")) {
-                        out.append(line);
-                    }
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(resultProc.getInputStream()))) {
+                    reader.lines().filter(line -> !line.startsWith("Picked up JAVA_TOOL_OPTIONS")).forEach(out::append);
                 }
-                reader.close();
 
                 String outString = out.toString();
                 if (!outString.contains(JAR_VERIFIED)) {

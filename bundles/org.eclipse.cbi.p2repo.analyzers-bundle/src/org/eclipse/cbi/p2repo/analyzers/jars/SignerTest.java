@@ -80,10 +80,9 @@ public class SignerTest extends TestJars {
     }
 
     private void printSummary(Set<PlainCheckReport> reports) throws IOException {
-        ReportWriter info = createNewReportWriter(SIGNED_FILENAME);
-        ReportWriter warn = createNewReportWriter(KNOWN_UNSIGNED);
-        ReportWriter error = createNewReportWriter(UNSIGNED_FILENAME);
-        try {
+        try (ReportWriter info = createNewReportWriter(SIGNED_FILENAME);
+                ReportWriter warn = createNewReportWriter(KNOWN_UNSIGNED);
+                ReportWriter error = createNewReportWriter(UNSIGNED_FILENAME);) {
             long featuresCount = reports.stream().filter(report -> report.getIuType().equals("feature")).count();
             info.writeln("Jars checked: " + reports.size() + ". " + featuresCount + " features and "
                     + (reports.size() - featuresCount) + " plugins.");
@@ -118,10 +117,6 @@ public class SignerTest extends TestJars {
                     break;
                 }
             }
-        } finally {
-            info.close();
-            warn.close();
-            error.close();
         }
     }
 
