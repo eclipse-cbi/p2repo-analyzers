@@ -3,7 +3,7 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,11 +36,11 @@ public class FeatureNameLengths extends TestRepo {
 
     public static void main(String[] args) {
         FeatureNameLengths featureNameLengths = new FeatureNameLengths(RepoTestsConfiguration.createFromSystemProperties());
-        featureNameLengths.setRepoURLToTest("/home/files/buildzips/junoRC3/wtp-repo");
+        featureNameLengths.setRepoURLToTest(URI.create("/home/files/buildzips/junoRC3/wtp-repo"));
         featureNameLengths.setMainOutputDirectory("/temp");
         try {
             featureNameLengths.testFeatureDirectoryLength();
-        } catch (ProvisionException | URISyntaxException | IOException e) {
+        } catch (ProvisionException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -109,7 +109,7 @@ public class FeatureNameLengths extends TestRepo {
         distribution.put(category, count);
     }
 
-    public int testFeatureDirectoryLength() throws ProvisionException, URISyntaxException, IOException {
+    public int testFeatureDirectoryLength() throws ProvisionException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllGroupIUs();
         return checkFeatureDirLenths(allIUs);
     }

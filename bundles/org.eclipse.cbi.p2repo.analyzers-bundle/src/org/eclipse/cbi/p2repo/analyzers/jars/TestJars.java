@@ -1,7 +1,8 @@
 package org.eclipse.cbi.p2repo.analyzers.jars;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,29 +16,23 @@ public abstract class TestJars extends BuildRepoTests {
         super(configurations);
     }
 
-    private String bundleDirectory;
-    private String featureDirectory;
+    private Path   bundleDirectory;
+    private Path featureDirectory;
 
-    protected String getBundleDirectory() {
+    protected Path getBundleDirectory() {
         if (bundleDirectory == null) {
             // we try both aggregate/plugins and if doesn't exist, assume
             // plugins
-            String AGGR_PLUGINS_DIR = "aggregate/plugins";
-            String PLUGINS_DIR = "plugins";
-            String property = getDirectoryToCheck();
+            Path property = getDirectoryToCheck();
             if (property == null) {
                 handleFatalError("Need to set input directory to check against.");
             }
-            property = ensureEndingSlash(property);
-
             // try aggregate first
-            bundleDirectory = property + AGGR_PLUGINS_DIR;
-            File inputdir = new File(bundleDirectory);
-            if (!(inputdir.exists() && inputdir.isDirectory())) {
+            bundleDirectory = property.resolve("aggregate/plugins");
+            if (!(Files.exists(bundleDirectory) && Files.isDirectory(bundleDirectory))) {
                 // then try more common non-aggregate plugins directory
-                bundleDirectory = property + PLUGINS_DIR;
-                inputdir = new File(bundleDirectory);
-                if (!(inputdir.exists() && inputdir.isDirectory())) {
+                bundleDirectory = property.resolve("plugins");
+                if (!(Files.exists(bundleDirectory) && Files.isDirectory(bundleDirectory))) {
                     handleFatalError("bundle directory (" + bundleDirectory + ") must be an existing directory.");
                 }
             }
@@ -45,33 +40,21 @@ public abstract class TestJars extends BuildRepoTests {
         return bundleDirectory;
     }
 
-    private String ensureEndingSlash(String property) {
-        String result = property;
-        if (!result.endsWith("/")) {
-            result = result + "/";
-        }
-        return result;
-    }
 
-    protected String getFeatureDirectory() {
+    protected Path getFeatureDirectory() {
         if (featureDirectory == null) {
             // we try both aggregate/plugins and if doesn't exist, assume
             // plugins
-            String AGGR_FEATURES_DIR = "aggregate/features";
-            String FEATURES_DIR = "features";
-            String property = getDirectoryToCheck();
+            Path property = getDirectoryToCheck();
             if (property == null) {
                 handleFatalError("Need to set input directory to check against.");
             }
-            property = ensureEndingSlash(property);
             // try aggregate first
-            featureDirectory = property + AGGR_FEATURES_DIR;
-            File inputdir = new File(featureDirectory);
-            if (!(inputdir.exists() && inputdir.isDirectory())) {
+            featureDirectory = property.resolve("aggregate/features");
+            if (!(Files.exists(featureDirectory) && Files.isDirectory(featureDirectory))) {
                 // then try more common non-aggregate plugins directory
-                featureDirectory = property + FEATURES_DIR;
-                inputdir = new File(featureDirectory);
-                if (!(inputdir.exists() && inputdir.isDirectory())) {
+                featureDirectory = property.resolve("features");
+                if (!(Files.exists(featureDirectory) && Files.isDirectory(featureDirectory))) {
                     handleFatalError("feature directory (" + featureDirectory + ") must be an existing directory.");
                 }
             }

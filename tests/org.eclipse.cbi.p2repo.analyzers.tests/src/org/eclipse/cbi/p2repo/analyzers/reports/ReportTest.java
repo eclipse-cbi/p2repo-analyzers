@@ -10,7 +10,6 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.cbi.p2repo.analyzers.BuildRepoTests;
 import org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration;
 import org.eclipse.core.runtime.FileLocator;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,8 +18,8 @@ public class ReportTest {
 	static Path data;
 
 	@BeforeClass
-	public static void download() {
-		try {
+	public static void download() throws Exception {
+		{
 			URL self = FileLocator.resolve(new URI("platform:/plugin/org.eclipse.cbi.p2repo.analyzers.tests").toURL());
 			data = "file".equals(self.getProtocol()) ? Path.of(self.toURI()).resolve("data")
 					: Files.createTempDirectory("report-test");
@@ -41,16 +40,12 @@ public class ReportTest {
 					}
 				}
 			}
-		} catch (Exception e) {
-			Assert.fail(e.getMessage());
-			throw new RuntimeException(e);
 		}
 	}
 
 	@Test
 	public void testReportGenerator() {
-		RepoTestsConfiguration configuration = new RepoTestsConfiguration(data.toString(),
-				data.resolve("report").toString(), data.toString(), null);
+		RepoTestsConfiguration configuration = new RepoTestsConfiguration(data, data.resolve("report"), data, null);
 		new BuildRepoTests(configuration).execute();
 	}
 }

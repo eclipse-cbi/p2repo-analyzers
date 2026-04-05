@@ -3,7 +3,7 @@ package org.eclipse.cbi.p2repo.analyzers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -62,9 +62,9 @@ public class BuildRepoTests {
      * @return
      */
     private static boolean               outputDirectoryInitialized;
-    private String                       directoryToCheck;
-    private String                       referenceDirectoryToCheck;
-    private String                       tempWorkingDir;
+    private Path                         directoryToCheck;
+    private Path                         referenceDirectoryToCheck;
+    private Path                         tempWorkingDir;
     private boolean                      failuresOccurred = false;
     private ReportWriter                 reportWriter;
     private final RepoTestsConfiguration configurations;
@@ -204,7 +204,7 @@ public class BuildRepoTests {
             // is copied into place when output directory is first created.
             copyTemplateForIndexFile("/templateFiles/indexmain.html");
 
-        } catch (ProvisionException | OperationCanceledException | IOException | URISyntaxException e) {
+        } catch (ProvisionException | OperationCanceledException | IOException e) {
             e.printStackTrace();
             failuresOccurred = true;
         }
@@ -255,13 +255,13 @@ public class BuildRepoTests {
         }
     }
 
-    private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException, URISyntaxException {
-        String repoToTest = Path.of(getDirectoryToCheck()).toUri().toString();
-        String referenceRepoToTest = null;
+    private void doRepoTests() throws IOException, ProvisionException, OperationCanceledException {
+        URI repoToTest = getDirectoryToCheck().toUri();
+        URI referenceRepoToTest = null;
         if (getDirectoryToCheckForReference() != null) {
-            File refRepoToCheck = new File(getDirectoryToCheckForReference());
-            if (refRepoToCheck.exists()) {
-                referenceRepoToTest =  refRepoToCheck.toURI().toString();
+            Path refRepoToCheck = getDirectoryToCheckForReference();
+            if (Files.exists(refRepoToCheck)) {
+                referenceRepoToTest = refRepoToCheck.toUri();
             } else {
                 System.out.println("WARNING: the reference repository was found not to exist. No check done.");
                 System.out.println("         referenceRepo: " + getDirectoryToCheckForReference());
@@ -312,14 +312,14 @@ public class BuildRepoTests {
         }
     }
 
-    public String getDirectoryToCheck() {
+    public Path getDirectoryToCheck() {
         if (directoryToCheck == null) {
             directoryToCheck = configurations.getReportRepoDir();
         }
         return directoryToCheck;
     }
 
-    public void setDirectoryToCheck(String bundleDirToCheck) {
+    public void setDirectoryToCheck(Path bundleDirToCheck) {
         this.directoryToCheck = bundleDirToCheck;
     }
 
@@ -331,7 +331,7 @@ public class BuildRepoTests {
      *
      * @return name of directory to use for temporary files
      */
-    protected String getTempWorkingDir() {
+    protected Path getTempWorkingDir() {
         if (tempWorkingDir == null) {
             tempWorkingDir = configurations.getTempWorkingDir();
         }
@@ -344,7 +344,7 @@ public class BuildRepoTests {
      *
      * @param tempWorkingDir
      */
-    public void setTempWorkingDir(String tempWorkingDir) {
+    public void setTempWorkingDir(Path tempWorkingDir) {
         this.tempWorkingDir = tempWorkingDir;
     }
 
@@ -357,14 +357,14 @@ public class BuildRepoTests {
         // this.failuresOccurred = failuresOccurred;
     }
 
-    public String getDirectoryToCheckForReference() {
+    public Path getDirectoryToCheckForReference() {
         if (referenceDirectoryToCheck == null) {
             referenceDirectoryToCheck = configurations.getReferenceRepoDir();
         }
         return referenceDirectoryToCheck;
     }
 
-    public void setDirectoryToCheckForReference(String referenceDirectoryToCheck) {
+    public void setDirectoryToCheckForReference(Path referenceDirectoryToCheck) {
         this.referenceDirectoryToCheck = referenceDirectoryToCheck;
     }
 

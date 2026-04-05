@@ -3,7 +3,6 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class VersionChecking extends TestRepo {
     private static final String STARTS_WITH            = "startsWith";
     private static final int    STARTWITH_MATCH_LENGTH = 5;
 
-    public boolean testVersionUniqness() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
+    public boolean testVersionUniqness() throws ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllIUs();
         if (allIUs == null) {
             return true;
