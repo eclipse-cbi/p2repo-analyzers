@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,8 +76,8 @@ public class TestLayoutTest extends TestJars {
     public static void main(String[] args) {
 
         TestLayoutTest testlayout = new TestLayoutTest(RepoTestsConfiguration.createFromSystemProperties());
-        testlayout.setDirectoryToCheck("D:\\temptest");
-        testlayout.setTempWorkingDir("D:/temp");
+        testlayout.setDirectoryToCheck(Path.of("D:\\temptest"));
+        testlayout.setTempWorkingDir(Path.of("D:/temp"));
         try {
             testlayout.testLayout();
         } catch (IOException e) {
@@ -105,7 +106,7 @@ public class TestLayoutTest extends TestJars {
         errors = new ArrayList<>();
         boolean failuresOccured = false;
 
-        File inputdir = new File(getBundleDirectory());
+        File inputdir = getBundleDirectory().toFile();
 
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
@@ -409,7 +410,7 @@ public class TestLayoutTest extends TestJars {
 
         errors = new ArrayList<>();
         boolean failuresOccurred = false;
-        File inputdir = new File(getFeatureDirectory());
+        File inputdir = getFeatureDirectory().toFile();
         File[] children = inputdir.listFiles(new JARFileNameFilter());
         int totalsize = children.length;
         int checked = 0;

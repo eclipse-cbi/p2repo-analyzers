@@ -3,7 +3,6 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +23,7 @@ public class IUVersionCheckToReference extends TestRepo {
         super(configurations);
     }
 
-    public boolean checkIUVersionsToReference() throws IOException, ProvisionException, URISyntaxException {
+    public boolean checkIUVersionsToReference() throws IOException, ProvisionException {
         String testDirName = getReportOutputDirectory();
         File outfile = new File(testDirName, "versionChecks.html");
         List<IInstallableUnit> referenceOnly = new ArrayList<>();
@@ -44,7 +43,7 @@ public class IUVersionCheckToReference extends TestRepo {
             outfileWriter.write("<h1>All IUs</h1>" + EOL + "<p>(except groups, and categories)</p>");
             // The "System.out" lines are for sanity check/debugging purposes.
             outfileWriter.write("<p>Repository ('repoURLToTest'): " + getRepoURLToTest() + "</p>" + EOL);
-            if (!getRepoURLForReference().isEmpty()) {
+            if (getRepoURLForReference() != null) {
                 outfileWriter.write("<p>Repository for reference ('repoURLForReference'): " + getRepoURLForReference() + "</p>"
                         + EOL);
             }
@@ -186,8 +185,7 @@ public class IUVersionCheckToReference extends TestRepo {
         return count;
     }
 
-    private void processForNewBundles(List<IInstallableUnit> newIUs, Set<String> curinboth) throws ProvisionException,
-            URISyntaxException {
+    private void processForNewBundles(List<IInstallableUnit> newIUs, Set<String> curinboth) throws ProvisionException {
         for (IInstallableUnit curiu : getAllIUs().toSet()) {
 
             // we exclude feature groups here, so they can be in their
@@ -201,8 +199,7 @@ public class IUVersionCheckToReference extends TestRepo {
         }
     }
 
-    private void processForExtraReferences(List<IInstallableUnit> referenceOnly, Set<String> refinboth) throws ProvisionException,
-            URISyntaxException {
+    private void processForExtraReferences(List<IInstallableUnit> referenceOnly, Set<String> refinboth) throws ProvisionException {
         if (getAllReferenceIUs() != null) {
             for (IInstallableUnit refiu : getAllReferenceIUs().toSet()) {
 
@@ -221,7 +218,7 @@ public class IUVersionCheckToReference extends TestRepo {
     }
 
     private void checkforNewInCurrent(IInstallableUnit curiu, List<IInstallableUnit> newIUs, Set<String> curinboth)
-            throws ProvisionException, URISyntaxException {
+            throws ProvisionException {
         String curiuID = curiu.getId();
         if (curiuID == null) {
             // TODO: throw exception here?
@@ -247,7 +244,7 @@ public class IUVersionCheckToReference extends TestRepo {
     }
 
     private void checkforExtraReferences(IInstallableUnit refiu, List<IInstallableUnit> referenceOnly, Set<String> inboth)
-            throws ProvisionException, URISyntaxException {
+            throws ProvisionException {
         String refiuID = refiu.getId();
         if (refiuID == null) {
             // TODO: throw exception here?

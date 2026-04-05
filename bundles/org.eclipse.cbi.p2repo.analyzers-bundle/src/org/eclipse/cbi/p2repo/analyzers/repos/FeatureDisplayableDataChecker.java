@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,11 +39,11 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     private static void _testFeatureDisplayableDataChecer() {
         System.out.println("\n\n\tLocal test of  FeatureDisplayableDataChecker.\n\n");
         FeatureDisplayableDataChecker featureDisplayableDataChecker = new FeatureDisplayableDataChecker(RepoTestsConfiguration.createFromSystemProperties());
-        featureDisplayableDataChecker.setRepoURLToTest("file:///home/shared/simrel/luna/aggregation/final");
+        featureDisplayableDataChecker.setRepoURLToTest(URI.create("file:///home/shared/simrel/luna/aggregation/final"));
         featureDisplayableDataChecker.setMainOutputDirectory("/home/shared/simrel/luna");
         try {
             featureDisplayableDataChecker.testDisplayableData();
-        } catch (ProvisionException | URISyntaxException | IOException e) {
+        } catch (ProvisionException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -239,7 +239,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         return proposedHeader;
     }
 
-    public boolean testDisplayableData() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
+    public boolean testDisplayableData() throws ProvisionException, OperationCanceledException, IOException {
         boolean result = false;
         IQueryResult<IInstallableUnit> allIUs = getAllGroupIUs();
         result = checkLicenseConsistency(allIUs);

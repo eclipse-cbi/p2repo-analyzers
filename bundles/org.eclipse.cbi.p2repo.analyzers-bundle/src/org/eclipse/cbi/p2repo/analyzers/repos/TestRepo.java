@@ -13,8 +13,8 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.cbi.p2repo.analyzers.BuildRepoTests;
@@ -47,8 +47,8 @@ public class TestRepo extends BuildRepoTests {
     protected static final String          BR    = "<br/>" + EOL;
     private IQueryResult<IInstallableUnit> allCurrentIUs;
     private IQueryResult<IInstallableUnit> allReferenceIUs;
-    private String                         repoURLToTest;
-    private String                         repoURLForReference;
+    private URI                            repoURLToTest;
+    private Optional<URI>                  repoURLForReference;
 
     protected void println(FileWriter out, String wholeLine) throws IOException {
         out.write("<li>" + wholeLine + "</li>" + EOL);
@@ -167,29 +167,27 @@ public class TestRepo extends BuildRepoTests {
 
     }
 
-    protected IQueryResult<IInstallableUnit> getAllReferenceIUs() throws URISyntaxException, ProvisionException {
+    protected IQueryResult<IInstallableUnit> getAllReferenceIUs() throws ProvisionException {
         if (allReferenceIUs == null) {
-            String repoRefURL = getRepoURLForReference();
-            if (!repoRefURL.isEmpty()) {
+            URI repoRefURL = getRepoURLForReference();
+            if (repoRefURL != null) {
                 allReferenceIUs = getAllIUscore(repoRefURL);
             }
         }
         return allReferenceIUs;
     }
 
-    protected IQueryResult<IInstallableUnit> getAllIUs() throws URISyntaxException, ProvisionException {
+    protected IQueryResult<IInstallableUnit> getAllIUs() throws ProvisionException {
         if (allCurrentIUs == null) {
-            String repoURL = getRepoURLToTest();
+            URI repoURL = getRepoURLToTest();
             allCurrentIUs = getAllIUscore(repoURL);
         }
         return allCurrentIUs;
     }
 
-    private IQueryResult<IInstallableUnit> getAllIUscore(String repoURL) throws URISyntaxException, ProvisionException {
+    private IQueryResult<IInstallableUnit> getAllIUscore(URI repoLocation) throws ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
-        URI repoLocation = null;
         try {
-            repoLocation = new URI(repoURL);
             IMetadataRepositoryManager repomgr = getMetadataRepositoryManager();
             if (repomgr != null) {
                 IMetadataRepository repo = repomgr.loadRepository(repoLocation, null);
@@ -206,31 +204,29 @@ public class TestRepo extends BuildRepoTests {
             }
         } catch (org.eclipse.equinox.p2.core.ProvisionException e) {
             // Logging some extra information here, and then rethrow.
-            System.out.println("repoURL: " + repoURL);
             System.out.println("repoLocation:" + repoLocation);
             throw e;
         }
         return allIUs;
     }
 
-    protected IQueryResult<IInstallableUnit> getAllGroupIUs() throws URISyntaxException, ProvisionException {
-        String repoURL = getRepoURLToTest();
+    protected IQueryResult<IInstallableUnit> getAllGroupIUs() throws ProvisionException {
+        URI repoURL = getRepoURLToTest();
         return getAllGroupIUscore(repoURL);
     }
 
-    protected IQueryResult<IInstallableUnit> getAllReferenceGroupIUs() throws URISyntaxException, ProvisionException {
+    protected IQueryResult<IInstallableUnit> getAllReferenceGroupIUs() throws ProvisionException {
         IQueryResult<IInstallableUnit> result = null;
-        String repoURL = getRepoURLForReference();
-        if (!repoURL.isEmpty()) {
+        URI repoURL = getRepoURLForReference();
+        if (repoURL != null) {
             result = getAllGroupIUscore(repoURL);
         }
         return result;
 
     }
 
-    private IQueryResult<IInstallableUnit> getAllGroupIUscore(String repoURL) throws URISyntaxException, ProvisionException {
+    private IQueryResult<IInstallableUnit> getAllGroupIUscore(URI repoLocation) throws ProvisionException {
         IQueryResult<IInstallableUnit> allIUs = null;
-        URI repoLocation = new URI(repoURL);
         IMetadataRepositoryManager repositoryManager = getMetadataRepositoryManager();
         if (repositoryManager == null) {
             handleFatalError("IMetadataRepositoryManager service is not registered.");
@@ -257,7 +253,7 @@ public class TestRepo extends BuildRepoTests {
         return ServiceHelper.getService(FrameworkUtil.getBundle(TestRepo.class).getBundleContext(), IProvisioningAgent.class);
     }
 
-    public String getRepoURLToTest() {
+    public URI getRepoURLToTest() {
         if (repoURLToTest == null) {
             repoURLToTest = getConfigurations().getRepoURLToTest();
 
@@ -270,28 +266,24 @@ public class TestRepo extends BuildRepoTests {
         return repoURLToTest;
     }
 
-    public String getRepoURLForReference() {
+    public URI getRepoURLForReference() {
         if (repoURLForReference == null) {
-            repoURLForReference = getConfigurations().getRepoURLForReference();
-            if (repoURLForReference == null) {
+            repoURLForReference = Optional.ofNullable(getConfigurations().getRepoURLForReference());
+            if (repoURLForReference.isEmpty()) {
                 handleWarning("the 'repoURLForReference' property was not set");
-                repoURLForReference = "";
-            }
-            if (!repoURLForReference.isEmpty()) {
+            } else {
                 System.out.println("repoURLForReference: " + repoURLForReference);
             }
-
         }
-
-        return repoURLForReference;
+        return repoURLForReference.orElse(null);
     }
 
-    public void setRepoURLToTest(String repoURLToTest) {
+    public void setRepoURLToTest(URI repoURLToTest) {
         this.repoURLToTest = repoURLToTest;
     }
 
-    public void setRepoURLForReference(String repoURLForReference) {
-        this.repoURLForReference = repoURLForReference;
+    public void setRepoURLForReference(URI repoURLForReference) {
+        this.repoURLForReference = Optional.ofNullable(repoURLForReference);
     }
 
     protected boolean isCategory(IInstallableUnit curiu) {

@@ -13,6 +13,7 @@ package org.eclipse.cbi.p2repo.analyzers.jars;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,7 +49,7 @@ public class VersionTest extends TestJars {
     public static void main(String[] args) {
 
         VersionTest testlayout = new VersionTest(RepoTestsConfiguration.createFromSystemProperties());
-        testlayout.setDirectoryToCheck("D:\\temp\\staging\\");
+        testlayout.setDirectoryToCheck(Path.of("D:\\temp\\staging\\"));
         try {
             testlayout.testFeatureVersions();
             testlayout.testBundleVersions();
@@ -60,7 +61,7 @@ public class VersionTest extends TestJars {
 
     private boolean testBundleVersions() throws IOException {
 
-        File inputdir = new File(getBundleDirectory());
+        File inputdir = getBundleDirectory().toFile();
 
         getReportWriter().writeln(" Check for 4-part versions in Bundles");
 
@@ -134,7 +135,7 @@ public class VersionTest extends TestJars {
 
     private boolean testFeatureVersions() throws IOException {
 
-        File inputdir = new File(getFeatureDirectory());
+        File inputdir = getFeatureDirectory().toFile();
 
         getReportWriter().writeln(" Check for 4-part versions in Features");
 

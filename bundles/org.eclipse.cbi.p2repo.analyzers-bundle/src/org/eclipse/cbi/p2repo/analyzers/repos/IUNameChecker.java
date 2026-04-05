@@ -3,7 +3,6 @@ package org.eclipse.cbi.p2repo.analyzers.repos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,12 +21,12 @@ public class IUNameChecker extends TestRepo {
         super(configurations);
     }
 
-    public boolean testBundleNames() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
+    public boolean testBundleNames() throws ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllIUs();
         return checkBundleNames(allIUs);
     }
 
-    public boolean testFeatureNames() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
+    public boolean testFeatureNames() throws ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllGroupIUs();
         return checkFeatureNames(allIUs);
     }

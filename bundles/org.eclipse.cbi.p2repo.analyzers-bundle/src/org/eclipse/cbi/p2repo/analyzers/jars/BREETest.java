@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public class BREETest extends TestJars {
     public static void main(String[] args) {
 
         BREETest testlayout = new BREETest(RepoTestsConfiguration.createFromSystemProperties());
-        testlayout.setDirectoryToCheck("/home/files/testSDKRepo");
+        testlayout.setDirectoryToCheck(Path.of("/home/files/testSDKRepo"));
         try {
             testlayout.testBREESettingRule();
         } catch (IOException e) {
@@ -91,7 +92,7 @@ public class BREETest extends TestJars {
     public boolean testBREESettingRule() throws IOException {
 
         createReportWriter(outputFilename);
-        File inputdir = new File(getBundleDirectory());
+        File inputdir = getBundleDirectory().toFile();
 
         return checkBundleBREE(inputdir);
     }

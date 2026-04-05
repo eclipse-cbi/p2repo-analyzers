@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -117,7 +116,7 @@ public class ProviderNameChecker extends TestRepo {
         }
     }
 
-    public boolean testProviderNames() throws URISyntaxException, ProvisionException, OperationCanceledException, IOException {
+    public boolean testProviderNames() throws ProvisionException, OperationCanceledException, IOException {
         IQueryResult<IInstallableUnit> allIUs = getAllIUs();
         return checkProviderNames(allIUs);
     }

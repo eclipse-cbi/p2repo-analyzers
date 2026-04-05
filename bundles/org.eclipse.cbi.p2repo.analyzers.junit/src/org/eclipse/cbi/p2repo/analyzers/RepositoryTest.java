@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import org.junit.Test;
 
 /**
  * JUnit TestCase which runs all the available checks as Junit Plugin Tests
- * 
+ *
  * @author Dennis Huebner
  *
  */
@@ -40,14 +41,14 @@ public class RepositoryTest {
 			.createFromSystemProperties();
 	private static final String SKIP_CHECKER_PROP_NAME = "skipChecker";
 	private static final Set<String> SKIPPED_CHECKER = new HashSet<>();
-	private static String dirToTest;
-	private static String repoToTest;
-	private static String refRepoDir;
+	private static Path dirToTest;
+	private static URI repoToTest;
+	private static Path refRepoDir;
 
 	@BeforeClass
 	public static final void beforeClass() {
 		BuildRepoTests tests = new BuildRepoTests(CONF_FROM_SYSTEM_PROPERTIES);
-		String directoryToCheck = tests.getDirectoryToCheck();
+		Path  directoryToCheck = tests.getDirectoryToCheck();
 		if (directoryToCheck == null) {
 			System.err.println("Repository directory was not specified. Use -"
 					+ RepoTestsConfiguration.REPORT_REPO_DIR_PARAM + "=/dir/location to pass the repository location");
@@ -57,7 +58,7 @@ public class RepositoryTest {
 				System.out.println(entry.getKey() + "=" + entry.getValue());
 		}
 		dirToTest = directoryToCheck;
-		repoToTest = Path.of(directoryToCheck).toUri().toString();
+		repoToTest = directoryToCheck .toUri();
 		refRepoDir = tests.getDirectoryToCheckForReference();
 
 		String skipCheckerProp = System.getProperty(SKIP_CHECKER_PROP_NAME);

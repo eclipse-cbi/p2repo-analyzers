@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +51,7 @@ public class ESTest extends TestJars {
     public static void main(String[] args) {
 
         ESTest testlayout = new ESTest(RepoTestsConfiguration.createFromSystemProperties());
-        testlayout.setDirectoryToCheck("/home/files/buildzips/junoRC2/eclipseJEE/");
+        testlayout.setDirectoryToCheck(Path.of("/home/files/buildzips/junoRC2/eclipseJEE/"));
         try {
             testlayout.testESSettingRule();
         } catch (IOException e) {
@@ -61,7 +62,7 @@ public class ESTest extends TestJars {
 
     public boolean testESSettingRule() throws IOException {
 
-        File inputdir = new File(getBundleDirectory());
+        File inputdir = getBundleDirectory().toFile();
 
         createReportWriter(outputFilename);
         return checkBundleES(inputdir);

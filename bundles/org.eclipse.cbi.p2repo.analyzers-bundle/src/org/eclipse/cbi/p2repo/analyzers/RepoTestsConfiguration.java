@@ -3,8 +3,10 @@
  */
 package org.eclipse.cbi.p2repo.analyzers;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.cbi.p2repo.analyzers.common.reporter.IP2RepositoryAnalyserConfiguration;
 
@@ -21,12 +23,12 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     public static final String REPO_URL_PARAM           = "repoURLToTest";
     public static final String REFERENCE_REPO_URL_PARAM = "repoURLForReference";
 
-    private String  referenceRepoDir;
-    private String  reportOutputDir;
-    private String  reportRepoDir;
-    private String  tempWorkingDir;
-    private String  repoURLToTest;
-    private String  repoURLForReference;
+    private final Path         referenceRepoDir;
+    private final Path         reportOutputDir;
+    private final Path         reportRepoDir;
+    private final Path         tempWorkingDir;
+    private URI                repoURLToTest;
+    private URI                repoURLForReference;
 
     /**
      * @param reportRepoDir
@@ -34,7 +36,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
      * @param referenceRepoDir
      * @param tempWorkingDir
      */
-    public RepoTestsConfiguration(String reportRepoDir, String reportOutputDir, String referenceRepoDir, String tempWorkingDir) {
+    public RepoTestsConfiguration(Path reportRepoDir, Path reportOutputDir, Path referenceRepoDir, Path tempWorkingDir) {
         this.reportRepoDir = reportRepoDir;
         this.reportOutputDir = reportOutputDir;
         this.referenceRepoDir = referenceRepoDir;
@@ -44,7 +46,7 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
     /**
      * @return the repoURLToTest
      */
-    public String getRepoURLToTest() {
+    public URI getRepoURLToTest() {
         return repoURLToTest;
     }
 
@@ -52,14 +54,14 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
      * @param repoURLToTest
      *            the repoURLToTest to set
      */
-    public void setRepoURLToTest(String repoURLToTest) {
+    public void setRepoURLToTest(URI repoURLToTest) {
         this.repoURLToTest = repoURLToTest;
     }
 
     /**
      * @return the repoURLForReference
      */
-    public String getRepoURLForReference() {
+    public URI getRepoURLForReference() {
         return repoURLForReference;
     }
 
@@ -67,29 +69,29 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
      * @param repoURLForReference
      *            the repoURLForReference to set
      */
-    public void setRepoURLForReference(String repoURLForReference) {
+    public void setRepoURLForReference(URI repoURLForReference) {
         this.repoURLForReference = repoURLForReference;
     }
 
-    public String getReferenceRepoDir() {
+    public Path getReferenceRepoDir() {
         return referenceRepoDir;
     }
 
     @Override
     public String getReportOutputDir() {
-        return this.reportOutputDir;
+        return this.reportOutputDir.toString();
     }
 
-    public String getReportRepoDir() {
+    public Path getReportRepoDir() {
         return this.reportRepoDir;
     }
 
     @Override
     public URI getReportRepoURI() {
-        return (new File(getReportRepoDir()).toURI());
+        return getReportRepoDir().toUri();
     }
 
-    public String getTempWorkingDir() {
+    public Path getTempWorkingDir() {
         return this.tempWorkingDir;
     }
 
@@ -104,13 +106,16 @@ public final class RepoTestsConfiguration implements IP2RepositoryAnalyserConfig
         }
         String tmpDir = System.getProperty("java.io.tmpdir");
         String refRepoDir = System.getProperty(REFERENCE_REPO_PARAM, null);
-        return new RepoTestsConfiguration(repoDir, outDir, refRepoDir, tmpDir);
+        return new RepoTestsConfiguration(Path.of(repoDir), Path.of(outDir), Path.of(refRepoDir), Path.of(tmpDir));
     }
 
     @Override
     public String getDataOutputDir() {
-        File dataDir = new File(reportOutputDir, "data");
-        dataDir.mkdirs();
-        return dataDir.getAbsolutePath();
+        Path dataDir = reportOutputDir.resolve("data");
+        try {
+            Files.createDirectories(dataDir);
+        } catch (IOException e) { // Ignore
+        }
+        return dataDir.toAbsolutePath().toString();
     }
 }
