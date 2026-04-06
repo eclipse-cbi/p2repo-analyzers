@@ -36,20 +36,4 @@
          id="org.junit"
          version="0.0.0"/>
 
-   <plugin
-         id="com.google.guava"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.xtext.xbase.lib"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.xtend.lib"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.xtend.lib.macro"
-         version="0.0.0"/>
-
 </feature>

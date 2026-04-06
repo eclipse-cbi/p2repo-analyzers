@@ -4,12 +4,16 @@ import static org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration.REFERENCE_
 import static org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration.REPORT_OUTPUT_DIR_PARAM;
 import static org.eclipse.cbi.p2repo.analyzers.RepoTestsConfiguration.REPORT_REPO_DIR_PARAM;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
-import com.google.common.base.Stopwatch;
-
 public class RepoReportApplication implements IApplication {
+    private final NumberFormat runtimeFormat = new DecimalFormat("#.000 s", new DecimalFormatSymbols(Locale.ENGLISH));
 
     @Override
     public Object start(IApplicationContext context) throws Exception {
@@ -23,9 +27,9 @@ public class RepoReportApplication implements IApplication {
         // TODO: eventually may want test failures to be an array, or map, so
         // we'd know exactly what failed.
         // but for now, all "tests" return "not failed"
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        long start = System.currentTimeMillis();
         boolean testfailures = new BuildRepoTests(configurations).execute();
-        stopwatch.stop();
+        String stopwatch = runtimeFormat.format((System.currentTimeMillis() - start) / 1000.0);
         if (testfailures) {
             appresult = Integer.valueOf(-1);
             System.out.println("Report tests failed. Took: " + stopwatch);
@@ -41,7 +45,6 @@ public class RepoReportApplication implements IApplication {
         dumpln("\t" + REPORT_REPO_DIR_PARAM + " - repository location to create reports.");
         dumpln("\t" + REPORT_OUTPUT_DIR_PARAM + " - report output location.");
         dumpln("\t" + REFERENCE_REPO_PARAM + " - reference repository location to compare with.");
-
     }
 
     private void dumpln(String string) {
