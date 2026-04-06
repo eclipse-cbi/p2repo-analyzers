@@ -8,7 +8,6 @@ javacore.*
 heapdump.*
 core.*
 Snap.*
-*.xtendbin
 *.java._trace
 promo-repo/
 build.log

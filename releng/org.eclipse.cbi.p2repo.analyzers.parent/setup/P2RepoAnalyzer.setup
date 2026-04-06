@@ -7,7 +7,6 @@
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
     xmlns:workingsets="http://www.eclipse.org/oomph/workingsets/1.0"
@@ -144,13 +143,6 @@
       name="eclipse.target.platform"
       value="None"
       storageURI="scope://Workspace"/>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
-      label="P2 Repository Analyzer">
-    <requirement
-        name="org.eclipse.xtend.sdk.feature.group"/>
-    <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
-  </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.cbi.p2repo-analyzer"
