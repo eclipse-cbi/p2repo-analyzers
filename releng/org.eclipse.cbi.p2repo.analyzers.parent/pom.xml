@@ -15,8 +15,8 @@
     <buildType>I</buildType>
     <buildId>${buildType}${buildTimestamp}</buildId>
     <comparator.repo>http://download.eclipse.org/cbi/updates/analyzers/4.7/</comparator.repo>
-    <tycho-version>5.0.1</tycho-version>
-    <cbi-plugins.version>1.5.3</cbi-plugins.version>
+    <tycho-version>5.0.2</tycho-version>
+    <cbi-plugins.version>1.5.4</cbi-plugins.version>
     <maven-resources-plugin-version>3.4.0</maven-resources-plugin-version>
     <justj-version>21</justj-version>
     <code.ignoredWarnings>-warn:-deprecation,raw,unchecked,discouraged</code.ignoredWarnings>
