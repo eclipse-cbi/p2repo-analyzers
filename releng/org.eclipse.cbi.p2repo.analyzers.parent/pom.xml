@@ -301,6 +301,11 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven-resources-plugin-version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
