@@ -15,7 +15,7 @@ pipeline {
   }
 
   options {
-    buildDiscarder(logRotator(numToKeepStr: '10'))
+    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '2'))
     disableConcurrentBuilds()
   }
 
@@ -124,7 +124,7 @@ pipeline {
       post {
         always {
             junit '**/target/surefire-reports/TEST-*.xml'
-            archiveArtifacts artifacts: 'releng/org.eclipse.cbi.p2repo.analyzers.repository/target/**, releng/org.eclipse.cbi.p2repo.analyzers.product/target/**, releng/org.eclipse.cbi.p2repo.analyzers.parent/promotion/**'
+            archiveArtifacts artifacts: 'releng/org.eclipse.cbi.p2repo.analyzers.repository/target/repository/**, releng/org.eclipse.cbi.p2repo.analyzers.product/target/products/*,'
         }
       }
     }
