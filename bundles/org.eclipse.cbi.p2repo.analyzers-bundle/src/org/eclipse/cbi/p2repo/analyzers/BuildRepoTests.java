@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import org.eclipse.cbi.p2repo.analyzers.jars.BREETest;
 import org.eclipse.cbi.p2repo.analyzers.jars.ESTest;
@@ -372,7 +373,7 @@ public class BuildRepoTests {
         // we'll assume, for now, directories for output has been created.
         try (InputStream instream = this.getClass().getResourceAsStream(filename);) {
             if (instream != null) {
-                Files.copy(instream, indexfile);
+                Files.copy(instream, indexfile, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 System.out.println("Program Error: did not find expected resource on classpath: " + filename);
             }
