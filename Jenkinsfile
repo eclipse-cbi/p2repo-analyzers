@@ -1,6 +1,6 @@
 pipeline {
   agent {
-      label 'centos-8'
+      label 'ubuntu-latest'
   }
 
   environment {
