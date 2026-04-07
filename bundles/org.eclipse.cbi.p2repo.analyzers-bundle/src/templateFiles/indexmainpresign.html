@@ -1,14 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <title>Software Repository Reports</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="Eclipse Foundation, Inc." />
-<link rel="stylesheet" href="http://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/styles.min.css"/>
+<link rel="stylesheet" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/styles.min.css">
 </head>
 <body>
     <div id="header">
-        <a href="http://www.eclipse.org/"><img src="http://www.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse.png" alt="Eclipse.org logo" class="logo-eclipse-default"/></a>
+        <a href="https://www.eclipse.org/"><img src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/images/logo/eclipse.png" alt="Eclipse.org logo" class="logo-eclipse-default"></a>
     </div>
     <div id="midcolumn">
 
@@ -26,7 +25,7 @@
             are important, and ideally would be "clean", but normally would not prevent the release, or inclusion in the common
             repository. Except where noted, the checks are done directly are jars in the main common repository directories. That
             is, it does not check the "trusted repositories" we point to via composite indirection. See the <a
-                href="http://wiki.eclipse.org/SimRel/Simultaneous_Release_Reports_FAQ"> Reports FAQ</a> for more information about
+                href="https://github.com/eclipse-cbi/p2repo-analyzers/blob/main/README.md">Reports FAQ</a> for more information about
             the code that generates the reports.
 
         </p>
@@ -52,9 +51,9 @@
             <dt>
                 <a href="reports/versionChecks.html">Bundle versions compared to reference repository</a>
             </dt>
-            <dd>Similar to the "Feature versions" report, this report scans the repo, looking for "non-groups" (bundles) and tabulates the comparison to reference repository. 
-            The comparisons to pay most attention to are those that "decrease" from last release, to the current release. Note: this report does not correctly handle cases where 
-            there are more than one version of a bundle in the repo. Sometimes those are not valid to have anyway, but sometimes it is valid, and this report does not 
+            <dd>Similar to the "Feature versions" report, this report scans the repo, looking for "non-groups" (bundles) and tabulates the comparison to reference repository.
+            The comparisons to pay most attention to are those that "decrease" from last release, to the current release. Note: this report does not correctly handle cases where
+            there are more than one version of a bundle in the repo. Sometimes those are not valid to have anyway, but sometimes it is valid, and this report does not
             have enough logic to know what to do with those that occur with same ID, but multiple versions. You can usually just ignore those comparisons in this report.</dd>
             <dt>
                 <a href="reports/versionPatternCheck.txt">Bundles and Features not using 4 part versions</a>
@@ -133,7 +132,7 @@
                 <a href="reports/esdata.txt">Use of Eclipse-SourceReferences</a>
             </dt>
             <dd>
-                List those bundles which are, and which are not, using the <a href="http://wiki.eclipse.org/PDE/UI/SourceReferences">Eclipse-SourceReferences</a>
+                List those bundles which are, and which are not, using the <a href="https://github.com/eclipse-pde/eclipse.pde/blob/master/docs/SourceReferences.md">Eclipse-SourceReferences</a>
                 directive and the value of that directive. This directive (and report) is useful for some projects to help their
                 community find their source code directly from their repository (to help make providing patches easier), but is not
                 useful or appropriate for all projects. Use the directive, and the report, however your project deems appropriate
