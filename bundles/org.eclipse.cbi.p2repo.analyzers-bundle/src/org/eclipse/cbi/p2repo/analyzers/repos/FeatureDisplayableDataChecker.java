@@ -174,7 +174,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
                 // some text, as checked in checkLicenseConsistency method.
                 int amount = Math.min(200, licenseText.length());
                 String shortLicenseText = licenseText.substring(0, amount);
-                printparagraph(outfileWriter, shortLicenseText);
+                printparagraph(outfileWriter, escape(shortLicenseText));
             }
             printHeader(outfileWriter, 3, "Features with old (2010) license");
             printUnits(outfileWriter, license2010);
@@ -197,7 +197,7 @@ public class FeatureDisplayableDataChecker extends TestRepo {
     }
 
     private String printableIdString(IInstallableUnit unit) {
-        String printIdString = unit.getId();
+        String printIdString = escape(unit.getId());
         // we want to mark "products" in a special way, since not sure where
         // they are displayed.
         String productString = unit.getProperty("org.eclipse.equinox.p2.type.product");
@@ -382,16 +382,16 @@ public class FeatureDisplayableDataChecker extends TestRepo {
         if (copyrightIu != null) {
             copyright = copyrightIu.getBody();
         }
-        String iuId = iu.getId();
-        String iuVersion = iu.getVersion().toString();
-        println(outfileWriter, iuId + NBSP + iuVersion + BR + NBSP + copyright);
+        String iuId = escape(iu.getId());
+        String iuVersion = escape(iu.getVersion().toString());
+        println(outfileWriter, iuId + NBSP + iuVersion + BR + NBSP + escape(copyright));
     }
 
     private void printLineDescription(FileWriter outfileWriter, IInstallableUnit iu) throws IOException {
 
-        String description = iu.getProperty(IInstallableUnit.PROP_DESCRIPTION, null);
-        String iuId = iu.getId();
-        String iuVersion = iu.getVersion().toString();
+        String description = escape(iu.getProperty(IInstallableUnit.PROP_DESCRIPTION, null));
+        String iuId = escape(iu.getId());
+        String iuVersion = escape(iu.getVersion().toString());
         println(outfileWriter, iuId + NBSP + iuVersion + BR + NBSP + description);
     }
 }

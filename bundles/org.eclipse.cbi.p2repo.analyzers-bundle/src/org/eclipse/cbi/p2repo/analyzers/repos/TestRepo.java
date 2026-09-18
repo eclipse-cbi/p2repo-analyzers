@@ -77,7 +77,7 @@ public class TestRepo extends BuildRepoTests {
     }
 
     protected void printHeader(FileWriter out, int level, String wholeLine) throws IOException {
-        out.write("<h" + level + ">" + wholeLine + "</h" + level + ">" + EOL);
+        out.write("<h" + level + ">" + escape(wholeLine) + "</h" + level + ">" + EOL);
 
     }
 
@@ -123,26 +123,32 @@ public class TestRepo extends BuildRepoTests {
         return "true".equals(iu.getProperty("org.eclipse.equinox.p2.type.group"));
     }
 
+    protected static String escape(String s) {
+        if (s == null)
+            return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;");
+    }
+
     protected void printLineListItem(FileWriter outfileWriter, IInstallableUnit iu, String iuproperty) throws IOException {
-        String iupropertyValue = iu.getProperty(iuproperty, null);
-        String iuId = iu.getId();
-        String iuVersion = iu.getVersion().toString();
+        String iupropertyValue = escape(iu.getProperty(iuproperty, null));
+        String iuId = escape(iu.getId());
+        String iuVersion = escape(iu.getVersion().toString());
         println(outfileWriter, iuId + NBSP + iuVersion + NBSP + BR + iupropertyValue);
     }
 
     protected void printLineListItem(FileWriter outfileWriter, IInstallableUnit iu, IInstallableUnit iuRef) throws IOException {
         // String iupropertyValue = iu.getProperty(iuproperty, null);
-        String iuId = iu.getId();
-        String iuVersion = iu.getVersion().toString();
-        String iuRefVersion = iuRef.getVersion().toString();
+        String iuId = escape(iu.getId());
+        String iuVersion = escape(iu.getVersion().toString());
+        String iuRefVersion = escape(iuRef.getVersion().toString());
         int diff = iuVersion.compareTo(iuRefVersion);
         println(outfileWriter, diff + NBSP + iuId + NBSP + iuRefVersion + NBSP + iuVersion);
     }
 
     protected void printLineRowItem(FileWriter outfileWriter, IInstallableUnit iu, IInstallableUnit iuRef) throws IOException {
-        String iuId = iu.getId();
-        String iuVersion = iu.getVersion().toString();
-        String iuRefVersion = iuRef.getVersion().toString();
+        String iuId = escape(iu.getId());
+        String iuVersion = escape(iu.getVersion().toString());
+        String iuRefVersion = escape(iuRef.getVersion().toString());
         printRowln(outfileWriter, "<td>" + iuId + "</td><td>" + iuRefVersion + "</td><td>" + iuVersion + "</td>");
     }
 
@@ -160,9 +166,9 @@ public class TestRepo extends BuildRepoTests {
     protected void printAllProperties(FileWriter outFileWriter, IInstallableUnit iu) throws IOException {
         Map<String, String> properties = iu.getProperties();
         Set<String> keys = properties.keySet();
-        for (Object key : keys) {
-            String value = properties.get(key);
-            println(outFileWriter, key + " : " + value);
+        for (String key : keys) {
+            String value = escape(properties.get(key));
+            println(outFileWriter, escape(key) + " : " + value);
         }
 
     }
