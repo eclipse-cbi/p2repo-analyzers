@@ -105,7 +105,7 @@ public class ProviderNameChecker extends TestRepo {
             outfileWriter.write("<h2>List of known branding provider names</h2>" + EOL);
             ArrayList<String> expectedProvidersNameLocal = getKnownProviderNames();
             for (String element : expectedProvidersNameLocal) {
-                println(outfileWriter, element + EOL);
+                println(outfileWriter, escape(element) + EOL);
             }
 
             // if (incorrectProviderName.size() > 0) {

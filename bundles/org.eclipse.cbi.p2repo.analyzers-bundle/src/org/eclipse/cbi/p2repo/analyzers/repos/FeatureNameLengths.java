@@ -87,7 +87,7 @@ public class FeatureNameLengths extends TestRepo {
                 println(outfileWriter, NBSP + "Features directory names with lengths above " + MAX_CRITERIA + EOL);
                 Collections.sort(longestNames, new StringLengthComparator());
                 for (String line : longestNames) {
-                    println(outfileWriter, line.length() + NBSP + line + EOL);
+                    println(outfileWriter, line.length() + NBSP + escape(line) + EOL);
                 }
             } else {
                 println(outfileWriter, NBSP + " No feature directory names lengths were longer than the maxCriteria, "
